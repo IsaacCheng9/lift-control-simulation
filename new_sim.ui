@@ -1,20 +1,146 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>dialog_new_sim</class>
+ <widget class="QDialog" name="dialog_new_sim">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>600</width>
+    <height>275</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+    <pointsize>10</pointsize>
+   </font>
   </property>
+  <property name="windowTitle">
+   <string>New Simulation - Lift Control</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="vert_layout_new_sim">
+     <item>
+      <widget class="QLabel" name="lbl_new_sim">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <pointsize>14</pointsize>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="text">
+        <string>New Simulation</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="hori_line_create_sim">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="grid_layout_create_sim">
+       <item row="4" column="0">
+        <widget class="QLabel" name="lbl_ui_speed">
+         <property name="text">
+          <string>UI Speed (Delay in Seconds):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="line_edit_num_people">
+         <property name="maxLength">
+          <number>40</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="lbl_lift_capacity">
+         <property name="text">
+          <string>Lift Capacity:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="line_edit_num_floors">
+         <property name="maxLength">
+          <number>13</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lbl_num_people">
+         <property name="text">
+          <string>Number of People:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_num_floors">
+         <property name="text">
+          <string>Number of Floors:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="line_edit_lift_capacity">
+         <property name="maxLength">
+          <number>40</number>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="line_edit_ui_speed">
+         <property name="maxLength">
+          <number>40</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="QPushButton" name="btn_new_sim">
+       <property name="text">
+        <string>Start New Simulation</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="hori_line_new_sim">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_start_successful">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="vert_spacer_new_sim">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
 </ui>
-
