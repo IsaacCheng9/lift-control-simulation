@@ -1,7 +1,4 @@
 """
-A system to manage the inventory of Barnaby's Brewhouse, allowing the user to
-add or remove volumes of each type of beer, and calculating the overall volume
-and number of bottles of each beer.
 """
 
 import json
@@ -39,6 +36,14 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        # Connects 'New Simulation' button to the new simulation dialog.
+        self.btn_new_sim.clicked.connect(self.open_dialog_new_sim)
+
+    def open_dialog_new_sim(self) -> None:
+        """Opens the dialog for the user to start a new simulation."""
+        self.Dialog = NewSimDialog()
+        self.Dialog.open()
 
 
 # Prevents the code from executing when the script is imported as a module.
