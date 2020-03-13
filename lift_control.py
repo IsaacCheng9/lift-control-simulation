@@ -10,6 +10,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow
 
 from lift_control_setup import Ui_mwindow_lift_control
+from new_sim import NewSimDialog
 
 
 def main() -> None:

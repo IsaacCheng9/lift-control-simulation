@@ -66,9 +66,9 @@ class Ui_dialog_new_sim(object):
         self.line_edit_ui_speed.setObjectName("line_edit_ui_speed")
         self.grid_layout_create_sim.addWidget(self.line_edit_ui_speed, 4, 1, 1, 1)
         self.vert_layout_new_sim.addLayout(self.grid_layout_create_sim)
-        self.btn_new_sim = QtWidgets.QPushButton(dialog_new_sim)
-        self.btn_new_sim.setObjectName("btn_new_sim")
-        self.vert_layout_new_sim.addWidget(self.btn_new_sim, 0, QtCore.Qt.AlignLeft)
+        self.btn_start_sim = QtWidgets.QPushButton(dialog_new_sim)
+        self.btn_start_sim.setObjectName("btn_start_sim")
+        self.vert_layout_new_sim.addWidget(self.btn_start_sim, 0, QtCore.Qt.AlignLeft)
         self.hori_line_new_sim = QtWidgets.QFrame(dialog_new_sim)
         self.hori_line_new_sim.setFrameShape(QtWidgets.QFrame.HLine)
         self.hori_line_new_sim.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -89,11 +89,11 @@ class Ui_dialog_new_sim(object):
         _translate = QtCore.QCoreApplication.translate
         dialog_new_sim.setWindowTitle(_translate("dialog_new_sim", "New Simulation - Lift Control"))
         self.lbl_new_sim.setText(_translate("dialog_new_sim", "New Simulation"))
-        self.lbl_ui_speed.setText(_translate("dialog_new_sim", "UI Speed (Delay in Seconds):"))
+        self.lbl_ui_speed.setText(_translate("dialog_new_sim", "UI Speed (Delay in Milliseconds):"))
         self.lbl_lift_capacity.setText(_translate("dialog_new_sim", "Lift Capacity:"))
         self.lbl_num_people.setText(_translate("dialog_new_sim", "Number of People:"))
         self.lbl_num_floors.setText(_translate("dialog_new_sim", "Number of Floors:"))
-        self.btn_new_sim.setText(_translate("dialog_new_sim", "Start New Simulation"))
+        self.btn_start_sim.setText(_translate("dialog_new_sim", "Start New Simulation"))
 
 
 if __name__ == "__main__":

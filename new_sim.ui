@@ -48,7 +48,7 @@
        <item row="4" column="0">
         <widget class="QLabel" name="lbl_ui_speed">
          <property name="text">
-          <string>UI Speed (Delay in Seconds):</string>
+          <string>UI Speed (Delay in Milliseconds):</string>
          </property>
         </widget>
        </item>
@@ -104,7 +104,7 @@
       </layout>
      </item>
      <item alignment="Qt::AlignLeft">
-      <widget class="QPushButton" name="btn_new_sim">
+      <widget class="QPushButton" name="btn_start_sim">
        <property name="text">
         <string>Start New Simulation</string>
        </property>

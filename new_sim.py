@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QDialog
 from new_sim_setup import Ui_dialog_new_sim
 
 
-class NewSimDialog(QDialog, Ui_dialog_new_sim):
+class NewSimDialog(QDialog, QIntValidator, Ui_dialog_new_sim):
     """Contains the dialog window for creating a new lift simulation."""
 
     def __init__(self):
@@ -17,13 +17,14 @@ class NewSimDialog(QDialog, Ui_dialog_new_sim):
         self.setupUi(self)
 
         # Restricts inputs to only numbers.
+        self.only_int = QIntValidator()
         self.line_edit_num_floors.setValidator(self.only_int)
         self.line_edit_num_people.setValidator(self.only_int)
         self.line_edit_lift_capacity.setValidator(self.only_int)
         self.line_edit_ui_speed.setValidator(self.only_int)
 
         # Connects the 'Start New Simulation' button to start the simulation.
-        self.btn_start_sim.connect(self.start_sim)
+        self.btn_start_sim.clicked.connect(self.start_sim)
 
     def start_sim(self):
         """Starts the lift simulation in the main window."""
