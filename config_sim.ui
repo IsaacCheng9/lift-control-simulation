@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dialog_new_sim</class>
- <widget class="QDialog" name="dialog_new_sim">
+ <class>dialog_config_sim</class>
+ <widget class="QDialog" name="dialog_config_sim">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -21,9 +21,9 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="vert_layout_new_sim">
+    <layout class="QVBoxLayout" name="vert_layout_config_sim">
      <item>
-      <widget class="QLabel" name="lbl_new_sim">
+      <widget class="QLabel" name="lbl_config_sim">
        <property name="font">
         <font>
          <family>Arial</family>
@@ -32,23 +32,23 @@
         </font>
        </property>
        <property name="text">
-        <string>New Simulation</string>
+        <string>Configure Simulation</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="Line" name="hori_line_create_sim">
+      <widget class="Line" name="hori_line_config_sim">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
      <item>
-      <layout class="QGridLayout" name="grid_layout_create_sim">
+      <layout class="QGridLayout" name="grid_layout_config_sim">
        <item row="4" column="0">
-        <widget class="QLabel" name="lbl_ui_speed">
+        <widget class="QLabel" name="lbl_ui_delay">
          <property name="text">
-          <string>UI Speed (Delay in Milliseconds):</string>
+          <string>UI Delay (Milliseconds):</string>
          </property>
         </widget>
        </item>
@@ -95,7 +95,7 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QLineEdit" name="line_edit_ui_speed">
+        <widget class="QLineEdit" name="line_edit_ui_delay">
          <property name="maxLength">
           <number>40</number>
          </property>
@@ -104,28 +104,33 @@
       </layout>
      </item>
      <item alignment="Qt::AlignLeft">
-      <widget class="QPushButton" name="btn_start_sim">
+      <widget class="QPushButton" name="btn_save_sim">
        <property name="text">
-        <string>Start New Simulation</string>
+        <string>Save Simulation</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="Line" name="hori_line_new_sim">
+      <widget class="Line" name="hori_line_save_sim">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_start_successful">
+      <widget class="QLabel" name="lbl_save_successful">
+       <property name="font">
+        <font>
+         <italic>true</italic>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item>
-      <spacer name="vert_spacer_new_sim">
+      <spacer name="vert_spacer_config_sim">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>

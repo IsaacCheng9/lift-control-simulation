@@ -54,9 +54,9 @@
      <item>
       <layout class="QHBoxLayout" name="hori_layout_nav">
        <item alignment="Qt::AlignLeft">
-        <widget class="QPushButton" name="btn_new_sim">
+        <widget class="QPushButton" name="btn_config_sim">
          <property name="text">
-          <string>New Simulation</string>
+          <string>Configure Simulation</string>
          </property>
         </widget>
        </item>
@@ -86,13 +86,6 @@
       <widget class="Line" name="hori_line_nav">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="lbl_num_in_lift">
-       <property name="text">
-        <string>Number of People in Lift: </string>
        </property>
       </widget>
      </item>
@@ -134,14 +127,14 @@
      <item>
       <layout class="QGridLayout" name="grid_layout_sim">
        <item row="7" column="1">
-        <widget class="QLabel" name="lbl_floor7">
+        <widget class="QLabel" name="lbl_delivered7">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="5" column="0">
-        <widget class="QLabel" name="lbl_floor1_5">
+        <widget class="QLabel" name="lbl_waiting5">
          <property name="text">
           <string>0</string>
          </property>
@@ -155,7 +148,7 @@
         </widget>
        </item>
        <item row="6" column="1">
-        <widget class="QLabel" name="lbl_floor6">
+        <widget class="QLabel" name="lbl_delivered6">
          <property name="text">
           <string>0</string>
          </property>
@@ -175,21 +168,21 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QLabel" name="lbl_floor4">
+        <widget class="QLabel" name="lbl_delivered4">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLabel" name="lbl_floor3">
+        <widget class="QLabel" name="lbl_delivered3">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="6" column="0">
-        <widget class="QLabel" name="lbl_floor1_6">
+        <widget class="QLabel" name="lbl_waiting6">
          <property name="text">
           <string>0</string>
          </property>
@@ -203,7 +196,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="lbl_floor1_4">
+        <widget class="QLabel" name="lbl_waiting3">
          <property name="text">
           <string>0</string>
          </property>
@@ -217,21 +210,21 @@
         </widget>
        </item>
        <item row="9" column="1">
-        <widget class="QLabel" name="lbl_floor9">
+        <widget class="QLabel" name="lbl_delivered9">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="lbl_floor2">
+        <widget class="QLabel" name="lbl_delivered2">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="8" column="1">
-        <widget class="QLabel" name="lbl_floor8">
+        <widget class="QLabel" name="lbl_delivered8">
          <property name="text">
           <string>0</string>
          </property>
@@ -258,7 +251,7 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QLabel" name="lbl_floor5">
+        <widget class="QLabel" name="lbl_delivered5">
          <property name="text">
           <string>0</string>
          </property>
@@ -278,14 +271,14 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="lbl_">
+        <widget class="QLabel" name="lbl_waiting4">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="7" column="0">
-        <widget class="QLabel" name="lbl_floor1_7">
+        <widget class="QLabel" name="lbl_waiting7">
          <property name="text">
           <string>0</string>
          </property>
@@ -306,7 +299,7 @@
         </widget>
        </item>
        <item row="10" column="0">
-        <widget class="QLabel" name="lbl_floor1_9">
+        <widget class="QLabel" name="lbl_waiting10">
          <property name="text">
           <string>0</string>
          </property>
@@ -315,14 +308,33 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="lbl_key">
+       <property name="font">
+        <font>
+         <italic>false</italic>
+        </font>
+       </property>
+       <property name="text">
+        <string>(White blocks represent floors, and red blocks represent floors with the lift on it.)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="hori_line_summary_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_instruction">
        <property name="font">
         <font>
          <italic>true</italic>
         </font>
        </property>
        <property name="text">
-        <string>(White blocks represent floors, and red blocks represent floors with the lift on it.)</string>
+        <string/>
        </property>
       </widget>
      </item>
