@@ -17,7 +17,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>New Simulation - Lift Control</string>
+   <string>Configure Simulation - Lift Control</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -55,7 +55,7 @@
        <item row="2" column="1">
         <widget class="QLineEdit" name="line_edit_num_people">
          <property name="maxLength">
-          <number>40</number>
+          <number>3</number>
          </property>
         </widget>
        </item>
@@ -69,7 +69,7 @@
        <item row="1" column="1">
         <widget class="QLineEdit" name="line_edit_num_floors">
          <property name="maxLength">
-          <number>13</number>
+          <number>3</number>
          </property>
         </widget>
        </item>
@@ -90,14 +90,14 @@
        <item row="3" column="1">
         <widget class="QLineEdit" name="line_edit_lift_capacity">
          <property name="maxLength">
-          <number>40</number>
+          <number>2</number>
          </property>
         </widget>
        </item>
        <item row="4" column="1">
         <widget class="QLineEdit" name="line_edit_ui_delay">
          <property name="maxLength">
-          <number>40</number>
+          <number>4</number>
          </property>
         </widget>
        </item>
