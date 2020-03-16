@@ -87,6 +87,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         floor = []
         people = []
 
+        print(lift_capacity)
+
         # Checks whether the user has made a configuration.
 
         # Creates a random combination of starting positions and target
