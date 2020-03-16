@@ -2,6 +2,7 @@
 
 import json
 import logging
+import random
 import sys
 from typing import Tuple
 
@@ -101,7 +102,9 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         floor = []
         people = []
 
-        print(lift_capacity)
+        print(num_floors, num_people, lift_capacity, ui_delay)
+        floor = [random.randrange(0, num_floors) for i in range(num_people)]
+        print(floor)
 
         # Checks whether the user has made a configuration.
 
