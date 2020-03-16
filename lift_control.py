@@ -3,6 +3,7 @@
 import json
 import logging
 import sys
+from typing import Tuple
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator
@@ -37,10 +38,19 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         super().__init__()
         self.setupUi(self)
 
+        num_floors = 10
+        num_people = 0
+        lift_capacity = 0
+        ui_delay = 0
+
         # Connects 'New Simulation' button to the new simulation dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
         # Connects 'Run Simulation' button to run the simulation.
-        self.btn_run_sim.clicked.connect(self.run_simulation)
+        self.btn_run_sim.clicked.connect(lambda:
+                                         self.run_simulation(num_floors,
+                                                             num_people,
+                                                             lift_capacity,
+                                                             ui_delay))
 
     def open_dialog_config_sim(self) -> None:
         """Opens the dialog for the user to configure their simulation."""
@@ -58,7 +68,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
         self.Dialog.open()
 
-    def save_sim(self):
+    def save_sim(self) -> Tuple[str, str, str, str]:
         """Saves the lift simulation settings."""
         # Gets the inputs for the new sale.
         num_floors = self.Dialog.line_edit_num_floors.text()
@@ -73,13 +83,17 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Configuration saved successfully!")
+            return (int(num_floors), int(num_people), int(lift_capacity),
+                    int(ui_delay))
         else:
             # Notifies the user that their configuration was not saved
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Please fill all input fields to save your configuration.")
+            return (0, 0, 0, 0)
 
-    def run_simulation(self) -> None:
+    def run_simulation(self, num_floors, num_people, lift_capacity,
+                       ui_delay) -> None:
         """Runs the simulation based on the given configuration."""
         total_delivered = 0
         num_moves = 0
