@@ -39,19 +39,16 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         super().__init__()
         self.setupUi(self)
 
-        num_floors = 10
-        num_people = 0
-        lift_capacity = 0
-        ui_delay = 0
+        self.num_floors = 10
+        self.num_people = 0
+        self.lift_capacity = 0
+        self.ui_delay = 0
 
         # Connects 'New Simulation' button to the new simulation dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
         # Connects 'Run Simulation' button to run the simulation.
         self.btn_run_sim.clicked.connect(lambda:
-                                         self.run_simulation(num_floors,
-                                                             num_people,
-                                                             lift_capacity,
-                                                             ui_delay))
+                                         self.run_simulation())
 
     def open_dialog_config_sim(self) -> None:
         """Opens the dialog for the user to configure their simulation."""
@@ -69,32 +66,28 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
         self.Dialog.open()
 
-    def save_sim(self) -> Tuple[str, str, str, str]:
+    def save_sim(self):
         """Saves the lift simulation settings."""
         # Gets the inputs for the new sale.
-        num_floors = self.Dialog.line_edit_num_floors.text()
-        num_people = self.Dialog.line_edit_num_people.text()
-        lift_capacity = self.Dialog.line_edit_lift_capacity.text()
-        ui_delay = self.Dialog.line_edit_ui_delay.text()
+        self.num_floors = self.Dialog.line_edit_num_floors.text()
+        self.num_people = self.Dialog.line_edit_num_people.text()
+        self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
+        self.ui_delay = self.Dialog.line_edit_ui_delay.text()
 
         # Validates against null inputs.
-        if (num_floors != "" and num_people != "" and lift_capacity != "" and
-                ui_delay != ""):
+        if (self.num_floors != "" and self.num_people != "" and
+                self.lift_capacity != "" and self.ui_delay != ""):
             # Notifies the user that their configuration was saved
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Configuration saved successfully!")
-            return (int(num_floors), int(num_people), int(lift_capacity),
-                    int(ui_delay))
         else:
             # Notifies the user that their configuration was not saved
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Please fill all input fields to save your configuration.")
-            return (0, 0, 0, 0)
 
-    def run_simulation(self, num_floors, num_people, lift_capacity,
-                       ui_delay) -> None:
+    def run_simulation(self) -> None:
         """Runs the simulation based on the given configuration."""
         total_delivered = 0
         num_moves = 0
@@ -102,8 +95,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         floor = []
         people = []
 
-        print(num_floors, num_people, lift_capacity, ui_delay)
-        floor = [random.randrange(0, num_floors) for i in range(num_people)]
+        print(self.num_floors, self.num_people, self.lift_capacity,
+              self.ui_delay)
+        floor = [random.randrange(0, int(self.num_floors)) for i in
+                 range(int(self.num_people))]
         print(floor)
 
         # Checks whether the user has made a configuration.
