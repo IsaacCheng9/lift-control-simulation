@@ -74,9 +74,11 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
         self.ui_delay = self.Dialog.line_edit_ui_delay.text()
 
-        # Validates against null inputs.
+        # Validates against inputs of null and zero.
         if (self.num_floors != "" and self.num_people != "" and
-                self.lift_capacity != "" and self.ui_delay != ""):
+                self.lift_capacity != "" and self.ui_delay != "" and
+                int(self.num_floors) > 0 and int(self.num_people) > 0 and
+                int(self.lift_capacity) > 0 and int(self.ui_delay) > 0):
             # Notifies the user that their configuration was saved
             # successfully.
             self.Dialog.lbl_save_successful.setText(
@@ -94,23 +96,25 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         num_in_lift = 0
         people = []
 
-        print(self.num_floors, self.num_people, self.lift_capacity,
-              self.ui_delay)
-
-        # Creates the list of dictionaries of the people and their lift status.
+        # Generates people and their lift statuses as a list of dictionaries.
         for i in range(int(self.num_people)):
             # Creates a random starting floor and target floor.
             starting_floor = random.randrange(0, int(self.num_floors))
             target_floor = random.randrange(0, int(self.num_floors))
             person = {
-                "id": 1,
+                "id": i,
                 "starting_floor": starting_floor,
                 "target_floor": target_floor,
                 "current_floor": 0,
                 "status:": False}
             people.append(person)
 
-        print(people)
+        # Displays the configuration and generated people.
+        print("\nNumber of Floors:", self.num_floors, "\nNumber of People:",
+              self.num_people, "\nLift Capacity:", self.lift_capacity,
+              "\nUI Delay:", self.ui_delay, "\n")
+        for person in people:
+            print(person)
 
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
