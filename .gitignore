@@ -127,4 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-Lift Control - Development Log.docx
+
+# Documentation files
+*.docx
+*.txt

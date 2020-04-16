@@ -92,14 +92,14 @@
      <item>
       <widget class="QLabel" name="lbl_total_delivered">
        <property name="text">
-        <string>Total Number of People Delivered:</string>
+        <string>Total Number of People Delivered: 0</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="lbl_total_moves">
        <property name="text">
-        <string>Total Number of Moves:</string>
+        <string>Total Number of Moves: 0</string>
        </property>
       </widget>
      </item>
@@ -113,7 +113,7 @@
      <item>
       <widget class="QLabel" name="lbl_num_in_lift">
        <property name="text">
-        <string>Number of People Currently in Lift:</string>
+        <string>Number of People Currently in Lift: 0</string>
        </property>
       </widget>
      </item>
