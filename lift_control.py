@@ -4,6 +4,7 @@ import json
 import logging
 import random
 import sys
+from time import sleep
 from typing import Tuple
 
 from PyQt5 import QtWidgets
@@ -24,9 +25,7 @@ def main() -> None:
 
 
 def setup_logging():
-    """
-    Sets up the logging system to automatically log actions to log file.
-    """
+    """Sets up the logging system to automatically log actions to log file."""
     logging.basicConfig(filename="logs.txt", level=logging.DEBUG,
                         format="%(asctime)s - %(levelname)s - %(message)s")
     logging.debug("Lift Control program started.")
@@ -95,18 +94,33 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         num_moves = 0
         num_in_lift = 0
         people = []
+        lift_floor = 0
 
         # Generates people and their lift statuses as a list of dictionaries.
         for i in range(int(self.num_people)):
-            # Creates a random starting floor and target floor.
+            # Creates a random starting floor.
             starting_floor = random.randrange(0, int(self.num_floors))
-            target_floor = random.randrange(0, int(self.num_floors))
+
+            # Creates a target floor which is different to starting floor.
+            while True:
+                target_floor = random.randrange(0, int(self.num_floors))
+                if starting_floor != target_floor:
+                    break
+
+            if target_floor - starting_floor > 0:
+                direction = "Up"
+            else:
+                direction = "Down"
+
+            # Adds the person dictionary to the list.
             person = {
                 "id": i,
                 "starting_floor": starting_floor,
                 "target_floor": target_floor,
                 "current_floor": 0,
-                "status:": False}
+                "status": False,
+                "direction": direction,
+                "in_lift": False}
             people.append(person)
 
         # Displays the configuration and generated people.
@@ -115,6 +129,19 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
               "\nUI Delay:", self.ui_delay, "\n")
         for person in people:
             print(person)
+        print("\n")
+
+        # Continues simulation until all target floors are reached.
+        while next((d for d in people if not d["status"]), None) is not None:
+            sleep(int(self.ui_delay) / 1000)
+            for person in people:
+                if person["current_floor"] != person["target_floor"]:
+                    person["current_floor"] += 1
+                if person["current_floor"] == person["target_floor"]:
+                    person["status"] = True
+            for person in people:
+                print(person)
+            print("\n")
 
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
