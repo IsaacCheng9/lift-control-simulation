@@ -97,7 +97,9 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         print(self.num_floors, self.num_people, self.lift_capacity,
               self.ui_delay)
 
+        # Creates the list of dictionaries of the people and their lift status.
         for i in range(int(self.num_people)):
+            # Creates a random starting floor and target floor.
             starting_floor = random.randrange(0, int(self.num_floors))
             target_floor = random.randrange(0, int(self.num_floors))
             person = {
@@ -107,13 +109,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                 "current_floor": 0,
                 "status:": False}
             people.append(person)
-        
+
         print(people)
-
-        # Checks whether the user has made a configuration.
-
-        # Creates a random combination of starting positions and target
-        # positions.
 
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
