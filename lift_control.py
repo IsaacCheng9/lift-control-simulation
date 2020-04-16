@@ -92,14 +92,23 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         total_delivered = 0
         num_moves = 0
         num_in_lift = 0
-        floor = []
         people = []
 
         print(self.num_floors, self.num_people, self.lift_capacity,
               self.ui_delay)
-        floor = [random.randrange(0, int(self.num_floors)) for i in
-                 range(int(self.num_people))]
-        print(floor)
+
+        for i in range(int(self.num_people)):
+            starting_floor = random.randrange(0, int(self.num_floors))
+            target_floor = random.randrange(0, int(self.num_floors))
+            person = {
+                "id": 1,
+                "starting_floor": starting_floor,
+                "target_floor": target_floor,
+                "current_floor": 0,
+                "status:": False}
+            people.append(person)
+        
+        print(people)
 
         # Checks whether the user has made a configuration.
 
