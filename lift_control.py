@@ -123,22 +123,57 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                 "in_lift": False}
             people.append(person)
 
-        # Displays the configuration and generated people.
+        # Displays configuration, generated people, and starting lift floor.
         print("\nNumber of Floors:", self.num_floors, "\nNumber of People:",
               self.num_people, "\nLift Capacity:", self.lift_capacity,
               "\nUI Delay:", self.ui_delay, "\n")
         for person in people:
             print(person)
         print("\n")
+        print("Lift Floor (Starting):", lift_floor)
 
         # Continues simulation until all target floors are reached.
         while next((d for d in people if not d["status"]), None) is not None:
-            sleep(int(self.ui_delay) / 1000)
+            # Base case algorithm.
             for person in people:
+                if person["status"] is False:
+                    # Simulates lift moving to collect person from their floor.
+                    collect_moves = (int(person["starting_floor"]) -
+                                     lift_floor)
+                    print("\nFloor Differential (Collecting):", collect_moves)
+                    for i in range(abs(collect_moves)):
+                        sleep(int(self.ui_delay) / 1000)
+                        if collect_moves > 0:
+                            lift_floor += 1
+                        else:
+                            lift_floor -= 1
+                        print("    Lift Floor (Collecting):", lift_floor)
+
+                    # Simulates lift moving to deliver person to their floor.
+                    deliver_moves = (int(person["target_floor"]) -
+                                     lift_floor)
+                    print("Floor Differential (Delivering):", deliver_moves)
+                    for i in range(abs(deliver_moves)):
+                        sleep(int(self.ui_delay) / 1000)
+                        if deliver_moves > 0:
+                            lift_floor += 1
+                        else:
+                            lift_floor -= 1
+                        print("    Lift Floor (Delivering):", lift_floor)
+                    person["status"] = True
+                    print("Delivered person ID", person["id"], "from floor",
+                          person["starting_floor"], "to",
+                          person["target_floor"])
+
+                """
                 if person["current_floor"] != person["target_floor"]:
                     person["current_floor"] += 1
+                
+
                 if person["current_floor"] == person["target_floor"]:
                     person["status"] = True
+                """
+
             for person in people:
                 print(person)
             print("\n")
