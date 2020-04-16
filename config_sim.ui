@@ -45,34 +45,6 @@
      </item>
      <item>
       <layout class="QGridLayout" name="grid_layout_config_sim">
-       <item row="4" column="0">
-        <widget class="QLabel" name="lbl_ui_delay">
-         <property name="text">
-          <string>UI Delay (Milliseconds):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="line_edit_num_people">
-         <property name="maxLength">
-          <number>3</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="lbl_lift_capacity">
-         <property name="text">
-          <string>Lift Capacity:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="line_edit_num_floors">
-         <property name="maxLength">
-          <number>3</number>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="lbl_num_people">
          <property name="text">
@@ -87,19 +59,31 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="line_edit_lift_capacity">
-         <property name="maxLength">
-          <number>2</number>
+       <item row="3" column="0">
+        <widget class="QLabel" name="lbl_lift_capacity">
+         <property name="text">
+          <string>Lift Capacity:</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="line_edit_ui_delay">
-         <property name="maxLength">
-          <number>4</number>
+       <item row="4" column="0">
+        <widget class="QLabel" name="lbl_ui_delay">
+         <property name="text">
+          <string>UI Delay (Milliseconds):</string>
          </property>
         </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLineEdit" name="line_edit_num_floors"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLineEdit" name="line_edit_num_people"/>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLineEdit" name="line_edit_lift_capacity"/>
+       </item>
+       <item row="4" column="2">
+        <widget class="QLineEdit" name="line_edit_ui_delay"/>
        </item>
       </layout>
      </item>
