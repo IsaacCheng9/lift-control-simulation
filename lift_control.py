@@ -129,7 +129,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
               "\nUI Delay:", self.ui_delay, "\n")
         for person in people:
             print(person)
-        print("\n")
         print("Lift Floor (Starting):", lift_floor)
 
         # Continues simulation until all target floors are reached.
@@ -141,12 +140,19 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     collect_moves = (int(person["starting_floor"]) -
                                      lift_floor)
                     print("\nFloor Differential (Collecting):", collect_moves)
+                    num_in_lift += 1
+                    self.lbl_num_in_lift.setText("Number of People Currently "
+                                                 "in Lift: " +
+                                                 str(num_in_lift))
                     for i in range(abs(collect_moves)):
                         sleep(int(self.ui_delay) / 1000)
                         if collect_moves > 0:
                             lift_floor += 1
                         else:
                             lift_floor -= 1
+                        num_moves += 1
+                        self.lbl_total_moves.setText("Total Number of Moves: "
+                                                     + str(num_moves))
                         print("    Lift Floor (Collecting):", lift_floor)
 
                     # Simulates lift moving to deliver person to their floor.
@@ -159,11 +165,25 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             lift_floor += 1
                         else:
                             lift_floor -= 1
+                        num_moves += 1
+                        self.lbl_total_moves.setText("Total Number of Moves: "
+                                                     + str(num_moves))
                         print("    Lift Floor (Delivering):", lift_floor)
+
+                    # Marks the person as delivered, and increases count.
+                    num_in_lift -= 1
                     person["status"] = True
+                    total_delivered += 1
+                    self.lbl_total_delivered.setText("Total Number of People "
+                                                     "Delivered: " +
+                                                     str(total_delivered))
                     print("Delivered person ID", person["id"], "from floor",
                           person["starting_floor"], "to",
-                          person["target_floor"])
+                          person["target_floor"], "\n")
+
+                    # Displays the updated version of the list of people.
+                    for person in people:
+                        print(person)
 
                 """
                 if person["current_floor"] != person["target_floor"]:
@@ -173,10 +193,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                 if person["current_floor"] == person["target_floor"]:
                     person["status"] = True
                 """
-
-            for person in people:
-                print(person)
-            print("\n")
 
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
