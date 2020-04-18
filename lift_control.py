@@ -1,5 +1,4 @@
 """A system created to manage lift control, optimised for efficiency of use."""
-
 import json
 import logging
 import random
@@ -45,9 +44,14 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
         # Connects 'New Simulation' button to the new simulation dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
-        # Connects 'Run Simulation' button to run the simulation.
+        # Connects 'Run Simulation (Naive)' button to run the simulation with
+        # the naive (mechanical) algorithm.
         self.btn_run_sim_naive.clicked.connect(lambda:
                                                self.run_simulation_naive())
+        # Connects 'Run Simulation (Improved)' button to run the simulation
+        # with the improved algorithm.
+        self.btn_run_sim_improved.clicked.connect(
+            lambda: self.run_simulation_improved())
 
     def open_dialog_config_sim(self) -> None:
         """Opens the dialog for the user to configure their simulation."""
@@ -89,7 +93,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                 "Please fill all input fields to save your configuration.")
 
     def run_simulation_naive(self) -> None:
-        """Runs the simulation based on the given configuration."""
+        """Runs the simulation using the naive (mechanical) algorithm."""
         total_delivered = 0
         num_moves = 0
         num_in_lift = 0
@@ -121,12 +125,12 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                 "target_floor": target_floor,
                 "current_floor": 0,
                 "status": False,
-                "direction": direction,
-                "in_lift": False}
+                "direction": direction}
             people_overview.append(person)
 
         # Displays configuration, generated people, and starting lift floor.
-        print("\nNumber of Floors:", self.num_floors, "\nNumber of People:",
+        print("\n-------------------------------------------------------------"
+              "\nNumber of Floors:", self.num_floors, "\nNumber of People:",
               self.num_people, "\nLift Capacity:", self.lift_capacity,
               "\nUI Delay (ms):", self.ui_delay, "\n")
         for person in people_overview:
@@ -136,7 +140,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         # Continues simulation until all target floors are reached.
         while (next((d for d in people_overview if not d["status"]), None) is
                not None):
-            # Base case algorithm.
+            # Iterates in order of the people generated (represents a queue).
             for person in people_overview:
                 if person["status"] is False:
                     # Simulates lift moving to collect person from their floor.
@@ -162,9 +166,114 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     people_lift.append(person)
 
                     # Simulates lift moving to deliver person to their floor.
-                    person["in_lift"] = True
                     deliver_moves = (int(person["target_floor"]) -
                                      lift_floor)
+                    print("Floor Differential (Delivering):", deliver_moves)
+
+                    for i in range(abs(deliver_moves)):
+                        sleep(int(self.ui_delay) / 1000)
+
+                        if deliver_moves > 0:
+                            lift_floor += 1
+                        else:
+                            lift_floor -= 1
+                        num_moves += 1
+                        self.lbl_total_moves.setText("Total Number of Moves: "
+                                                     + str(num_moves))
+                        print("    Lift Floor (Delivering):", lift_floor)
+
+                    # Marks the person as delivered, and increases count.
+                    people_lift.remove(person)
+                    num_in_lift -= 1
+                    person["status"] = True
+                    total_delivered += 1
+                    self.lbl_total_delivered.setText("Total Number of People "
+                                                     "Delivered: " +
+                                                     str(total_delivered))
+                    print("Delivered person ID", person["id"], "from floor",
+                          person["starting_floor"], "to",
+                          person["target_floor"], "\n")
+
+                    # Displays the updated version of the list of people.
+                    for person in people_overview:
+                        print(person)
+
+    def run_simulation_improved(self) -> None:
+        """Runs the simulation using the improved algorithm."""
+        total_delivered = 0
+        num_moves = 0
+        num_in_lift = 0
+        people_overview = []
+        people_lift = []
+        lift_floor = 0
+        stop_floor = False
+
+        # Generates people and their lift statuses as a list of dictionaries.
+        for i in range(int(self.num_people)):
+            # Creates a random starting floor.
+            starting_floor = random.randrange(0, int(self.num_floors))
+
+            # Creates a target floor which is different to starting floor.
+            while True:
+                target_floor = random.randrange(0, int(self.num_floors))
+                if starting_floor != target_floor:
+                    break
+
+            if target_floor - starting_floor > 0:
+                direction = "Up"
+            else:
+                direction = "Down"
+
+            # Adds the person dictionary to the list.
+            person = {
+                "id": i,
+                "starting_floor": starting_floor,
+                "target_floor": target_floor,
+                "current_floor": 0,
+                "status": False,
+                "direction": direction}
+            people_overview.append(person)
+
+        # Displays configuration, generated people, and starting lift floor.
+        print("\n-------------------------------------------------------------"
+              "\nNumber of Floors:", self.num_floors, "\nNumber of People:",
+              self.num_people, "\nLift Capacity:", self.lift_capacity,
+              "\nUI Delay (ms):", self.ui_delay, "\n")
+        for person in people_overview:
+            print(person)
+        print("Lift Floor (Starting):", lift_floor)
+
+        # Continues simulation until all target floors are reached.
+        while (next((d for d in people_overview if not d["status"]), None) is
+               not None):
+            # Iterates in order of the people generated (represents a queue).
+            for person in people_overview:
+                if person["status"] is False:
+                    # Simulates lift moving to collect person from their floor.
+                    collect_moves = (int(person["starting_floor"]) -
+                                     lift_floor)
+                    print("\nFloor Differential (Collecting):", collect_moves)
+                    num_in_lift += 1
+                    self.lbl_num_in_lift.setText("Number of People Currently "
+                                                 "in Lift: " +
+                                                 str(num_in_lift))
+
+                    for i in range(abs(collect_moves)):
+                        sleep(int(self.ui_delay) / 1000)
+                        if collect_moves > 0:
+                            lift_floor += 1
+                        else:
+                            lift_floor -= 1
+                        num_moves += 1
+                        self.lbl_total_moves.setText("Total Number of Moves: "
+                                                     + str(num_moves))
+                        print("    Lift Floor (Collecting):", lift_floor)
+
+                    people_lift.append(person)
+
+                    # Simulates lift moving to deliver person to their floor.
+                    deliver_moves = min([int(person["target_floor"]) -
+                                         lift_floor for person in people_lift])
                     print("Floor Differential (Delivering):", deliver_moves)
 
                     while people_lift and not stop_floor:
@@ -188,26 +297,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                                      + str(num_moves))
                         print("    Lift Floor (Delivering):", lift_floor)
 
-                    """
-                    for i in range(abs(deliver_moves)):
-                        sleep(int(self.ui_delay) / 1000)
-
-
-
-
-                        if deliver_moves > 0:
-                            lift_floor += 1
-                        else:
-                            lift_floor -= 1
-                        num_moves += 1
-                        self.lbl_total_moves.setText("Total Number of Moves: "
-                                                     + str(num_moves))
-                        print("    Lift Floor (Delivering):", lift_floor)
-                    """
-
                     # Marks the person as delivered, and increases count.
                     people_lift.remove(person)
-                    person["in_lift"] = False
                     num_in_lift -= 1
                     person["status"] = True
                     total_delivered += 1
