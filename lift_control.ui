@@ -61,9 +61,16 @@
         </widget>
        </item>
        <item alignment="Qt::AlignLeft">
-        <widget class="QPushButton" name="btn_run_sim">
+        <widget class="QPushButton" name="btn_run_sim_naive">
          <property name="text">
-          <string>Run Simulation</string>
+          <string>Run Simulation (Naive)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_run_sim_improved">
+         <property name="text">
+          <string>Run Simulation (Improved)</string>
          </property>
         </widget>
        </item>

@@ -46,8 +46,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         # Connects 'New Simulation' button to the new simulation dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
         # Connects 'Run Simulation' button to run the simulation.
-        self.btn_run_sim.clicked.connect(lambda:
-                                         self.run_simulation())
+        self.btn_run_sim_naive.clicked.connect(lambda:
+                                         self.run_simulation_naive())
 
     def open_dialog_config_sim(self) -> None:
         """Opens the dialog for the user to configure their simulation."""
@@ -88,7 +88,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
             self.Dialog.lbl_save_successful.setText(
                 "Please fill all input fields to save your configuration.")
 
-    def run_simulation(self) -> None:
+    def run_simulation_naive(self) -> None:
         """Runs the simulation based on the given configuration."""
         total_delivered = 0
         num_moves = 0
@@ -162,6 +162,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                      lift_floor)
                     print("Floor Differential (Delivering):", deliver_moves)
 
+                    """
                     for i in range(abs(deliver_moves)):
                         sleep(int(self.ui_delay) / 1000)
 
@@ -197,7 +198,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         self.lbl_total_moves.setText("Total Number of Moves: "
                                                      + str(num_moves))
                         print("    Lift Floor (Delivering):", lift_floor)
-                    """
 
                     # Marks the person as delivered, and increases count.
                     person["in_lift"] = False
