@@ -144,6 +144,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     self.lbl_num_in_lift.setText("Number of People Currently "
                                                  "in Lift: " +
                                                  str(num_in_lift))
+
                     for i in range(abs(collect_moves)):
                         sleep(int(self.ui_delay) / 1000)
                         if collect_moves > 0:
@@ -156,11 +157,22 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         print("    Lift Floor (Collecting):", lift_floor)
 
                     # Simulates lift moving to deliver person to their floor.
+                    person["in_lift"] = True
                     deliver_moves = (int(person["target_floor"]) -
                                      lift_floor)
                     print("Floor Differential (Delivering):", deliver_moves)
+
                     for i in range(abs(deliver_moves)):
                         sleep(int(self.ui_delay) / 1000)
+
+                        # Checks if there is a person on the floor going the
+                        # same direction and collects them if they are.
+                        for extra in people:
+                            if (extra["starting_floor"] == lift_floor and
+                                extra["status"] == False and
+                                    extra["direction"] == person["direction"]):
+                                lift_floor += 1
+
                         if deliver_moves > 0:
                             lift_floor += 1
                         else:
@@ -170,7 +182,25 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                                      + str(num_moves))
                         print("    Lift Floor (Delivering):", lift_floor)
 
+                    """
+                    for i in range(abs(deliver_moves)):
+                        sleep(int(self.ui_delay) / 1000)
+
+                        
+
+
+                        if deliver_moves > 0:
+                            lift_floor += 1
+                        else:
+                            lift_floor -= 1
+                        num_moves += 1
+                        self.lbl_total_moves.setText("Total Number of Moves: "
+                                                     + str(num_moves))
+                        print("    Lift Floor (Delivering):", lift_floor)
+                    """
+
                     # Marks the person as delivered, and increases count.
+                    person["in_lift"] = False
                     num_in_lift -= 1
                     person["status"] = True
                     total_delivered += 1
