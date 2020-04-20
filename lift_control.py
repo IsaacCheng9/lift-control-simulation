@@ -168,7 +168,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         self.lbl_total_moves.setText("Total Number of Moves: "
                                                      + str(num_moves))
                         print("    Lift Floor (Collecting):", lift_floor)
-                    people_lift.append(person)
 
                     # Calculates the number of moves needed to reach the
                     # person's target floor.
@@ -301,7 +300,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                       "in the lift, as person", extra["id"],
                                       "has been added to the lift.\n")
                         
-                        print(people_lift) # Testing
+                        # Displays an updated version of the list of people in
+                        # the lift.
+                        for passenger in people_lift:
+                            print(people_lift)
 
                         # Calculates the number of moves needed to reach the
                         # floor of the next closest person in the lift.
@@ -312,7 +314,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                               deliver_moves)
 
                         # Moves the lift up or down depending on the direction.
-                        if person["direction"] == "Up":
+                        if people_lift[0]["direction"] == "Up":
                             lift_floor += 1
                         else:
                             lift_floor -= 1
@@ -346,8 +348,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
                                 # Removes the person from the lift.
                                 people_lift.remove(passenger)
-
-                                print(people_lift) # Testing
 
                 """
                 if person["current_floor"] != person["target_floor"]:
