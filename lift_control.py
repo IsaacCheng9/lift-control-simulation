@@ -95,7 +95,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
     def run_simulation_naive(self) -> None:
         """
         Runs the simulation using the naive (mechanical) algorithm.
-        
+
         This algorithm implements a traditional lift control system where the
         person requesting the lift will press a button to either go up or
         down once the lift arrives.
@@ -174,11 +174,13 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                                  "in Lift: " +
                                                  str(num_in_lift))
 
+                    """
                     # Moves the lift floor by floor to collect the person, and
                     # adds them to the list of people in the lift.
                     for i in range(abs(collect_moves)):
                         sleep(int(self.ui_delay) / 1000)
-                        # Moves the lift up or down depending on the direction.
+                        # Moves the lift up or down based on the person's start
+                        # floor relative to the lift's current floor.
                         if collect_moves > 0:
                             lift_floor += 1
                         else:
@@ -188,6 +190,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                                      + str(num_moves))
                         print("    Lift Floor (Collecting):", lift_floor)
                     people_lift.append(person)
+                    """
 
                     # Iterates whilst there are people in the lift.
                     while people_lift:
@@ -205,7 +208,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 print("There are now", num_in_lift, "people "
                                       "in the lift, as person", extra["id"],
                                       "has been added to the lift.\n")
-                        
+
                         # Displays an updated version of the list of people in
                         # the lift.
                         for passenger in people_lift:
@@ -258,7 +261,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
     def run_simulation_improved(self) -> None:
         """
         Runs the simulation using the improved algorithm.
-        
+
         This algorithm implements an improved lift control system where the
         person requesting the lift will enter the floor they want to travel to,
         as opposed to traditional lift systems where the person only presses
@@ -324,7 +327,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     # person's starting floor.
                     collect_moves = (int(person["starting_floor"]) -
                                      lift_floor)
-                    print("\nFloor Differential (Collecting):", collect_moves)
+                    print("\nFloor Differential (Collecting):",
+                          abs(collect_moves))
 
                     # Updates the number of people in the lift.
                     num_in_lift += 1
@@ -336,7 +340,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     # adds them to the list of people in the lift.
                     for i in range(abs(collect_moves)):
                         sleep(int(self.ui_delay) / 1000)
-                        # Moves the lift up or down depending on the direction.
+                        # Moves the lift up or down based on the person's start
+                        # floor relative to the lift's current floor.
                         if collect_moves > 0:
                             lift_floor += 1
                         else:
@@ -355,7 +360,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         # same direction and collects them if they are.
                         for extra in people_overview:
                             if (extra not in people_lift and
-                                people_lift.length < self.lift_capacity and
+                                len(people_lift) < int(self.lift_capacity) and
                                 extra["starting_floor"] == lift_floor and
                                 extra["status"] is False and
                                     extra["direction"] == person["direction"]):
@@ -364,18 +369,19 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 print("There are now", num_in_lift, "people "
                                       "in the lift, as person", extra["id"],
                                       "has been added to the lift.\n")
-                        
+
                         # Displays an updated version of the list of people in
                         # the lift.
+                        print("\nPeople Currently in Lift:")
                         for passenger in people_lift:
-                            print(people_lift)
+                            print(passenger)
 
                         # Calculates the number of moves needed to reach the
                         # floor of the next closest person in the lift.
                         deliver_moves = min(
                             [abs(int(passenger["target_floor"]) - lift_floor)
                              for passenger in people_lift])
-                        print("Floor Differential (Delivering):",
+                        print("\nFloor Differential (Delivering):",
                               deliver_moves)
 
                         # Moves the lift up or down depending on the direction.
@@ -406,6 +412,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
                                 # Displays the updated version of the list of
                                 # people.
+                                print("\nPeople Overview:")
                                 for person in people_overview:
                                     if person["id"] == passenger["id"]:
                                         person["status"] = True
