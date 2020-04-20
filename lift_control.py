@@ -349,15 +349,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 # Removes the person from the lift.
                                 people_lift.remove(passenger)
 
-                """
-                if person["current_floor"] != person["target_floor"]:
-                    person["current_floor"] += 1
-
-
-                if person["current_floor"] == person["target_floor"]:
-                    person["status"] = True
-                """
-
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
     """Contains the dialog window for creating a new lift simulation."""
