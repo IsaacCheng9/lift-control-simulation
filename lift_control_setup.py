@@ -228,7 +228,7 @@ class Ui_mwindow_lift_control(object):
         self.btn_run_sim_improved.setText(_translate("mwindow_lift_control", "Run Simulation (Improved)"))
         self.lbl_num_delivered.setText(_translate("mwindow_lift_control", "Number of People Delivered: 0"))
         self.lbl_num_moves.setText(_translate("mwindow_lift_control", "Number of Moves: 0"))
-        self.lbl_num_in_lift.setText(_translate("mwindow_lift_control", "Number of People  in Lift: 0"))
+        self.lbl_num_in_lift.setText(_translate("mwindow_lift_control", "Number of People in Lift: 0"))
         self.lbl_delivered4.setText(_translate("mwindow_lift_control", "0"))
         self.lbl_waiting6.setText(_translate("mwindow_lift_control", "0"))
         self.lbl_waiting10.setText(_translate("mwindow_lift_control", "0"))
