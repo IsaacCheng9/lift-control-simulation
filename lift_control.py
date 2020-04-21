@@ -46,8 +46,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
         # Connects 'Run Simulation (Naive)' button to run the simulation with
         # the naive (mechanical) algorithm.
-        self.btn_run_sim_naive.clicked.connect(lambda:
-                                               self.run_simulation_naive())
+        self.btn_run_sim_naive.clicked.connect(
+            lambda: self.run_simulation_naive())
         # Connects 'Run Simulation (Improved)' button to run the simulation
         # with the improved algorithm.
         self.btn_run_sim_improved.clicked.connect(
@@ -71,6 +71,9 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
     def save_sim(self):
         """Saves the lift simulation settings."""
+        # Empties the list of people generated to overwrite previous config.
+        people_overview = []
+
         # Gets the inputs for the new sale.
         self.num_floors = self.Dialog.line_edit_num_floors.text()
         self.num_people = self.Dialog.line_edit_num_people.text()
@@ -86,6 +89,39 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Configuration saved successfully!")
+
+            # Generates people and their lift statuses as a list of
+            # dictionaries.
+            for i in range(int(self.num_people)):
+                # Creates a random starting floor.
+                starting_floor = random.randrange(0, int(self.num_floors))
+
+                # Creates a target floor which is different to starting floor.
+                while True:
+                    target_floor = random.randrange(0, int(self.num_floors))
+                    if starting_floor != target_floor:
+                        break
+
+                # Calculates the direction the person will be going.
+                if target_floor - starting_floor > 0:
+                    direction = "Up"
+                else:
+                    direction = "Down"
+
+                # Adds the person dictionary to the list.
+                person = {
+                    "id": i,
+                    "starting_floor": starting_floor,
+                    "target_floor": target_floor,
+                    "current_floor": 0,
+                    "status": False,
+                    "direction": direction}
+                people_overview.append(person)
+
+            # Saves the list of people to a JSON file.
+            with open("people_overview.json", "w") as outfile:
+                json.dump(people_overview, outfile,
+                          ensure_ascii=False, indent=4)
         else:
             # Notifies the user that their configuration was not saved
             # successfully.
@@ -114,38 +150,13 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         num_delivered = 0
         num_moves = 0
         num_in_lift = 0
-        people_overview = []
         people_lift = []
         lift_floor = 0
         lift_direction = "Up"
 
-        # Generates people and their lift statuses as a list of dictionaries.
-        for i in range(int(self.num_people)):
-            # Creates a random starting floor.
-            starting_floor = random.randrange(0, int(self.num_floors))
-
-            # Creates a target floor which is different to starting floor.
-            while True:
-                target_floor = random.randrange(0, int(self.num_floors))
-                if starting_floor != target_floor:
-                    break
-
-            # Calculates the button the person will press to reach their
-            # target floor.
-            if target_floor - starting_floor > 0:
-                direction = "Up"
-            else:
-                direction = "Down"
-
-            # Adds the person dictionary to the list.
-            person = {
-                "id": i,
-                "starting_floor": starting_floor,
-                "target_floor": target_floor,
-                "current_floor": 0,
-                "status": False,
-                "direction": direction}
-            people_overview.append(person)
+        # Reads existing JSON files for list of people.
+        with open("people_overview.json", "r") as infile:
+            people_overview = json.load(infile)
 
         # Displays configuration, generated people, and starting lift floor.
         print("\n-------------------------------------------------------------"
@@ -308,36 +319,12 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         num_delivered = 0
         num_moves = 0
         num_in_lift = 0
-        people_overview = []
         people_lift = []
         lift_floor = 0
 
-        # Generates people and their lift statuses as a list of dictionaries.
-        for i in range(int(self.num_people)):
-            # Creates a random starting floor.
-            starting_floor = random.randrange(0, int(self.num_floors))
-
-            # Creates a target floor which is different to starting floor.
-            while True:
-                target_floor = random.randrange(0, int(self.num_floors))
-                if starting_floor != target_floor:
-                    break
-
-            # Calculates the direction the person will be going.
-            if target_floor - starting_floor > 0:
-                direction = "Up"
-            else:
-                direction = "Down"
-
-            # Adds the person dictionary to the list.
-            person = {
-                "id": i,
-                "starting_floor": starting_floor,
-                "target_floor": target_floor,
-                "current_floor": 0,
-                "status": False,
-                "direction": direction}
-            people_overview.append(person)
+        # Reads existing JSON files for list of people.
+        with open("people_overview.json", "r") as infile:
+            people_overview = json.load(infile)
 
         # Displays configuration, generated people, and starting lift floor.
         print("\n-------------------------------------------------------------"
@@ -422,7 +409,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             lift_floor -= 1
                         num_moves += 1
                         self.lbl_num_moves.setText("Number of Moves: "
-                                                     + str(num_moves))
+                                                   + str(num_moves))
                         print("    Lift Floor (Delivering):", lift_floor)
 
                         # Checks if the lift has arrived at the target floor of
