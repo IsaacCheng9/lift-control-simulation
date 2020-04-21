@@ -111,7 +111,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         downwards, or from going downwards to upwards, it must travel to either
         the top or the bottom floor respectively.
         """
-        total_delivered = 0
+        num_delivered = 0
         num_moves = 0
         num_in_lift = 0
         people_overview = []
@@ -171,8 +171,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
                     # Updates the number of people in the lift.
                     num_in_lift += 1
-                    self.lbl_num_in_lift.setText("Number of People Currently "
-                                                 "in Lift: " +
+                    self.lbl_num_in_lift.setText("Number of People in Lift: " +
                                                  str(num_in_lift))
 
                     # Moves the lift floor by floor to collect the person, and
@@ -191,9 +190,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             else:
                                 lift_floor -= 1
                             num_moves += 1
-                            self.lbl_total_moves.setText("Total Number of "
-                                                         "Moves: " +
-                                                         str(num_moves))
+                            self.lbl_num_moves.setText("Number of Moves: " +
+                                                       str(num_moves))
                             print("    Lift Floor (Collecting):", lift_floor)
 
                         # Changes the lift's direction if they have reached
@@ -218,6 +216,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                     extra["direction"] == person["direction"]):
                                 people_lift.append(extra)
                                 num_in_lift += 1
+                                self.lbl_num_in_lift.setText("Number of "
+                                                             "People in "
+                                                             "Lift: " +
+                                                             str(num_in_lift))
                                 print("\nThere are now", num_in_lift, "people "
                                       "in the lift, as person", extra["id"],
                                       "has been added to the lift.\n")
@@ -244,8 +246,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         else:
                             lift_floor -= 1
                         num_moves += 1
-                        self.lbl_total_moves.setText("Total Number of Moves: "
-                                                     + str(num_moves))
+                        self.lbl_num_moves.setText("Number of Moves: "
+                                                   + str(num_moves))
                         print("    Lift Floor (Delivering):", lift_floor)
 
                         # Changes the lift's direction if they have reached
@@ -263,10 +265,14 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 # Marks the person as delivered, and increases
                                 # count.
                                 num_in_lift -= 1
-                                total_delivered += 1
-                                self.lbl_total_delivered.setText(
-                                    "Total Number of People Delivered: " +
-                                    str(total_delivered))
+                                num_delivered += 1
+                                self.lbl_num_in_lift.setText("Number of "
+                                                             "People in "
+                                                             "Lift: " +
+                                                             str(num_in_lift))
+                                self.lbl_num_delivered.setText(
+                                    "Number of People Delivered: " +
+                                    str(num_delivered))
                                 print("\nDelivered person ID", passenger["id"],
                                       "from floor",
                                       passenger["starting_floor"], "to",
@@ -299,7 +305,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         time saving, as people who request the lift first will still have
         greater priority.
         """
-        total_delivered = 0
+        num_delivered = 0
         num_moves = 0
         num_in_lift = 0
         people_overview = []
@@ -372,8 +378,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         else:
                             lift_floor -= 1
                         num_moves += 1
-                        self.lbl_total_moves.setText("Total Number of Moves: "
-                                                     + str(num_moves))
+                        self.lbl_num_moves.setText("Number of Moves: "
+                                                   + str(num_moves))
                         print("    Lift Floor (Collecting):", lift_floor)
                     people_lift.append(person)
 
@@ -415,7 +421,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         else:
                             lift_floor -= 1
                         num_moves += 1
-                        self.lbl_total_moves.setText("Total Number of Moves: "
+                        self.lbl_num_moves.setText("Number of Moves: "
                                                      + str(num_moves))
                         print("    Lift Floor (Delivering):", lift_floor)
 
@@ -426,10 +432,14 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 # Marks the person as delivered, and increases
                                 # count.
                                 num_in_lift -= 1
-                                total_delivered += 1
-                                self.lbl_total_delivered.setText(
-                                    "Total Number of People Delivered: " +
-                                    str(total_delivered))
+                                num_delivered += 1
+                                self.lbl_num_in_lift.setText("Number of "
+                                                             "People in "
+                                                             "Lift: " +
+                                                             str(num_in_lift))
+                                self.lbl_num_delivered.setText(
+                                    "Number of People Delivered: " +
+                                    str(num_delivered))
                                 print("\nDelivered person ID", passenger["id"],
                                       "from floor",
                                       passenger["starting_floor"], "to",
