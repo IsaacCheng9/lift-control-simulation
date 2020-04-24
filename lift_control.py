@@ -8,7 +8,7 @@ from typing import Tuple
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator
-from PyQt5.QtWidgets import QDialog, QMainWindow
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
 
 from config_sim_setup import Ui_dialog_config_sim
 from lift_control_setup import Ui_mwindow_lift_control
@@ -366,21 +366,24 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     lift_direction = "Up"
                 elif people_pending[0]["starting_floor"] - lift_floor < 0:
                     lift_direction = "Down"
+                else:
+                    lift_direction = "None"
 
                 # Number of floors the lift is away from collecting someone.
                 floors_away = (abs(int(people_pending[0]["starting_floor"])
                                    - lift_floor))
 
                 # Adds people as pending if they can be delivered en route.
-                for extra in people_overview:
-                    floors_away_extra = (abs(
-                        int(extra["target_floor"]) - lift_floor))
-                    if (extra not in people_pending and
-                        len(people_lift) < int(self.lift_capacity) - 1
-                        and extra["delivered"] is False and
-                        extra["direction"] == lift_direction and
-                            floors_away_extra <= floors_away):
-                        people_pending.append(extra)
+                if lift_direction == "Up" or lift_direction == "Down":
+                    for extra in people_overview:
+                        floors_away_extra = (abs(
+                            int(extra["target_floor"]) - lift_floor))
+                        if (extra not in people_pending and
+                            len(people_lift) < int(self.lift_capacity) - 1
+                            and extra["delivered"] is False and
+                            extra["direction"] == lift_direction and
+                                floors_away_extra <= floors_away):
+                            people_pending.append(extra)
 
                 # Displays an updated version of the list of people pending.
                 print("\nPeople Pending:")
@@ -396,6 +399,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         self.lbl_num_in_lift.setText("Number of People in "
                                                      "Lift: " +
                                                      str(num_in_lift))
+                        QApplication.processEvents()
                         print("\nThere are now", num_in_lift, "people in the "
                               "lift, as person ID", waiting["id"],
                               "has been added to the lift.")
@@ -425,6 +429,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     num_moves += 1
                     self.lbl_num_moves.setText("Number of Moves: "
                                                + str(num_moves))
+                    QApplication.processEvents()
                     print("    Lift Floor (Collecting):", lift_floor)
 
                 # Iterates whilst there are people in the lift.
@@ -445,6 +450,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             self.lbl_num_delivered.setText(
                                 "Number of People Delivered: " +
                                 str(num_delivered))
+                            QApplication.processEvents()
                             print("\nDelivered person ID", passenger["id"],
                                   "from floor", passenger["starting_floor"],
                                   "to", passenger["target_floor"])
@@ -508,6 +514,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         num_moves += 1
                         self.lbl_num_moves.setText("Number of Moves: "
                                                    + str(num_moves))
+                        QApplication.processEvents()
                         print("    Lift Floor (Delivering):", lift_floor)
 
 
