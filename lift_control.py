@@ -196,7 +196,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             sleep(int(self.ui_delay) / 1000)
                             # Moves the lift up or down based on the person's
                             # start floor relative to the lift's current floor,
-                            # and whether the lift needs to change direction.
+                            # and whether the lift needs to change direction,
+                            # then displays the floor moved to.
                             if lift_direction == "Up":
                                 lift_floor += 1
                             else:
@@ -242,8 +243,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         for passenger in people_lift:
                             print(passenger)
 
-                        # Calculates the number of moves needed to reach the
-                        # floor of the next closest person in the lift.
+                        # Displays the number of moves needed to deliver the
+                        # next closest person in the lift.
                         deliver_moves = min(
                             [abs(int(passenger["target_floor"]) - lift_floor)
                              for passenger in people_lift])
@@ -252,7 +253,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
                         # Moves the lift up or down based on the person's
                         # target floor relative to the lift's current floor,
-                        # and whether the lift needs to change direction.
+                        # and whether the lift needs to change direction, then
+                        # displays the floor moved to.
                         if lift_direction == "Up":
                             lift_floor += 1
                         else:
@@ -274,7 +276,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         # anyone in the lift, and drops them off if it has.
                         for passenger in people_lift[:]:
                             if passenger["target_floor"] == lift_floor:
-                                # Marks the person as delivered, and increases
+                                # Marks the person as delivered, and increments
                                 # count.
                                 num_in_lift -= 1
                                 num_delivered += 1
@@ -290,16 +292,20 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                       passenger["starting_floor"], "to",
                                       passenger["target_floor"])
 
-                                # Displays the updated version of the list of
-                                # people.
+                                # Marks the person as delivered.
                                 print("\nPeople Overview:")
                                 for person in people_overview:
                                     if person["id"] == passenger["id"]:
                                         person["status"] = True
-                                    print(person)
 
                                 # Removes the person from the lift.
                                 people_lift.remove(passenger)
+                        
+                        # Displays the updated version of the list of
+                        # people.
+                        print("\nPeople Overview:")
+                        for person in people_overview:
+                            print(person)
 
     def run_simulation_improved(self) -> None:
         """
@@ -316,6 +322,9 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         in the same direction. This strikes a balance between fairness and
         time saving, as people who request the lift first will still have
         greater priority.
+
+        It also optimises moves by delivering people who can be delivered en
+        route of the collection of people.
         """
         num_delivered = 0
         num_moves = 0
@@ -430,7 +439,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             # count.
                             num_in_lift -= 1
                             num_delivered += 1
-                            self.lbl_num_in_lift.setText("Number of People in"
+                            self.lbl_num_in_lift.setText("Number of People in "
                                                          "Lift: " +
                                                          str(num_in_lift))
                             self.lbl_num_delivered.setText(
@@ -439,6 +448,11 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             print("\nDelivered person ID", passenger["id"],
                                   "from floor", passenger["starting_floor"],
                                   "to", passenger["target_floor"])
+
+                            # Marks the person as delivered.
+                            for person in people_overview:
+                                if person["id"] == passenger["id"]:
+                                    person["status"] = True
 
                             # Ensures person is removed from lift and pending.
                             people_lift.remove(passenger)
@@ -449,8 +463,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     # people.
                     print("\nPeople Overview:")
                     for person in people_overview:
-                        if person["id"] == passenger["id"]:
-                            person["status"] = True
                         print(person)
 
                     # Calculates the number of moves needed to reach the
