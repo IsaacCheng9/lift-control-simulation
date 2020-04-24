@@ -185,6 +185,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     num_in_lift += 1
                     self.lbl_num_in_lift.setText("Number of People in Lift: " +
                                                  str(num_in_lift))
+                    QApplication.processEvents()
 
                     # Moves the lift floor by floor to collect the person, and
                     # adds them to the list of people in the lift.
@@ -205,6 +206,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             num_moves += 1
                             self.lbl_num_moves.setText("Number of Moves: " +
                                                        str(num_moves))
+                            QApplication.processEvents()
                             print("    Lift Floor (Collecting):", lift_floor)
 
                         # Changes the lift's direction if they have reached
@@ -233,6 +235,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                                              "People in "
                                                              "Lift: " +
                                                              str(num_in_lift))
+                                QApplication.processEvents()
                                 print("\nThere are now", num_in_lift, "people "
                                       "in the lift, as person", extra["id"],
                                       "has been added to the lift.")
@@ -262,6 +265,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         num_moves += 1
                         self.lbl_num_moves.setText("Number of Moves: "
                                                    + str(num_moves))
+                        QApplication.processEvents()
                         print("    Lift Floor (Delivering):", lift_floor)
 
                         # Changes the lift's direction if they have reached
@@ -287,6 +291,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 self.lbl_num_delivered.setText(
                                     "Number of People Delivered: " +
                                     str(num_delivered))
+                                QApplication.processEvents()
                                 print("\nDelivered person ID", passenger["id"],
                                       "from floor",
                                       passenger["starting_floor"], "to",
