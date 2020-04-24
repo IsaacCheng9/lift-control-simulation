@@ -114,7 +114,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     "starting_floor": starting_floor,
                     "target_floor": target_floor,
                     "current_floor": 0,
-                    "status": False,
+                    "delivered": False,
                     "direction": direction}
                 people_overview.append(person)
 
@@ -169,11 +169,11 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         print("\nLift Floor (Starting):", lift_floor)
 
         # Continues simulation until all target floors are reached.
-        while (next((d for d in people_overview if not d["status"]), None) is
-               not None):
+        while (next((d for d in people_overview if not d["delivered"]), None)
+               is not None):
             # Iterates in order of the people generated (represents a queue).
             for person in people_overview:
-                if person["status"] is False:
+                if person["delivered"] is False:
                     # Calculates the number of moves needed to reach the next
                     # person's starting floor.
                     collect_moves = (int(person["starting_floor"]) -
@@ -225,7 +225,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         for extra in people_overview:
                             if (extra not in people_lift and
                                 extra["starting_floor"] == lift_floor and
-                                extra["status"] is False and
+                                extra["delivered"] is False and
                                     extra["direction"] == person["direction"]):
                                 people_lift.append(extra)
                                 num_in_lift += 1
@@ -296,11 +296,11 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 print("\nPeople Overview:")
                                 for person in people_overview:
                                     if person["id"] == passenger["id"]:
-                                        person["status"] = True
+                                        person["delivered"] = True
 
                                 # Removes the person from the lift.
                                 people_lift.remove(passenger)
-                        
+
                         # Displays the updated version of the list of
                         # people.
                         print("\nPeople Overview:")
@@ -348,13 +348,13 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         print("\nLift Floor (Starting):", lift_floor)
 
         # Continues simulation until all target floors are reached.
-        while (next((d for d in people_overview if not d["status"]), None) is
-               not None):
+        while (next((d for d in people_overview if not d["delivered"]), None)
+               is not None):
             # Processes in order of requests generated (represents a queue
             # in chronological order).
             if not people_pending:
                 for person in people_overview:
-                    if person["status"] is False:
+                    if person["delivered"] is False:
                         people_pending.append(person)
                         break
             else:
@@ -377,7 +377,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         int(extra["target_floor"]) - lift_floor))
                     if (extra not in people_pending and
                         len(people_lift) < int(self.lift_capacity) - 1
-                        and extra["status"] is False and
+                        and extra["delivered"] is False and
                         extra["direction"] == lift_direction and
                             floors_away_extra <= floors_away):
                         people_pending.append(extra)
@@ -452,7 +452,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             # Marks the person as delivered.
                             for person in people_overview:
                                 if person["id"] == passenger["id"]:
-                                    person["status"] = True
+                                    person["delivered"] = True
 
                             # Ensures person is removed from lift and pending.
                             people_lift.remove(passenger)
@@ -474,7 +474,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             if (extra not in people_lift and
                                 len(people_lift) < int(self.lift_capacity)
                                 and extra["starting_floor"] == lift_floor
-                                and extra["status"] is False and
+                                and extra["delivered"] is False and
                                 extra["direction"] ==
                                     people_lift[0]["direction"]):
                                 people_lift.append(extra)
