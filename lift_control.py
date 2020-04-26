@@ -31,7 +31,7 @@ def setup_logging():
 
 
 class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
-    """Contains the dialog window for inventory management."""
+    """Contains the main window for the lift control simulation."""
 
     def __init__(self):
         super().__init__()
