@@ -60,6 +60,20 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="btn_generate_new_sim">
+         <property name="text">
+          <string>Generate New Simulation</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="vert_line_buttons">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
        <item alignment="Qt::AlignLeft">
         <widget class="QPushButton" name="btn_run_sim_naive">
          <property name="text">

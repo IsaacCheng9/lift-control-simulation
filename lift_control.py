@@ -44,6 +44,9 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
         # Connects 'New Simulation' button to the new simulation dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
+        # Connects 'Generate New Simulation' button to generate a new
+        # simulation with the current configuration settings.
+        self.btn_generate_new_sim.clicked.connect(self.generate_new_sim)
         # Connects 'Run Simulation (Naive)' button to run the simulation with
         # the naive (mechanical) algorithm.
         self.btn_run_sim_naive.clicked.connect(
@@ -71,9 +74,6 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
     def save_sim(self):
         """Saves the lift simulation settings."""
-        # Empties the list of people generated to overwrite previous config.
-        people_overview = []
-
         # Gets the inputs for the new sale.
         self.num_floors = self.Dialog.line_edit_num_floors.text()
         self.num_people = self.Dialog.line_edit_num_people.text()
@@ -90,43 +90,51 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
             self.Dialog.lbl_save_successful.setText(
                 "Configuration saved successfully!")
 
-            # Generates people and their lift statuses as a list of
-            # dictionaries.
-            for i in range(int(self.num_people)):
-                # Creates a random starting floor.
-                starting_floor = random.randrange(0, int(self.num_floors))
-
-                # Creates a target floor which is different to starting floor.
-                while True:
-                    target_floor = random.randrange(0, int(self.num_floors))
-                    if starting_floor != target_floor:
-                        break
-
-                # Calculates the direction the person will be going.
-                if target_floor - starting_floor > 0:
-                    direction = "Up"
-                else:
-                    direction = "Down"
-
-                # Adds the person dictionary to the list.
-                person = {
-                    "id": i,
-                    "starting_floor": starting_floor,
-                    "target_floor": target_floor,
-                    "current_floor": 0,
-                    "delivered": False,
-                    "direction": direction}
-                people_overview.append(person)
-
-            # Saves the list of people to a JSON file.
-            with open("people_overview.json", "w") as outfile:
-                json.dump(people_overview, outfile,
-                          ensure_ascii=False, indent=4)
+            # Generates a new simulation with the new configuration settings.
+            self.generate_new_sim()
         else:
             # Notifies the user that their configuration was not saved
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Please fill all input fields to save your configuration.")
+
+    def generate_new_sim(self) -> None:
+        """Generates a new simulation with current configuration settings."""
+        # Empties the list of people generated to overwrite previous sim.
+        people_overview = []
+
+        # Generates people and their lift statuses as a list of
+        # dictionaries.
+        for i in range(int(self.num_people)):
+            # Creates a random starting floor.
+            starting_floor = random.randrange(0, int(self.num_floors))
+
+            # Creates a target floor which is different to starting floor.
+            while True:
+                target_floor = random.randrange(0, int(self.num_floors))
+                if starting_floor != target_floor:
+                    break
+
+            # Calculates the direction the person will be going.
+            if target_floor - starting_floor > 0:
+                direction = "Up"
+            else:
+                direction = "Down"
+
+            # Adds the person dictionary to the list.
+            person = {
+                "id": i,
+                "starting_floor": starting_floor,
+                "target_floor": target_floor,
+                "current_floor": 0,
+                "delivered": False,
+                "direction": direction}
+            people_overview.append(person)
+
+        # Saves the list of people to a JSON file.
+        with open("people_overview.json", "w") as outfile:
+            json.dump(people_overview, outfile,
+                      ensure_ascii=False, indent=4)
 
     def run_simulation_naive(self) -> None:
         """
