@@ -156,7 +156,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         the top or the bottom floor respectively.
         """
         num_delivered = 0
-        num_moves = 0
+        distance_travelled = 0
         num_in_lift = 0
         people_lift = []
         lift_floor = 0
@@ -211,9 +211,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 lift_floor += 1
                             else:
                                 lift_floor -= 1
-                            num_moves += 1
-                            self.lbl_num_moves.setText("Number of Moves: " +
-                                                       str(num_moves))
+                            distance_travelled += 1
+                            self.lbl_distance_travelled.setText(
+                                "Total Distance Travelled: " +
+                                str(distance_travelled))
                             QApplication.processEvents()
                             print("    Lift Floor (Collecting):", lift_floor)
 
@@ -270,9 +271,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             lift_floor += 1
                         else:
                             lift_floor -= 1
-                        num_moves += 1
-                        self.lbl_num_moves.setText("Number of Moves: "
-                                                   + str(num_moves))
+                        distance_travelled += 1
+                        self.lbl_distance_travelled.setText(
+                            "Total Distance Travelled: " +
+                            str(distance_travelled))
                         QApplication.processEvents()
                         print("    Lift Floor (Delivering):", lift_floor)
 
@@ -340,7 +342,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         route of the collection of people.
         """
         num_delivered = 0
-        num_moves = 0
+        distance_travelled = 0
         num_in_lift = 0
         people_pending = []
         people_lift = []
@@ -439,9 +441,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         lift_floor += 1
                     else:
                         lift_floor -= 1
-                    num_moves += 1
-                    self.lbl_num_moves.setText("Number of Moves: "
-                                               + str(num_moves))
+                    distance_travelled += 1
+                    self.lbl_distance_travelled.setText(
+                        "Total Distance Travelled: " +
+                        str(distance_travelled))
                     QApplication.processEvents()
                     print("    Lift Floor (Collecting):", lift_floor)
 
@@ -524,9 +527,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         else:
                             lift_floor -= 1
                             lift_direction = "Down"
-                        num_moves += 1
-                        self.lbl_num_moves.setText("Number of Moves: "
-                                                   + str(num_moves))
+                        distance_travelled += 1
+                        self.lbl_distance_travelled.setText(
+                            "Total Distance Travelled: " +
+                            str(distance_travelled))
                         QApplication.processEvents()
                         print("    Lift Floor (Delivering):", lift_floor)
 

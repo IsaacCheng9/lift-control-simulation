@@ -118,9 +118,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_num_moves">
+      <widget class="QLabel" name="lbl_distance_travelled">
        <property name="text">
-        <string>Number of Moves: 0</string>
+        <string>Total Distance Travelled: 0</string>
        </property>
       </widget>
      </item>
