@@ -11,15 +11,20 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
 
 from config_sim_setup import Ui_dialog_config_sim
-from lift_control_setup import Ui_mwindow_lift_control
+from main_menu_setup import Ui_mwindow_main_menu
+from sim_2_floors_setup import Ui_mwindow_sim_2_floors
+from sim_3_floors_setup import Ui_mwindow_sim_3_floors
+from sim_4_floors_setup import Ui_mwindow_sim_4_floors
+from sim_5_floors_setup import Ui_mwindow_sim_5_floors
+from sim_6_floors_setup import Ui_mwindow_sim_6_floors
 
 
 def main() -> None:
     """Opens the program window, and exits program when window is closed."""
     app = QtWidgets.QApplication(sys.argv)
     setup_logging()
-    mwindow_lift_control = LiftControlWindow()
-    mwindow_lift_control.show()
+    mwindow_main_menu = MainMenuWindow()
+    mwindow_main_menu.show()
     sys.exit(app.exec())
 
 
@@ -30,31 +35,37 @@ def setup_logging():
     logging.debug("Lift Control program started.")
 
 
-class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
+class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
     """Contains the main window for the lift control simulation."""
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
+        # Reads existing JSON files for list of people.
+        with open("people_overview.json", "r") as infile:
+            people_overview = json.load(infile)
+
         self.num_floors = 5
-        self.num_people = 5
+        self.num_people = len(people_overview)
         self.lift_capacity = 5
         self.ui_delay = 250
 
-        # Connects 'New Simulation' button to the new simulation dialog.
+        # Updates labels to show current configuration.
+        self.lbl_num_floors.setText(
+            "Number of Floors: " + str(self.num_floors))
+        self.lbl_num_people.setText(
+            "Number of People: " + str(self.num_people))
+        self.lbl_lift_capacity.setText(
+            "Lift Capacity: " + str(self.lift_capacity))
+        self.lbl_ui_delay.setText(
+            "UI Delay: " + str(self.ui_delay))
+
+        # Connects 'Configure Simulation' button to the configure simulation
+        # dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
-        # Connects 'Generate New Simulation' button to generate a new
-        # simulation with the current configuration settings.
-        self.btn_generate_new_sim.clicked.connect(self.generate_new_sim)
-        # Connects 'Run Simulation (Naive)' button to run the simulation with
-        # the naive (mechanical) algorithm.
-        self.btn_run_sim_naive.clicked.connect(
-            lambda: self.run_simulation_naive())
-        # Connects 'Run Simulation (Improved)' button to run the simulation
-        # with the improved algorithm.
-        self.btn_run_sim_improved.clicked.connect(
-            lambda: self.run_simulation_improved())
+        # Connects 'Open Simulation' button to the relevant simulation window.
+        self.btn_open_sim.clicked.connect(self.open_mwindow_lift_sim)
 
     def open_dialog_config_sim(self) -> None:
         """Opens the dialog for the user to configure their simulation."""
@@ -72,6 +83,34 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
         self.Dialog.open()
 
+    def open_mwindow_lift_sim(self) -> None:
+        """Opens the main window for simulating five people."""
+        if int(self.num_floors) == 2:
+            self.MWindow = LiftSim2FloorsWindow()
+        elif int(self.num_floors) == 3:
+            self.MWindow = LiftSim3FloorsWindow()
+        elif int(self.num_floors) == 4:
+            self.MWindow = LiftSim4FloorsWindow()
+        elif int(self.num_floors) == 5:
+            self.MWindow = LiftSim5FloorsWindow()
+        else:
+            self.MWindow = LiftSim6FloorsWindow()
+
+        # Connects 'Generate New Simulation' button to generate a new
+        # simulation with the current configuration settings.
+        self.MWindow.btn_generate_new_sim.clicked.connect(
+            self.generate_new_sim)
+        # Connects 'Run Simulation (Naive)' button to run the simulation with
+        # the naive (mechanical) algorithm.
+        self.MWindow.btn_run_sim_naive.clicked.connect(
+            lambda: self.run_simulation_naive())
+        # Connects 'Run Simulation (Improved)' button to run the simulation
+        # with the improved algorithm.
+        self.MWindow.btn_run_sim_improved.clicked.connect(
+            lambda: self.run_simulation_improved())
+
+        self.MWindow.show()
+
     def save_sim(self):
         """Saves the lift simulation settings."""
         # Gets the inputs for the new sale.
@@ -83,20 +122,47 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
         # Validates against inputs of null and zero.
         if (self.num_floors != "" and self.num_people != "" and
                 self.lift_capacity != "" and self.ui_delay != "" and
-                int(self.num_floors) > 0 and int(self.num_people) > 0 and
+                int(self.num_floors) > 1 and int(self.num_people) > 0 and
                 int(self.lift_capacity) > 0 and int(self.ui_delay) > 0):
             # Notifies the user that their configuration was saved
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Configuration saved successfully!")
-
             # Generates a new simulation with the new configuration settings.
             self.generate_new_sim()
+            # Updates labels to show current configuration.
+            self.lbl_num_floors.setText(
+                "Number of Floors: " + str(self.num_floors))
+            self.lbl_num_people.setText(
+                "Number of People: " + str(self.num_people))
+            self.lbl_lift_capacity.setText(
+                "Lift Capacity: " + str(self.lift_capacity))
+            self.lbl_ui_delay.setText(
+                "UI Delay: " + str(self.ui_delay))
+            # Updates 'Open Simulation' button to open the relevant
+            # simulation window.
+            self.btn_open_sim.clicked.connect(self.open_mwindow_lift_sim)
+
+        elif int(self.num_floors) <= 1:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure at least two floors!")
+        elif int(self.num_people) <= 0:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure at least one person!")
+        elif int(self.lift_capacity) <= 0:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure a lift capacity of at least one person!")
+        elif int(self.ui_delay) <= 0:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure a UI delay of at least one millisecond!")
         else:
-            # Notifies the user that their configuration was not saved
-            # successfully.
+            # Notifies the user that they need fill in all fields.
             self.Dialog.lbl_save_successful.setText(
                 "Please fill all input fields to save your configuration.")
+
+    def update_simulation_window(self):
+        """Updates simulation window depending on number of floors."""
+        pass
 
     def generate_new_sim(self) -> None:
         """Generates a new simulation with current configuration settings."""
@@ -191,8 +257,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
                     # Updates the number of people in the lift.
                     num_in_lift += 1
-                    self.lbl_num_in_lift.setText("Number of People in Lift: " +
-                                                 str(num_in_lift))
+                    self.MWindow.lbl_num_in_lift.setText(
+                        "Number of People in Lift: " + str(num_in_lift))
                     QApplication.processEvents()
 
                     # Moves the lift floor by floor to collect the person, and
@@ -212,7 +278,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             else:
                                 lift_floor -= 1
                             distance_travelled += 1
-                            self.lbl_distance_travelled.setText(
+                            self.MWindow.lbl_distance_travelled.setText(
                                 "Total Distance Travelled: " +
                                 str(distance_travelled))
                             QApplication.processEvents()
@@ -240,10 +306,9 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                     extra["direction"] == person["direction"]):
                                 people_lift.append(extra)
                                 num_in_lift += 1
-                                self.lbl_num_in_lift.setText("Number of "
-                                                             "People in "
-                                                             "Lift: " +
-                                                             str(num_in_lift))
+                                self.MWindow.lbl_num_in_lift.setText(
+                                    "Number of People in Lift: " +
+                                    str(num_in_lift))
                                 QApplication.processEvents()
                                 print("\nThere are now", num_in_lift, "people "
                                       "in the lift, as person", extra["id"],
@@ -272,7 +337,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         else:
                             lift_floor -= 1
                         distance_travelled += 1
-                        self.lbl_distance_travelled.setText(
+                        self.MWindow.lbl_distance_travelled.setText(
                             "Total Distance Travelled: " +
                             str(distance_travelled))
                         QApplication.processEvents()
@@ -294,11 +359,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                                 # count.
                                 num_in_lift -= 1
                                 num_delivered += 1
-                                self.lbl_num_in_lift.setText("Number of "
-                                                             "People in "
-                                                             "Lift: " +
-                                                             str(num_in_lift))
-                                self.lbl_num_delivered.setText(
+                                self.MWindow.lbl_num_in_lift.setText(
+                                    "Number of People in Lift: " +
+                                    str(num_in_lift))
+                                self.MWindow.lbl_num_delivered.setText(
                                     "Number of People Delivered: " +
                                     str(num_delivered))
                                 QApplication.processEvents()
@@ -411,9 +475,8 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                         people_lift.append(waiting)
                         people_pending.remove(waiting)
                         num_in_lift += 1
-                        self.lbl_num_in_lift.setText("Number of People in "
-                                                     "Lift: " +
-                                                     str(num_in_lift))
+                        self.MWindow.lbl_num_in_lift.setText(
+                            "Number of People in Lift: " + str(num_in_lift))
                         QApplication.processEvents()
                         print("\nThere are now", num_in_lift, "people in the "
                               "lift, as person ID", waiting["id"],
@@ -442,7 +505,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                     else:
                         lift_floor -= 1
                     distance_travelled += 1
-                    self.lbl_distance_travelled.setText(
+                    self.MWindow.lbl_distance_travelled.setText(
                         "Total Distance Travelled: " +
                         str(distance_travelled))
                     QApplication.processEvents()
@@ -460,10 +523,10 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             # count.
                             num_in_lift -= 1
                             num_delivered += 1
-                            self.lbl_num_in_lift.setText("Number of People in "
-                                                         "Lift: " +
-                                                         str(num_in_lift))
-                            self.lbl_num_delivered.setText(
+                            self.MWindow.lbl_num_in_lift.setText(
+                                "Number of People in Lift: " +
+                                str(num_in_lift))
+                            self.MWindow.lbl_num_delivered.setText(
                                 "Number of People Delivered: " +
                                 str(num_delivered))
                             QApplication.processEvents()
@@ -528,7 +591,7 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
                             lift_floor -= 1
                             lift_direction = "Down"
                         distance_travelled += 1
-                        self.lbl_distance_travelled.setText(
+                        self.MWindow.lbl_distance_travelled.setText(
                             "Total Distance Travelled: " +
                             str(distance_travelled))
                         QApplication.processEvents()
@@ -537,6 +600,46 @@ class LiftControlWindow(QMainWindow, Ui_mwindow_lift_control):
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
     """Contains the dialog window for creating a new lift simulation."""
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
+class LiftSim2FloorsWindow(QMainWindow, Ui_mwindow_sim_2_floors):
+    """Contains the main window for simulating 2 floors."""
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
+class LiftSim3FloorsWindow(QMainWindow, Ui_mwindow_sim_3_floors):
+    """Contains the main window for simulating 3 floors."""
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
+class LiftSim4FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
+    """Contains the main window for simulating 4 floors."""
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
+class LiftSim5FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
+    """Contains the main window for simulating 5 floors."""
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
+class LiftSim6FloorsWindow(QMainWindow, Ui_mwindow_sim_6_floors):
+    """Contains the main window for simulating 6 floors."""
 
     def __init__(self):
         super().__init__()

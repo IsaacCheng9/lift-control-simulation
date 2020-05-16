@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>mwindow_lift_control</class>
- <widget class="QMainWindow" name="mwindow_lift_control">
+ <class>mwindow_sim_3_floors</class>
+ <widget class="QMainWindow" name="mwindow_sim_3_floors">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Lift Control</string>
+   <string>Simulation - Lift Control</string>
   </property>
   <widget class="QWidget" name="central_widget">
    <widget class="QWidget" name="layoutWidget">
@@ -40,7 +40,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Lift Control</string>
+        <string>Lift Control - Simulation (3 Floors)</string>
        </property>
       </widget>
      </item>
@@ -53,13 +53,6 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="hori_layout_nav">
-       <item alignment="Qt::AlignLeft">
-        <widget class="QPushButton" name="btn_config_sim">
-         <property name="text">
-          <string>Configure Simulation</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QPushButton" name="btn_generate_new_sim">
          <property name="text">
@@ -147,132 +140,15 @@
      </item>
      <item>
       <layout class="QGridLayout" name="grid_layout_sim">
-       <item row="7" column="1">
-        <widget class="QLabel" name="lbl_delivered4">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="lbl_waiting6">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_waiting10">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QLabel" name="lbl_delivered5">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_num_waiting">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Number of People Waiting:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="lbl_delivered7">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLabel" name="lbl_delivered8">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="lbl_waiting5">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QLabel" name="lbl_delivered1">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="lbl_waiting8">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbl_waiting9">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QLabel" name="lbl_delivered2">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="lbl_delivered9">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
+       <item row="1" column="1">
         <widget class="QLabel" name="lbl_delivered3">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="lbl_lift_floors">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Lift Floors:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="lbl_delivered10">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLabel" name="lbl_delivered6">
+       <item row="3" column="1">
+        <widget class="QLabel" name="lbl_delivered1">
          <property name="text">
           <string>0</string>
          </property>
@@ -291,124 +167,82 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="lbl_waiting7">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="lbl_waiting4">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="lbl_waiting3">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="lbl_waiting2">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0">
-        <widget class="QLabel" name="lbl_waiting1">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="2">
-        <widget class="QLabel" name="lbl_floor10">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="lbl_floor9">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLabel" name="lbl_floor8">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="QLabel" name="lbl_floor7">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="2">
-        <widget class="QLabel" name="lbl_floor6">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="2">
-        <widget class="QLabel" name="lbl_floor5">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="2">
-        <widget class="QLabel" name="lbl_floor4">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="2">
         <widget class="QLabel" name="lbl_floor3">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="2">
-        <widget class="QLabel" name="lbl_floor2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_num_waiting">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Number of People Waiting:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="lbl_waiting1">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
-       <item row="10" column="2">
+       <item row="2" column="1">
+        <widget class="QLabel" name="lbl_delivered2">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
         <widget class="QLabel" name="lbl_floor1">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="lbl_floor2">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lbl_waiting2">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_waiting3">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="lbl_lift_floors">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Lift Floors:</string>
+         </property>
+        </widget>
+       </item>
       </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="lbl_key">
-       <property name="font">
-        <font>
-         <italic>false</italic>
-        </font>
-       </property>
-       <property name="text">
-        <string>(White blocks represent floors, and red blocks represent floors with the lift on it.)</string>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="Line" name="hori_line_sim">
@@ -418,14 +252,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_instruction">
+      <widget class="QLabel" name="lbl_key">
        <property name="font">
         <font>
          <italic>true</italic>
         </font>
        </property>
        <property name="text">
-        <string/>
+        <string>(White blocks represent floors, and red blocks represent floors with the lift on it.)</string>
        </property>
       </widget>
      </item>
