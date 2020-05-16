@@ -7,7 +7,7 @@ from time import sleep
 from typing import Tuple
 
 from PyQt5 import QtWidgets
-from PyQt5.QtGui import QIntValidator
+from PyQt5.QtGui import QIntValidator, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
 
 from config_sim_setup import Ui_dialog_config_sim
@@ -84,17 +84,37 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.Dialog.open()
 
     def open_mwindow_lift_sim(self) -> None:
-        """Opens the main window for simulating five people."""
+        """Opens the main window for the lift simulation."""
+        # Sets white and red blocks as images to represent floor lift is on.
+        white_block = QPixmap("white_block.png").scaled(75, 15)
+        red_block = QPixmap("red_block.png").scaled(75, 15)
+        
+        # Opens a different UI depending on the number of floors configured.
         if int(self.num_floors) == 2:
             self.MWindow = LiftSim2FloorsWindow()
+            self.MWindow.lbl_floor1.setPixmap(white_block)
+            self.MWindow.lbl_floor2.setPixmap(white_block)
         elif int(self.num_floors) == 3:
             self.MWindow = LiftSim3FloorsWindow()
+            self.MWindow.lbl_floor1.setPixmap(white_block)
+            self.MWindow.lbl_floor2.setPixmap(white_block)
+            self.MWindow.lbl_floor3.setPixmap(white_block)
         elif int(self.num_floors) == 4:
             self.MWindow = LiftSim4FloorsWindow()
+            self.MWindow.lbl_floor1.setPixmap(white_block)
+            self.MWindow.lbl_floor2.setPixmap(white_block)
+            self.MWindow.lbl_floor3.setPixmap(white_block)
+            self.MWindow.lbl_floor4.setPixmap(white_block)
         elif int(self.num_floors) == 5:
             self.MWindow = LiftSim5FloorsWindow()
+            self.MWindow.lbl_floor1.setPixmap(white_block)
+            self.MWindow.lbl_floor2.setPixmap(white_block)
+            self.MWindow.lbl_floor3.setPixmap(white_block)
+            self.MWindow.lbl_floor4.setPixmap(white_block)
+            self.MWindow.lbl_floor5.setPixmap(white_block)
         else:
             self.MWindow = LiftSim6FloorsWindow()
+
 
         # Connects 'Generate New Simulation' button to generate a new
         # simulation with the current configuration settings.
