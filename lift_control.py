@@ -642,7 +642,7 @@ class LiftSim3FloorsWindow(QMainWindow, Ui_mwindow_sim_3_floors):
         self.setupUi(self)
 
 
-class LiftSim4FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
+class LiftSim4FloorsWindow(QMainWindow, Ui_mwindow_sim_4_floors):
     """Contains the main window for simulating 4 floors."""
 
     def __init__(self):
