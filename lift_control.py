@@ -205,15 +205,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
         # Increments waiting and delivered stats for each floor accordingly.
         for person in people_overview:
-            if person["starting_floor"] == 0 and person["current_floor"] == 0:
+            if person["start_floor"] == 0 and person["current_floor"] == 0:
                 self.floor_0_waiting += 1
-            if person["starting_floor"] == 1 and person["current_floor"] == 1:
+            if person["start_floor"] == 1 and person["current_floor"] == 1:
                 self.floor_1_waiting += 1
-            if person["starting_floor"] == 2 and person["current_floor"] == 2:
+            if person["start_floor"] == 2 and person["current_floor"] == 2:
                 self.floor_2_waiting += 1
-            if person["starting_floor"] == 3 and person["current_floor"] == 3:
+            if person["start_floor"] == 3 and person["current_floor"] == 3:
                 self.floor_3_waiting += 1
-            if person["starting_floor"] == 4 and person["current_floor"] == 4:
+            if person["start_floor"] == 4 and person["current_floor"] == 4:
                 self.floor_4_waiting += 1
             if person["target_floor"] == 0 and person["current_floor"] == 0:
                 self.floor_0_delivered += 1
@@ -277,16 +277,16 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # dictionaries.
         for i in range(int(self.num_people)):
             # Creates a random starting floor.
-            starting_floor = random.randrange(0, int(self.num_floors))
+            start_floor = random.randrange(0, int(self.num_floors))
 
             # Creates a target floor which is different to starting floor.
             while True:
                 target_floor = random.randrange(0, int(self.num_floors))
-                if starting_floor != target_floor:
+                if start_floor != target_floor:
                     break
 
             # Calculates the direction the person will be going.
-            if target_floor - starting_floor > 0:
+            if target_floor - start_floor > 0:
                 direction = "Up"
             else:
                 direction = "Down"
@@ -294,9 +294,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             # Adds the person dictionary to the list.
             person = {
                 "id": i,
-                "starting_floor": starting_floor,
+                "start_floor": start_floor,
                 "target_floor": target_floor,
-                "current_floor": starting_floor,
+                "current_floor": start_floor,
                 "delivered": False,
                 "direction": direction}
             people_overview.append(person)
@@ -373,7 +373,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 if person["delivered"] is False:
                     # Calculates the number of moves needed to reach the next
                     # person's starting floor.
-                    collect_moves = (int(person["starting_floor"]) -
+                    collect_moves = (int(person["start_floor"]) -
                                      self.lift_floor)
                     print("\nFloor Differential (Collecting):",
                           abs(collect_moves))
@@ -382,7 +382,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     # adds them to the list of people in the lift.
                     while True:
                         # Doesn't move the lift if on correct floor.
-                        if self.lift_floor == person["starting_floor"]:
+                        if self.lift_floor == person["start_floor"]:
                             # Updates the number of people in the lift.
                             num_in_lift += 1
                             self.MWindow.lbl_num_in_lift.setText(
@@ -424,7 +424,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # same direction and collects them if they are.
                         for extra in people_overview:
                             if (extra not in people_lift and
-                                    extra["starting_floor"] == self.lift_floor
+                                    extra["start_floor"] == self.lift_floor
                                     and extra["delivered"] is False and
                                     extra["direction"] == person["direction"]):
                                 people_lift.append(extra)
@@ -504,12 +504,12 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     str(num_delivered))
                                 print("\nDelivered person ID", passenger["id"],
                                       "from floor",
-                                      passenger["starting_floor"], "to",
+                                      passenger["start_floor"], "to",
                                       passenger["target_floor"])
                                 self.MWindow.lbl_update.setText(
                                     "Delivered person ID " +
                                     str(passenger["id"]) + " from floor " +
-                                    str(passenger["starting_floor"]) + " to " +
+                                    str(passenger["start_floor"]) + " to " +
                                     str(passenger["target_floor"]))
                                 QApplication.processEvents()
 
@@ -592,15 +592,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             else:
                 # Calculates if the lift needs to go up or down to collect the
                 # next person.
-                if people_pending[0]["starting_floor"] - self.lift_floor > 0:
+                if people_pending[0]["start_floor"] - self.lift_floor > 0:
                     lift_direction = "Up"
-                elif people_pending[0]["starting_floor"] - self.lift_floor < 0:
+                elif people_pending[0]["start_floor"] - self.lift_floor < 0:
                     lift_direction = "Down"
                 else:
                     lift_direction = "None"
 
                 # Number of floors the lift is away from collecting someone.
-                floors_away = (abs(int(people_pending[0]["starting_floor"])
+                floors_away = (abs(int(people_pending[0]["start_floor"])
                                    - self.lift_floor))
 
                 # Adds people as pending if they can be delivered en route.
@@ -622,7 +622,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
                 # Checks if it needs to pick a pending person up.
                 for waiting in people_pending[:]:
-                    if waiting["starting_floor"] == self.lift_floor:
+                    if waiting["start_floor"] == self.lift_floor:
                         people_lift.append(waiting)
                         people_pending.remove(waiting)
                         num_in_lift += 1
@@ -644,7 +644,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     # Displays the number of moves needed to collect the next
                     # person.
                     collect_moves = abs(
-                        int(people_pending[0]["starting_floor"]) -
+                        int(people_pending[0]["start_floor"]) -
                         self.lift_floor)
                     print("\nFloor Differential (Collecting):",
                           collect_moves)
@@ -692,12 +692,12 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 "Number of People Delivered: " +
                                 str(num_delivered))
                             print("\nDelivered person ID", passenger["id"],
-                                  "from floor", passenger["starting_floor"],
+                                  "from floor", passenger["start_floor"],
                                   "to", passenger["target_floor"])
                             self.MWindow.lbl_update.setText(
                                 "Delivered person ID " +
                                 str(passenger["id"]) + " from floor " +
-                                str(passenger["starting_floor"]) + " to " +
+                                str(passenger["start_floor"]) + " to " +
                                 str(passenger["target_floor"]))
                             QApplication.processEvents()
 
@@ -719,7 +719,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         for extra in people_overview:
                             if (extra not in people_lift and
                                     len(people_lift) < int(self.lift_capacity)
-                                    and extra["starting_floor"] ==
+                                    and extra["start_floor"] ==
                                     self.lift_floor and extra["delivered"] is
                                     False and extra["direction"] ==
                                     people_lift[0]["direction"]):
