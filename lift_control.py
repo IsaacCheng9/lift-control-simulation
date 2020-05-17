@@ -221,7 +221,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.MWindow.lbl_delivered_1.setText(str(self.floor_1_delivered))
             self.MWindow.lbl_floor_0.setPixmap(white_block)
             self.MWindow.lbl_floor_1.setPixmap(white_block)
-            
+
             if int(self.num_floors) >= 3:
                 self.MWindow.lbl_waiting_2.setText(str(self.floor_2_waiting))
                 self.MWindow.lbl_delivered_2.setText(
@@ -248,10 +248,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.MWindow.lbl_floor_3.setPixmap(red_block)
             elif self.lift_floor == 4:
                 self.MWindow.lbl_floor_4.setPixmap(red_block)
-
-    def update_simulation_window(self):
-        """Updates simulation window depending on number of floors."""
-        pass
 
     def generate_new_sim(self) -> None:
         """Generates a new simulation with current configuration settings."""
