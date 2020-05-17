@@ -73,7 +73,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lbl_lift_capacity.setText(
             "Lift Capacity: " + str(self.lift_capacity))
         self.lbl_ui_delay.setText(
-            "UI Delay: " + str(self.ui_delay))
+            "UI Delay (Milliseconds): " + str(self.ui_delay))
 
         # Connects 'Configure Simulation' button to the configure simulation
         # dialog.
