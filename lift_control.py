@@ -284,7 +284,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 target_floor = random.randrange(0, int(self.num_floors))
                 if start_floor != target_floor:
                     break
-
+                    
             # Calculates the direction the person will be going.
             if target_floor - start_floor > 0:
                 direction = "Up"
