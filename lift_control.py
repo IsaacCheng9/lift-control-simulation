@@ -20,7 +20,7 @@ from sim_6_floors_setup import Ui_mwindow_sim_6_floors
 
 
 def main() -> None:
-    """Opens the program window, and exits program when window is closed."""
+    """Opens the main menu on program startup."""
     app = QtWidgets.QApplication(sys.argv)
     setup_logging()
     mwindow_main_menu = MainMenuWindow()
@@ -29,7 +29,7 @@ def main() -> None:
 
 
 def setup_logging():
-    """Sets up the logging system to automatically log actions to log file."""
+    """Sets up the logging system for debugging purposes."""
     logging.basicConfig(filename="logs.txt", level=logging.DEBUG,
                         format="%(asctime)s - %(levelname)s - %(message)s")
     logging.debug("Lift Control program started.")
@@ -49,7 +49,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.num_floors = 5
         self.num_people = len(people_overview)
         self.lift_capacity = 5
-        self.ui_delay = 250
+        self.ui_delay = 500
 
         # Updates labels to show current configuration.
         self.lbl_num_floors.setText(
@@ -130,7 +130,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
         self.ui_delay = self.Dialog.line_edit_ui_delay.text()
 
-        # Validates against inputs of null and zero.
+        # Updates configuration if inputs are all valid.
         if (self.num_floors != "" and self.num_people != "" and
                 self.lift_capacity != "" and self.ui_delay != "" and
                 int(self.num_floors) > 1 and int(self.num_people) > 0 and
@@ -152,6 +152,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             # simulation window.
             self.btn_open_sim.clicked.connect(self.open_mwindow_lift_sim)
 
+        # Validates against inputs which are either too small or null.
         elif int(self.num_floors) <= 1:
             self.Dialog.lbl_save_successful.setText(
                 "Please configure at least two floors!")
@@ -176,6 +177,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         Arguments:
             people_overview (list): A list of generated people.
         """
+        # Resets floor statistics to recalculate them.
         self.floor_0_waiting = 0
         self.floor_1_waiting = 0
         self.floor_2_waiting = 0
@@ -187,6 +189,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.floor_3_delivered = 0
         self.floor_4_delivered = 0
 
+        # Increments waiting and delivered stats for each floor accordingly.
         for person in people_overview:
             if person["starting_floor"] == 0 and person["current_floor"] == 0:
                 self.floor_0_waiting += 1
@@ -210,9 +213,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.floor_4_delivered += 1
 
         # Sets white and red blocks as images to represent floor lift is on.
-        white_block = QPixmap("white_block.png").scaled(75, 15)
-        red_block = QPixmap("red_block.png").scaled(75, 15)
+        white_block = QPixmap("white_block.png").scaled(150, 15)
+        red_block = QPixmap("red_block.png").scaled(125, 15)
 
+        # Updates UI with appropriate values depending on number of floors.
         if int(self.num_floors) <= 5:
             self.MWindow.lbl_waiting_0.setText(str(self.floor_0_waiting))
             self.MWindow.lbl_waiting_1.setText(str(self.floor_1_waiting))
@@ -397,7 +401,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         if (self.lift_floor == int(self.num_floors) - 1 and
                                 lift_direction == "Up"):
                             lift_direction = "Down"
-
                     people_lift.append(person)
 
                     # Iterates whilst there are people in the lift.
@@ -507,6 +510,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print("\nPeople Overview (Simulation Complete):")
         for person in people_overview:
             print(person)
+
+        sleep(int(self.ui_delay) / 500)
+        self.MWindow.lbl_update.setText("Simulation complete.")
+        QApplication.processEvents()
 
     def run_simulation_improved(self) -> None:
         """
@@ -672,10 +679,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                   "from floor", passenger["starting_floor"],
                                   "to", passenger["target_floor"])
                             self.MWindow.lbl_update.setText(
-                                    "Delivered person ID " +
-                                    str(passenger["id"]) + " from floor " +
-                                    str(passenger["starting_floor"]) + " to " +
-                                    str(passenger["target_floor"]))
+                                "Delivered person ID " +
+                                str(passenger["id"]) + " from floor " +
+                                str(passenger["starting_floor"]) + " to " +
+                                str(passenger["target_floor"]))
                             QApplication.processEvents()
 
                             # Marks the person as delivered.
@@ -753,6 +760,11 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print("\nPeople Overview (Simulation Complete):")
         for person in people_overview:
             print(person)
+
+        sleep(int(self.ui_delay) / 500)
+        self.MWindow.lbl_update.setText("Simulation complete.")
+        QApplication.processEvents()
+
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
     """Contains the dialog window for creating a new lift simulation."""
