@@ -141,28 +141,28 @@
      <item>
       <layout class="QGridLayout" name="grid_layout_sim">
        <item row="3" column="1">
-        <widget class="QLabel" name="lbl_delivered3">
+        <widget class="QLabel" name="lbl_delivered_2">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="5" column="2">
-        <widget class="QLabel" name="lbl_floor1">
+        <widget class="QLabel" name="lbl_floor_0">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="2" column="2">
-        <widget class="QLabel" name="lbl_floor4">
+        <widget class="QLabel" name="lbl_floor_3">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="lbl_num_delivered2">
+        <widget class="QLabel" name="lbl_delivered_floors">
          <property name="font">
           <font>
            <weight>50</weight>
@@ -175,21 +175,21 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="lbl_delivered5">
+        <widget class="QLabel" name="lbl_delivered_4">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="4" column="2">
-        <widget class="QLabel" name="lbl_floor2">
+        <widget class="QLabel" name="lbl_floor_1">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="lbl_num_waiting">
+        <widget class="QLabel" name="lbl_waiting_floors">
          <property name="font">
           <font>
            <weight>50</weight>
@@ -202,7 +202,7 @@
         </widget>
        </item>
        <item row="5" column="0">
-        <widget class="QLabel" name="lbl_waiting1">
+        <widget class="QLabel" name="lbl_waiting_0">
          <property name="text">
           <string>0</string>
          </property>
@@ -222,63 +222,63 @@
         </widget>
        </item>
        <item row="3" column="2">
-        <widget class="QLabel" name="lbl_floor3">
+        <widget class="QLabel" name="lbl_floor_2">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="lbl_waiting2">
+        <widget class="QLabel" name="lbl_waiting_1">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="lbl_waiting4">
+        <widget class="QLabel" name="lbl_waiting_3">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QLabel" name="lbl_delivered1">
+        <widget class="QLabel" name="lbl_delivered_0">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="lbl_waiting3">
+        <widget class="QLabel" name="lbl_waiting_2">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QLabel" name="lbl_floor5">
+        <widget class="QLabel" name="lbl_floor_4">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="lbl_delivered4">
+        <widget class="QLabel" name="lbl_delivered_3">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="lbl_waiting5">
+        <widget class="QLabel" name="lbl_waiting_4">
          <property name="text">
           <string>0</string>
          </property>
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QLabel" name="lbl_delivered2">
+        <widget class="QLabel" name="lbl_delivered_1">
          <property name="text">
           <string>0</string>
          </property>
@@ -321,7 +321,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="status_bar"/>
  </widget>
  <resources/>
  <connections/>

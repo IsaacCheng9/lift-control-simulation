@@ -96,9 +96,6 @@ class Ui_mwindow_sim_6_floors(object):
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.vert_layout_lift_control.addItem(spacerItem1)
         mwindow_sim_6_floors.setCentralWidget(self.central_widget)
-        self.status_bar = QtWidgets.QStatusBar(mwindow_sim_6_floors)
-        self.status_bar.setObjectName("status_bar")
-        mwindow_sim_6_floors.setStatusBar(self.status_bar)
 
         self.retranslateUi(mwindow_sim_6_floors)
         QtCore.QMetaObject.connectSlotsByName(mwindow_sim_6_floors)

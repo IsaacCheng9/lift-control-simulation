@@ -85,36 +85,26 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
     def open_mwindow_lift_sim(self) -> None:
         """Opens the main window for the lift simulation."""
-        # Sets white and red blocks as images to represent floor lift is on.
-        white_block = QPixmap("white_block.png").scaled(75, 15)
-        red_block = QPixmap("red_block.png").scaled(75, 15)
-        
+        self.lift_floor = 0
+
         # Opens a different UI depending on the number of floors configured.
         if int(self.num_floors) == 2:
             self.MWindow = LiftSim2FloorsWindow()
-            self.MWindow.lbl_floor1.setPixmap(white_block)
-            self.MWindow.lbl_floor2.setPixmap(white_block)
         elif int(self.num_floors) == 3:
             self.MWindow = LiftSim3FloorsWindow()
-            self.MWindow.lbl_floor1.setPixmap(white_block)
-            self.MWindow.lbl_floor2.setPixmap(white_block)
-            self.MWindow.lbl_floor3.setPixmap(white_block)
         elif int(self.num_floors) == 4:
             self.MWindow = LiftSim4FloorsWindow()
-            self.MWindow.lbl_floor1.setPixmap(white_block)
-            self.MWindow.lbl_floor2.setPixmap(white_block)
-            self.MWindow.lbl_floor3.setPixmap(white_block)
-            self.MWindow.lbl_floor4.setPixmap(white_block)
         elif int(self.num_floors) == 5:
             self.MWindow = LiftSim5FloorsWindow()
-            self.MWindow.lbl_floor1.setPixmap(white_block)
-            self.MWindow.lbl_floor2.setPixmap(white_block)
-            self.MWindow.lbl_floor3.setPixmap(white_block)
-            self.MWindow.lbl_floor4.setPixmap(white_block)
-            self.MWindow.lbl_floor5.setPixmap(white_block)
         else:
             self.MWindow = LiftSim6FloorsWindow()
 
+        # Reads existing JSON files for list of people.
+        with open("people_overview.json", "r") as infile:
+            people_overview = json.load(infile)
+
+        # Sets initial values for people waiting on each floor.
+        self.update_floors(people_overview)
 
         # Connects 'Generate New Simulation' button to generate a new
         # simulation with the current configuration settings.
@@ -180,6 +170,85 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.Dialog.lbl_save_successful.setText(
                 "Please fill all input fields to save your configuration.")
 
+    def update_floors(self, people_overview: list) -> list:
+        """
+        Updates values in UI for each floor.
+
+        Arguments:
+            people_overview (list): A list of generated people.
+        """
+        self.floor_0_waiting = 0
+        self.floor_1_waiting = 0
+        self.floor_2_waiting = 0
+        self.floor_3_waiting = 0
+        self.floor_4_waiting = 0
+        self.floor_0_delivered = 0
+        self.floor_1_delivered = 0
+        self.floor_2_delivered = 0
+        self.floor_3_delivered = 0
+        self.floor_4_delivered = 0
+
+        for person in people_overview:
+            if person["starting_floor"] == 0 and person["current_floor"] == 0:
+                self.floor_0_waiting += 1
+            if person["starting_floor"] == 1 and person["current_floor"] == 1:
+                self.floor_1_waiting += 1
+            if person["starting_floor"] == 2 and person["current_floor"] == 2:
+                self.floor_2_waiting += 1
+            if person["starting_floor"] == 3 and person["current_floor"] == 3:
+                self.floor_3_waiting += 1
+            if person["starting_floor"] == 4 and person["current_floor"] == 4:
+                self.floor_4_waiting += 1
+            if person["target_floor"] == 0 and person["current_floor"] == 0:
+                self.floor_0_delivered += 1
+            if person["target_floor"] == 1 and person["current_floor"] == 1:
+                self.floor_1_delivered += 1
+            if person["target_floor"] == 2 and person["current_floor"] == 2:
+                self.floor_2_delivered += 1
+            if person["target_floor"] == 3 and person["current_floor"] == 3:
+                self.floor_3_delivered += 1
+            if person["target_floor"] == 4 and person["current_floor"] == 4:
+                self.floor_4_delivered += 1
+
+        # Sets white and red blocks as images to represent floor lift is on.
+        white_block = QPixmap("white_block.png").scaled(75, 15)
+        red_block = QPixmap("red_block.png").scaled(75, 15)
+
+        if int(self.num_floors) <= 5:
+            self.MWindow.lbl_waiting_0.setText(str(self.floor_0_waiting))
+            self.MWindow.lbl_waiting_1.setText(str(self.floor_1_waiting))
+            self.MWindow.lbl_delivered_0.setText(str(self.floor_0_delivered))
+            self.MWindow.lbl_delivered_1.setText(str(self.floor_1_delivered))
+            self.MWindow.lbl_floor_0.setPixmap(white_block)
+            self.MWindow.lbl_floor_1.setPixmap(white_block)
+            
+            if int(self.num_floors) >= 3:
+                self.MWindow.lbl_waiting_2.setText(str(self.floor_2_waiting))
+                self.MWindow.lbl_delivered_2.setText(
+                    str(self.floor_2_delivered))
+                self.MWindow.lbl_floor_2.setPixmap(white_block)
+            if int(self.num_floors) >= 4:
+                self.MWindow.lbl_waiting_3.setText(str(self.floor_3_waiting))
+                self.MWindow.lbl_delivered_3.setText(
+                    str(self.floor_3_delivered))
+                self.MWindow.lbl_floor_3.setPixmap(white_block)
+            if int(self.num_floors) == 5:
+                self.MWindow.lbl_waiting_4.setText(str(self.floor_4_waiting))
+                self.MWindow.lbl_delivered_4.setText(
+                    str(self.floor_4_delivered))
+                self.MWindow.lbl_floor_4.setPixmap(white_block)
+
+            if self.lift_floor == 0:
+                self.MWindow.lbl_floor_0.setPixmap(red_block)
+            elif self.lift_floor == 1:
+                self.MWindow.lbl_floor_1.setPixmap(red_block)
+            elif self.lift_floor == 2:
+                self.MWindow.lbl_floor_2.setPixmap(red_block)
+            elif self.lift_floor == 3:
+                self.MWindow.lbl_floor_3.setPixmap(red_block)
+            elif self.lift_floor == 4:
+                self.MWindow.lbl_floor_4.setPixmap(red_block)
+
     def update_simulation_window(self):
         """Updates simulation window depending on number of floors."""
         pass
@@ -212,7 +281,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 "id": i,
                 "starting_floor": starting_floor,
                 "target_floor": target_floor,
-                "current_floor": 0,
+                "current_floor": starting_floor,
                 "delivered": False,
                 "direction": direction}
             people_overview.append(person)
@@ -221,6 +290,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         with open("people_overview.json", "w") as outfile:
             json.dump(people_overview, outfile,
                       ensure_ascii=False, indent=4)
+
+        # Sets initial values for people waiting on each floor.
+        self.update_floors(people_overview)
 
     def run_simulation_naive(self) -> None:
         """
@@ -245,12 +317,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         distance_travelled = 0
         num_in_lift = 0
         people_lift = []
-        lift_floor = 0
+        self.lift_floor = 0
         lift_direction = "Up"
 
         # Reads existing JSON files for list of people.
         with open("people_overview.json", "r") as infile:
             people_overview = json.load(infile)
+
+        # Sets initial values for people waiting on each floor.
+        self.update_floors(people_overview)
 
         # Displays configuration, generated people, and starting lift floor.
         print("\n-------------------------------------------------------------"
@@ -260,7 +335,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print("\nPeople Generated")
         for person in people_overview:
             print(person)
-        print("\nLift Floor (Starting):", lift_floor)
+        print("\nLift Floor (Starting):", self.lift_floor)
 
         # Continues simulation until all target floors are reached.
         while (next((d for d in people_overview if not d["delivered"]), None)
@@ -271,12 +346,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     # Calculates the number of moves needed to reach the next
                     # person's starting floor.
                     collect_moves = (int(person["starting_floor"]) -
-                                     lift_floor)
+                                     self.lift_floor)
                     print("\nFloor Differential (Collecting):",
                           abs(collect_moves))
 
-                    # Updates the number of people in the lift.
-                    num_in_lift += 1
                     self.MWindow.lbl_num_in_lift.setText(
                         "Number of People in Lift: " + str(num_in_lift))
                     QApplication.processEvents()
@@ -285,7 +358,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     # adds them to the list of people in the lift.
                     while True:
                         # Doesn't move the lift if on correct floor.
-                        if lift_floor == person["starting_floor"]:
+                        if self.lift_floor == person["starting_floor"]:
+                            # Updates the number of people in the lift.
+                            num_in_lift += 1
                             break
                         else:
                             sleep(int(self.ui_delay) / 1000)
@@ -294,21 +369,23 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             # and whether the lift needs to change direction,
                             # then displays the floor moved to.
                             if lift_direction == "Up":
-                                lift_floor += 1
+                                self.lift_floor += 1
                             else:
-                                lift_floor -= 1
+                                self.lift_floor -= 1
+                            self.update_floors(people_overview)
                             distance_travelled += 1
                             self.MWindow.lbl_distance_travelled.setText(
                                 "Total Distance Travelled: " +
                                 str(distance_travelled))
                             QApplication.processEvents()
-                            print("    Lift Floor (Collecting):", lift_floor)
+                            print("    Lift Floor (Collecting):",
+                                  self.lift_floor)
 
                         # Changes the lift's direction if they have reached
                         # the end.
-                        if lift_floor == 0 and lift_direction == "Down":
+                        if self.lift_floor == 0 and lift_direction == "Down":
                             lift_direction = "Up"
-                        if (lift_floor == int(self.num_floors) and
+                        if (self.lift_floor == int(self.num_floors) and
                                 lift_direction == "Up"):
                             lift_direction = "Down"
                     people_lift.append(person)
@@ -321,7 +398,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # same direction and collects them if they are.
                         for extra in people_overview:
                             if (extra not in people_lift and
-                                extra["starting_floor"] == lift_floor and
+                                extra["starting_floor"] == self.lift_floor and
                                 extra["delivered"] is False and
                                     extra["direction"] == person["direction"]):
                                 people_lift.append(extra)
@@ -343,8 +420,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # Displays the number of moves needed to deliver the
                         # next closest person in the lift.
                         deliver_moves = min(
-                            [abs(int(passenger["target_floor"]) - lift_floor)
-                             for passenger in people_lift])
+                            [abs(int(passenger["target_floor"]) -
+                             self.lift_floor) for passenger in people_lift])
                         print("\nFloor Differential (Delivering):",
                               deliver_moves)
 
@@ -353,28 +430,37 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # and whether the lift needs to change direction, then
                         # displays the floor moved to.
                         if lift_direction == "Up":
-                            lift_floor += 1
+                            self.lift_floor += 1
                         else:
-                            lift_floor -= 1
+                            self.lift_floor -= 1
+
+                        # Updates the current floor of people in lift.
+                        for passenger in people_lift:
+                            for person in people_overview:
+                                if person["id"] == passenger["id"]:
+                                    person["current_floor"] = (
+                                        self.lift_floor)
+                        self.update_floors(people_overview)
+
                         distance_travelled += 1
                         self.MWindow.lbl_distance_travelled.setText(
                             "Total Distance Travelled: " +
                             str(distance_travelled))
                         QApplication.processEvents()
-                        print("    Lift Floor (Delivering):", lift_floor)
+                        print("    Lift Floor (Delivering):", self.lift_floor)
 
                         # Changes the lift's direction if they have reached
                         # the end.
-                        if lift_floor == 0 and lift_direction == "Down":
+                        if self.lift_floor == 0 and lift_direction == "Down":
                             lift_direction = "Up"
-                        if (lift_floor == int(self.num_floors) and
+                        if (self.lift_floor == int(self.num_floors) - 1 and
                                 lift_direction == "Up"):
                             lift_direction = "Down"
 
                         # Checks if the lift has arrived at the target floor of
                         # anyone in the lift, and drops them off if it has.
                         for passenger in people_lift[:]:
-                            if passenger["target_floor"] == lift_floor:
+                            if passenger["target_floor"] == self.lift_floor:
                                 # Marks the person as delivered, and increments
                                 # count.
                                 num_in_lift -= 1
@@ -432,9 +518,23 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         people_lift = []
         lift_floor = 0
 
+        self.floor_0_waiting = 0
+        self.floor_1_waiting = 0
+        self.floor_2_waiting = 0
+        self.floor_3_waiting = 0
+        self.floor_4_waiting = 0
+        self.floor_0_delivered = 0
+        self.floor_1_delivered = 0
+        self.floor_2_delivered = 0
+        self.floor_3_delivered = 0
+        self.floor_4_delivered = 0
+
         # Reads existing JSON files for list of people.
         with open("people_overview.json", "r") as infile:
             people_overview = json.load(infile)
+
+        # Sets initial values for people waiting on each floor.
+        people_overview = self.update_floors(people_overview)
 
         # Displays configuration, generated people, and starting lift floor.
         print("\n-------------------------------------------------------------"

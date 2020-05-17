@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mwindow_main_menu(object):
     def setupUi(self, mwindow_main_menu):
         mwindow_main_menu.setObjectName("mwindow_main_menu")
-        mwindow_main_menu.resize(475, 275)
+        mwindow_main_menu.resize(475, 250)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -92,9 +92,6 @@ class Ui_mwindow_main_menu(object):
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.vert_layout_lift_control.addItem(spacerItem1)
         mwindow_main_menu.setCentralWidget(self.central_widget)
-        self.status_bar = QtWidgets.QStatusBar(mwindow_main_menu)
-        self.status_bar.setObjectName("status_bar")
-        mwindow_main_menu.setStatusBar(self.status_bar)
 
         self.retranslateUi(mwindow_main_menu)
         QtCore.QMetaObject.connectSlotsByName(mwindow_main_menu)
