@@ -287,13 +287,6 @@
       </layout>
      </item>
      <item>
-      <widget class="Line" name="hori_line_sim">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="lbl_key">
        <property name="font">
         <font>
@@ -302,6 +295,20 @@
        </property>
        <property name="text">
         <string>(White blocks represent floors, and red blocks represent floors with the lift on it.)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="hori_line_sim">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_update">
+       <property name="text">
+        <string> </string>
        </property>
       </widget>
      </item>
