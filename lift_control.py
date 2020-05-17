@@ -775,7 +775,7 @@ class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
 
 
 class LiftSim2FloorsWindow(QMainWindow, Ui_mwindow_sim_2_floors):
-    """Contains the main window for simulating 2 floors."""
+    """Contains the main window for simulating two floors."""
 
     def __init__(self):
         super().__init__()
@@ -783,7 +783,7 @@ class LiftSim2FloorsWindow(QMainWindow, Ui_mwindow_sim_2_floors):
 
 
 class LiftSim3FloorsWindow(QMainWindow, Ui_mwindow_sim_3_floors):
-    """Contains the main window for simulating 3 floors."""
+    """Contains the main window for simulating three floors."""
 
     def __init__(self):
         super().__init__()
@@ -791,7 +791,7 @@ class LiftSim3FloorsWindow(QMainWindow, Ui_mwindow_sim_3_floors):
 
 
 class LiftSim4FloorsWindow(QMainWindow, Ui_mwindow_sim_4_floors):
-    """Contains the main window for simulating 4 floors."""
+    """Contains the main window for simulating four floors."""
 
     def __init__(self):
         super().__init__()
@@ -799,7 +799,7 @@ class LiftSim4FloorsWindow(QMainWindow, Ui_mwindow_sim_4_floors):
 
 
 class LiftSim5FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
-    """Contains the main window for simulating 5 floors."""
+    """Contains the main window for simulating five floors."""
 
     def __init__(self):
         super().__init__()
@@ -807,7 +807,7 @@ class LiftSim5FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
 
 
 class LiftSim6FloorsWindow(QMainWindow, Ui_mwindow_sim_6_floors):
-    """Contains the main window for simulating 6 floors."""
+    """Contains the main window for simulating six or more floors."""
 
     def __init__(self):
         super().__init__()
