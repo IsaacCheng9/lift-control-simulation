@@ -321,6 +321,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         with open("people_overview.json", "r") as infile:
             people_overview = json.load(infile)
 
+        # Resets tracking stats to 0.
+        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
+        self.MWindow.lbl_distance_travelled.setText(
+            "Total Distance Travelled: 0")
         # Sets initial values for people waiting on each floor.
         self.update_floors(people_overview)
 
@@ -356,6 +360,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             num_in_lift += 1
                             self.MWindow.lbl_num_in_lift.setText(
                                 "Number of People in Lift: " + str(num_in_lift))
+                            QApplication.processEvents()
                             break
                         else:
                             sleep(int(self.ui_delay) / 1000)
@@ -380,7 +385,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # the end.
                         if self.lift_floor == 0 and lift_direction == "Down":
                             lift_direction = "Up"
-                        if (self.lift_floor == int(self.num_floors) and
+                        if (self.lift_floor == int(self.num_floors) - 1 and
                                 lift_direction == "Up"):
                             lift_direction = "Down"
 
@@ -388,8 +393,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
                     # Iterates whilst there are people in the lift.
                     while people_lift:
-                        sleep(int(self.ui_delay) / 1000)
-
                         # Checks if there's a person on the floor going the
                         # same direction and collects them if they are.
                         for extra in people_overview:
@@ -421,6 +424,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         print("\nFloor Differential (Delivering):",
                               deliver_moves)
 
+                        sleep(int(self.ui_delay) / 1000)
                         # Moves the lift up or down based on the person's
                         # target floor relative to the lift's current floor,
                         # and whether the lift needs to change direction, then
@@ -459,6 +463,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # anyone in the lift, and drops them off if it has.
                         for passenger in people_lift[:]:
                             if passenger["target_floor"] == self.lift_floor:
+                                sleep(int(self.ui_delay) / 1000)
                                 # Marks the person as delivered, and increments
                                 # count.
                                 num_in_lift -= 1
@@ -469,11 +474,16 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 self.MWindow.lbl_num_delivered.setText(
                                     "Number of People Delivered: " +
                                     str(num_delivered))
-                                QApplication.processEvents()
                                 print("\nDelivered person ID", passenger["id"],
                                       "from floor",
                                       passenger["starting_floor"], "to",
                                       passenger["target_floor"])
+                                self.MWindow.lbl_update.setText(
+                                    "Delivered person ID " +
+                                    str(passenger["id"]) + " from floor " +
+                                    str(passenger["starting_floor"]) + " to " +
+                                    str(passenger["target_floor"]))
+                                QApplication.processEvents()
 
                                 # Marks the person as delivered.
                                 print("\nPeople Overview:")
@@ -520,6 +530,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         with open("people_overview.json", "r") as infile:
             people_overview = json.load(infile)
 
+        # Resets tracking stats to 0.
+        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
+        self.MWindow.lbl_distance_travelled.setText(
+            "Total Distance Travelled: 0")
         # Sets initial values for people waiting on each floor.
         self.update_floors(people_overview)
 
@@ -544,8 +558,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         people_pending.append(person)
                         break
             else:
-                sleep(int(self.ui_delay) / 1000)
-
                 # Calculates if the lift needs to go up or down to collect the
                 # next person.
                 if people_pending[0]["starting_floor"] - self.lift_floor > 0:
@@ -605,6 +617,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     print("\nFloor Differential (Collecting):",
                           collect_moves)
 
+                    sleep(int(self.ui_delay) / 1000)
                     # Moves the lift up or down depending on the direction,
                     # and specifies the floor moved to.
                     if lift_direction == "Up":
@@ -631,8 +644,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
                 # Iterates whilst there are people in the lift.
                 while people_lift:
-                    sleep(int(self.ui_delay) / 1000)
-
                     # Checks if the lift has arrived at the target floor of
                     # anyone in the lift, and drops them off if it has.
                     for passenger in people_lift[:]:
@@ -701,6 +712,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         print("\nFloor Differential (Delivering):",
                               deliver_moves)
 
+                        sleep(int(self.ui_delay) / 1000)
                         # Moves the lift up or down depending on the
                         # direction, and specifies the floor moved to.
                         if people_lift[0]["direction"] == "Up":
