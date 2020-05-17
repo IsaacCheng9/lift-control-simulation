@@ -63,7 +63,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.num_floors = 5
         self.num_people = len(people_overview)
         self.lift_capacity = 5
-        self.ui_delay = 500
+        self.ui_delay = 1000
 
         # Updates labels to show current configuration.
         self.lbl_num_floors.setText(
@@ -632,13 +632,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         print("\nThere are now", num_in_lift, "people in the "
                               "lift, as person ID", waiting["id"],
                               "has been added to the lift.")
-
-                # Displays an updated version of the list of people waiting for
-                # the lift.
-                if people_lift:
-                    print("\nPeople in Lift:")
-                    for passenger in people_lift:
-                        print(passenger)
 
                 if people_pending:
                     # Displays the number of moves needed to collect the next
