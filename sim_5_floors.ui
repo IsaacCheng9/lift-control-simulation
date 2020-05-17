@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>800</height>
+    <width>525</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="font">
@@ -25,8 +25,8 @@
      <rect>
       <x>11</x>
       <y>11</y>
-      <width>751</width>
-      <height>751</height>
+      <width>491</width>
+      <height>361</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="vert_layout_lift_control">

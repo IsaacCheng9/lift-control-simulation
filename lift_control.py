@@ -291,6 +291,14 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Sets initial values for people waiting on each floor.
         self.update_floors(people_overview)
 
+        # Resets tracking stats to 0.
+        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
+        self.MWindow.lbl_distance_travelled.setText(
+            "Total Distance Travelled: 0")
+        # Provides confirmation that generation was successful.
+        self.MWindow.lbl_update.setText(
+            "New simulation generated successfully.")
+
     def run_simulation_naive(self) -> None:
         """
         Runs the simulation using the naive (mechanical) algorithm.
@@ -325,6 +333,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
         self.MWindow.lbl_distance_travelled.setText(
             "Total Distance Travelled: 0")
+        self.MWindow.lbl_update.setText("")
         # Sets initial values for people waiting on each floor.
         self.update_floors(people_overview)
 
@@ -486,7 +495,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 QApplication.processEvents()
 
                                 # Marks the person as delivered.
-                                print("\nPeople Overview:")
                                 for person in people_overview:
                                     if person["id"] == passenger["id"]:
                                         person["delivered"] = True
@@ -494,11 +502,11 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 # Removes the person from the lift.
                                 people_lift.remove(passenger)
 
-                        # Displays the updated version of the list of
-                        # people.
-                        print("\nPeople Overview:")
-                        for person in people_overview:
-                            print(person)
+        # Displays the updated version of the list of
+        # people.
+        print("\nPeople Overview (Simulation Complete):")
+        for person in people_overview:
+            print(person)
 
     def run_simulation_improved(self) -> None:
         """
@@ -534,6 +542,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
         self.MWindow.lbl_distance_travelled.setText(
             "Total Distance Travelled: 0")
+        self.MWindow.lbl_update.setText("")
         # Sets initial values for people waiting on each floor.
         self.update_floors(people_overview)
 
@@ -648,6 +657,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     # anyone in the lift, and drops them off if it has.
                     for passenger in people_lift[:]:
                         if passenger["target_floor"] == self.lift_floor:
+                            sleep(int(self.ui_delay) / 1000)
                             # Marks the person as delivered, and increments
                             # count.
                             num_in_lift -= 1
@@ -658,10 +668,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             self.MWindow.lbl_num_delivered.setText(
                                 "Number of People Delivered: " +
                                 str(num_delivered))
-                            QApplication.processEvents()
                             print("\nDelivered person ID", passenger["id"],
                                   "from floor", passenger["starting_floor"],
                                   "to", passenger["target_floor"])
+                            self.MWindow.lbl_update.setText(
+                                    "Delivered person ID " +
+                                    str(passenger["id"]) + " from floor " +
+                                    str(passenger["starting_floor"]) + " to " +
+                                    str(passenger["target_floor"]))
+                            QApplication.processEvents()
 
                             # Marks the person as delivered.
                             for person in people_overview:
@@ -672,12 +687,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             people_lift.remove(passenger)
                             if passenger in people_pending:
                                 people_pending.remove(passenger)
-
-                    # Displays the updated version of the list of
-                    # people.
-                    print("\nPeople Overview:")
-                    for person in people_overview:
-                        print(person)
 
                     # Calculates the number of moves needed to reach the
                     # floor of the next closest person in the lift.
@@ -739,6 +748,11 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         QApplication.processEvents()
                         print("    Lift Floor (Delivering):", self.lift_floor)
 
+        # Displays the updated version of the list of
+        # people.
+        print("\nPeople Overview (Simulation Complete):")
+        for person in people_overview:
+            print(person)
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
     """Contains the dialog window for creating a new lift simulation."""

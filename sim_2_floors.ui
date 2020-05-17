@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>800</height>
+    <width>525</width>
+    <height>325</height>
    </rect>
   </property>
   <property name="font">
@@ -25,8 +25,8 @@
      <rect>
       <x>11</x>
       <y>11</y>
-      <width>751</width>
-      <height>751</height>
+      <width>491</width>
+      <height>291</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="vert_layout_lift_control">
@@ -224,13 +224,6 @@
       </layout>
      </item>
      <item>
-      <widget class="Line" name="hori_line_sim">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="lbl_key">
        <property name="font">
         <font>
@@ -239,6 +232,20 @@
        </property>
        <property name="text">
         <string>(White blocks represent floors, and red blocks represent floors with the lift on it.)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="hori_line_sim">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_update">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>

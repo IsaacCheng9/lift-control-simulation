@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mwindow_sim_5_floors(object):
     def setupUi(self, mwindow_sim_5_floors):
         mwindow_sim_5_floors.setObjectName("mwindow_sim_5_floors")
-        mwindow_sim_5_floors.resize(800, 800)
+        mwindow_sim_5_floors.resize(525, 400)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -21,7 +21,7 @@ class Ui_mwindow_sim_5_floors(object):
         self.central_widget = QtWidgets.QWidget(mwindow_sim_5_floors)
         self.central_widget.setObjectName("central_widget")
         self.layoutWidget = QtWidgets.QWidget(self.central_widget)
-        self.layoutWidget.setGeometry(QtCore.QRect(11, 11, 751, 751))
+        self.layoutWidget.setGeometry(QtCore.QRect(11, 11, 491, 361))
         self.layoutWidget.setObjectName("layoutWidget")
         self.vert_layout_lift_control = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.vert_layout_lift_control.setContentsMargins(0, 0, 0, 0)
