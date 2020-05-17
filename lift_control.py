@@ -12,14 +12,13 @@ my improved lift algorithm.
 
 The configured simulation remains the same until the user generates a new
 simulation, or changes the configuration settings. This enables the user to
-directly compare how the improved algorithm compares to the naive algorithm. 
+directly compare how the improved algorithm compares to the naive algorithm.
 """
 import json
 import logging
 import random
 import sys
 from time import sleep
-from typing import Tuple
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator, QPixmap
@@ -387,7 +386,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             # Updates the number of people in the lift.
                             num_in_lift += 1
                             self.MWindow.lbl_num_in_lift.setText(
-                                "Number of People in Lift: " + str(num_in_lift))
+                                "Number of People in Lift: " +
+                                str(num_in_lift))
                             QApplication.processEvents()
                             break
                         else:
@@ -424,8 +424,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # same direction and collects them if they are.
                         for extra in people_overview:
                             if (extra not in people_lift and
-                                extra["starting_floor"] == self.lift_floor and
-                                extra["delivered"] is False and
+                                    extra["starting_floor"] == self.lift_floor
+                                    and extra["delivered"] is False and
                                     extra["direction"] == person["direction"]):
                                 people_lift.append(extra)
                                 num_in_lift += 1
@@ -447,7 +447,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # next closest person in the lift.
                         deliver_moves = min(
                             [abs(int(passenger["target_floor"]) -
-                                 self.lift_floor) for passenger in people_lift])
+                                 self.lift_floor) for passenger in
+                             people_lift])
                         print("\nFloor Differential (Delivering):",
                               deliver_moves)
 
@@ -463,11 +464,11 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
                         # Updates the current floor of people in lift.
                         for passenger in people_lift:
-                            for person in people_overview:
-                                if person["id"] == passenger["id"]:
+                            for person1 in people_overview:
+                                if person1["id"] == passenger["id"]:
                                     passenger["current_floor"] = (
                                         self.lift_floor)
-                                    person["current_floor"] = (
+                                    person1["current_floor"] = (
                                         self.lift_floor)
                         self.update_floors(people_overview)
 
@@ -513,9 +514,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 QApplication.processEvents()
 
                                 # Marks the person as delivered.
-                                for person in people_overview:
-                                    if person["id"] == passenger["id"]:
-                                        person["delivered"] = True
+                                for person1 in people_overview:
+                                    if person1["id"] == passenger["id"]:
+                                        person1["delivered"] = True
 
                                 # Removes the person from the lift.
                                 people_lift.remove(passenger)
@@ -603,14 +604,14 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                    - self.lift_floor))
 
                 # Adds people as pending if they can be delivered en route.
-                if lift_direction == "Up" or lift_direction == "Down":
+                if lift_direction in ("Up", "Down"):
                     for extra in people_overview:
                         floors_away_extra = (abs(
                             int(extra["target_floor"]) - self.lift_floor))
                         if (extra not in people_pending and
-                            len(people_lift) < int(self.lift_capacity) - 1
-                            and extra["delivered"] is False and
-                            extra["direction"] == lift_direction and
+                                len(people_lift) < int(self.lift_capacity) - 1
+                                and extra["delivered"] is False and
+                                extra["direction"] == lift_direction and
                                 floors_away_extra <= floors_away):
                             people_pending.append(extra)
 
@@ -717,10 +718,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # same direction and collects them if they are.
                         for extra in people_overview:
                             if (extra not in people_lift and
-                                len(people_lift) < int(self.lift_capacity)
-                                and extra["starting_floor"] == self.lift_floor
-                                and extra["delivered"] is False and
-                                extra["direction"] ==
+                                    len(people_lift) < int(self.lift_capacity)
+                                    and extra["starting_floor"] ==
+                                    self.lift_floor and extra["delivered"] is
+                                    False and extra["direction"] ==
                                     people_lift[0]["direction"]):
                                 people_lift.append(extra)
                                 num_in_lift += 1
