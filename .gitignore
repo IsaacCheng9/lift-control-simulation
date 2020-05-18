@@ -131,6 +131,7 @@ dmypy.json
 # Documentation files
 *.docx
 *.txt
+*.mp4
 
 # Configuration files
 *.json
