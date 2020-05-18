@@ -13,6 +13,11 @@ my improved lift algorithm.
 The configured simulation remains the same until the user generates a new
 simulation, or changes the configuration settings. This enables the user to
 directly compare how the improved algorithm compares to the naive algorithm.
+
+A temporary log of the simulations is also printed in the terminal. It records
+the simulation configuration, people generated, movements of the lift, people
+pending (if applicable), people in the lift, people delivered, and an overview
+of people after the simulation is complete.
 """
 import json
 import logging
@@ -360,7 +365,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
               "\nNumber of Floors:", self.num_floors, "\nNumber of People:",
               self.num_people, "\nLift Capacity:", self.lift_capacity,
               "\nUI Delay (ms):", self.ui_delay)
-        print("\nPeople Generated")
+        print("\nPeople Generated:")
         for person in people_overview:
             print(person)
         print("\nLift Floor (Starting):", self.lift_floor)
