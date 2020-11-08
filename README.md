@@ -1,6 +1,6 @@
 # lift-control
-A system created to manage lift control, optimised for efficiency in distance
-travelled by the lift.
+A system written in Python to manage lift control, with a custom-made
+algorithm optimised for efficiency in distance travelled by the lift.
 
 The user is able to configure any number of floors, number of people, lift
 capacity, and the delay of intervals in the user interface.
