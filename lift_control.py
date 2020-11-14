@@ -189,7 +189,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.Dialog.lbl_save_successful.setText(
                 "Please fill all input fields to save your configuration.")
 
-    def update_floors(self, people_overview: list) -> list:
+    def update_floors(self, people_overview: list):
         """
         Updates values in UI for each floor.
 
@@ -747,10 +747,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # direction, and specifies the floor moved to.
                         if people_lift[0]["direction"] == "Up":
                             self.lift_floor += 1
-                            lift_direction = "Up"
                         else:
                             self.lift_floor -= 1
-                            lift_direction = "Down"
 
                         # Updates the current floor of people in lift.
                         for passenger in people_lift:
