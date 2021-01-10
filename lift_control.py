@@ -41,15 +41,22 @@ from sim_6_floors_setup import Ui_mwindow_sim_6_floors
 def main() -> None:
     """Opens the main menu on program startup."""
     app = QtWidgets.QApplication(sys.argv)
-    setup_logging()
-    mwindow_main_menu = MainMenuWindow()
+    people_overview_file, logs_file = file_names()
+    setup_logging(logs_file)
+    mwindow_main_menu = MainMenuWindow(people_overview_file)
     mwindow_main_menu.show()
     sys.exit(app.exec())
 
 
-def setup_logging():
+def file_names() -> tuple:
+    people_overview_file = "people_overview.json"
+    logs_file = "logs.txt"
+    return people_overview_file, logs_file
+
+
+def setup_logging(logs_file: str):
     """Sets up the logging system for debugging purposes."""
-    logging.basicConfig(filename="logs.txt", level=logging.DEBUG,
+    logging.basicConfig(filename=logs_file, level=logging.DEBUG,
                         format="%(asctime)s - %(levelname)s - %(message)s")
     logging.debug("Lift Control program started.")
 
@@ -57,12 +64,12 @@ def setup_logging():
 class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
     """Contains the main window for the lift control simulation."""
 
-    def __init__(self):
+    def __init__(self, people_overview_file):
         super().__init__()
         self.setupUi(self)
 
         # Reads existing JSON files for list of people.
-        with open("people_overview.json", "r") as infile:
+        with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
 
         self.num_floors = 5
@@ -84,9 +91,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
         # Connects 'Open Simulation' button to the relevant simulation window.
-        self.btn_open_sim.clicked.connect(self.open_mwindow_lift_sim)
+        self.btn_open_sim.clicked.connect(
+            lambda: self.open_mwindow_lift_sim(people_overview_file))
 
-    def open_dialog_config_sim(self) -> None:
+    def open_dialog_config_sim(self, people_overview_file) -> None:
         """Opens the dialog for the user to configure their simulation."""
         self.Dialog = ConfigSimDialog()
 
@@ -98,11 +106,12 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.Dialog.line_edit_ui_delay.setValidator(self.only_int)
 
         # Connects the 'Save Simulation' button to save the configuration.
-        self.Dialog.btn_save_sim.clicked.connect(self.save_sim)
+        self.Dialog.btn_save_sim.clicked.connect(
+            lambda: self.save_sim(people_overview_file))
 
         self.Dialog.open()
 
-    def open_mwindow_lift_sim(self) -> None:
+    def open_mwindow_lift_sim(self, people_overview_file) -> None:
         """Opens the main window for the lift simulation."""
         self.lift_floor = 0
 
@@ -119,7 +128,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.MWindow = LiftSim6FloorsWindow()
 
         # Reads existing JSON files for list of people.
-        with open("people_overview.json", "r") as infile:
+        with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
 
         # Sets initial values for people waiting on each floor.
@@ -132,16 +141,16 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Connects 'Run Simulation (Naive)' button to run the simulation with
         # the naive (mechanical) algorithm.
         self.MWindow.btn_run_sim_naive.clicked.connect(
-            lambda: self.run_simulation_naive())
+            lambda: self.run_simulation_naive(people_overview_file))
         # Connects 'Run Simulation (Improved)' button to run the simulation
         # with the improved algorithm.
         self.MWindow.btn_run_sim_improved.clicked.connect(
             lambda: self.run_simulation_improved())
 
-        self.generate_new_sim()
+        self.generate_new_sim(people_overview_file)
         self.MWindow.show()
 
-    def save_sim(self):
+    def save_sim(self, people_overview_file):
         """Saves the lift simulation settings."""
         # Gets the inputs for the new sale.
         self.num_floors = self.Dialog.line_edit_num_floors.text()
@@ -169,7 +178,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 "UI Delay: " + str(self.ui_delay))
             # Updates 'Open Simulation' button to open the relevant
             # simulation window.
-            self.btn_open_sim.clicked.connect(self.open_mwindow_lift_sim)
+            self.btn_open_sim.clicked.connect(
+                lambda: self.open_mwindow_lift_sim(people_overview_file))
 
         # Validates against inputs which are either too small or null.
         elif (self.num_floors == "" or self.num_people == "" or
@@ -277,7 +287,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
         QApplication.processEvents()
 
-    def generate_new_sim(self) -> None:
+    def generate_new_sim(self, people_overview_file) -> None:
         """Generates a new simulation with current configuration settings."""
         # Empties the list of people generated to overwrite previous sim.
         people_overview = []
@@ -311,7 +321,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             people_overview.append(person)
 
         # Saves the list of people to a JSON file.
-        with open("people_overview.json", "w") as outfile:
+        with open(people_overview_file, "w") as outfile:
             json.dump(people_overview, outfile,
                       ensure_ascii=False, indent=4)
 
@@ -326,7 +336,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_update.setText(
             "New simulation generated successfully.")
 
-    def run_simulation_naive(self) -> None:
+    def run_simulation_naive(self, people_overview_file) -> None:
         """
         Runs the simulation using the naive (mechanical) algorithm.
 
@@ -353,7 +363,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         lift_direction = "Up"
 
         # Reads existing JSON files for list of people.
-        with open("people_overview.json", "r") as infile:
+        with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
 
         # Resets tracking stats to 0.
