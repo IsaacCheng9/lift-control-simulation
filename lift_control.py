@@ -68,7 +68,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.num_floors = 5
         self.num_people = len(people_overview)
         self.lift_capacity = 5
-        self.ui_delay = 1000
+        self.ui_delay = 500
 
         # Updates labels to show current configuration.
         self.lbl_num_floors.setText(
@@ -172,6 +172,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.btn_open_sim.clicked.connect(self.open_mwindow_lift_sim)
 
         # Validates against inputs which are either too small or null.
+        elif (self.num_floors == "" or self.num_people == "" or
+              self.lift_capacity == "" or self.ui_delay == ""):
+            self.Dialog.lbl_save_successful.setText(
+                "Please fill in all the configuration options!")
         elif int(self.num_floors) <= 1:
             self.Dialog.lbl_save_successful.setText(
                 "Please configure at least two floors!")
@@ -532,7 +536,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         for person in people_overview:
             print(person)
 
-        sleep(int(self.ui_delay) / 500)
+        sleep(int(self.ui_delay) / 1000)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
@@ -773,7 +777,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         for person in people_overview:
             print(person)
 
-        sleep(int(self.ui_delay) / 500)
+        sleep(int(self.ui_delay) / 1000)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
