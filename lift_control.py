@@ -137,7 +137,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Connects 'Generate New Simulation' button to generate a new
         # simulation with the current configuration settings.
         self.MWindow.btn_generate_new_sim.clicked.connect(
-            self.generate_new_sim)
+            lambda: self.generate_new_sim(people_overview_file))
         # Connects 'Run Simulation (Naive)' button to run the simulation with
         # the naive (mechanical) algorithm.
         self.MWindow.btn_run_sim_naive.clicked.connect(
@@ -145,28 +145,47 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Connects 'Run Simulation (Improved)' button to run the simulation
         # with the improved algorithm.
         self.MWindow.btn_run_sim_improved.clicked.connect(
-            lambda: self.run_simulation_improved())
+            lambda: self.run_simulation_improved(people_overview_file))
 
         self.generate_new_sim(people_overview_file)
         self.MWindow.show()
 
     def save_sim(self, people_overview_file):
         """Saves the lift simulation settings."""
-        # Gets the inputs for the new sale.
-        self.num_floors = self.Dialog.line_edit_num_floors.text()
-        self.num_people = self.Dialog.line_edit_num_people.text()
-        self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
-        self.ui_delay = self.Dialog.line_edit_ui_delay.text()
+        self.num_floors_input = self.Dialog.line_edit_num_floors.text()
+        self.num_people_input = self.Dialog.line_edit_num_people.text()
+        self.lift_capacity_input = self.Dialog.line_edit_lift_capacity.text()
+        self.ui_delay_input = self.Dialog.line_edit_ui_delay.text()
 
-        # Updates configuration if inputs are all valid.
-        if (self.num_floors != "" and self.num_people != "" and
-                self.lift_capacity != "" and self.ui_delay != "" and
-                int(self.num_floors) > 1 and int(self.num_people) > 0 and
-                int(self.lift_capacity) > 0 and int(self.ui_delay) > 0):
+        # Validates against inputs which are either too small or null.
+        if (self.num_floors_input == "" or self.num_people_input == "" or
+                self.lift_capacity_input == "" or self.ui_delay_input == ""):
+            self.Dialog.lbl_save_successful.setText(
+                "Please fill in all the configuration options!")
+        elif int(self.num_floors_input) <= 1:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure at least two floors!")
+        elif int(self.num_people_input) <= 0:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure at least one person!")
+        elif int(self.lift_capacity_input) <= 0:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure a lift capacity of at least one person!")
+        elif int(self.ui_delay_input) <= 0:
+            self.Dialog.lbl_save_successful.setText(
+                "Please configure a UI delay of at least one millisecond!")
+        else:
             # Notifies the user that their configuration was saved
             # successfully.
             self.Dialog.lbl_save_successful.setText(
                 "Configuration saved successfully!")
+
+            # Sets the inputs for the new lift simulation.
+            self.num_floors = self.Dialog.line_edit_num_floors.text()
+            self.num_people = self.Dialog.line_edit_num_people.text()
+            self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
+            self.ui_delay = self.Dialog.line_edit_ui_delay.text()
+
             # Updates labels to show current configuration.
             self.lbl_num_floors.setText(
                 "Number of Floors: " + str(self.num_floors))
@@ -176,32 +195,11 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 "Lift Capacity: " + str(self.lift_capacity))
             self.lbl_ui_delay.setText(
                 "UI Delay: " + str(self.ui_delay))
+
             # Updates 'Open Simulation' button to open the relevant
             # simulation window.
             self.btn_open_sim.clicked.connect(
                 lambda: self.open_mwindow_lift_sim(people_overview_file))
-
-        # Validates against inputs which are either too small or null.
-        elif (self.num_floors == "" or self.num_people == "" or
-              self.lift_capacity == "" or self.ui_delay == ""):
-            self.Dialog.lbl_save_successful.setText(
-                "Please fill in all the configuration options!")
-        elif int(self.num_floors) <= 1:
-            self.Dialog.lbl_save_successful.setText(
-                "Please configure at least two floors!")
-        elif int(self.num_people) <= 0:
-            self.Dialog.lbl_save_successful.setText(
-                "Please configure at least one person!")
-        elif int(self.lift_capacity) <= 0:
-            self.Dialog.lbl_save_successful.setText(
-                "Please configure a lift capacity of at least one person!")
-        elif int(self.ui_delay) <= 0:
-            self.Dialog.lbl_save_successful.setText(
-                "Please configure a UI delay of at least one millisecond!")
-        else:
-            # Notifies the user that they need fill in all fields.
-            self.Dialog.lbl_save_successful.setText(
-                "Please fill all input fields to save your configuration.")
 
     def update_floors(self, people_overview: list):
         """
@@ -550,7 +548,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
-    def run_simulation_improved(self) -> None:
+    def run_simulation_improved(self, people_overview_file) -> None:
         """
         Runs the simulation using the improved algorithm.
 
@@ -577,7 +575,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lift_floor = 0
 
         # Reads existing JSON files for list of people.
-        with open("people_overview.json", "r") as infile:
+        with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
 
         # Resets tracking stats to 0.
