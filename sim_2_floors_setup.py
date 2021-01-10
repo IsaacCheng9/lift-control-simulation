@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_mwindow_sim_2_floors(object):
     def setupUi(self, mwindow_sim_2_floors):
         mwindow_sim_2_floors.setObjectName("mwindow_sim_2_floors")
-        mwindow_sim_2_floors.resize(650, 325)
+        mwindow_sim_2_floors.resize(650, 375)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
