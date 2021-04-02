@@ -246,9 +246,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
         # Sets white and red blocks as images to represent floor lift is on.
         dir_name = os.path.dirname(__file__)
-        white_block_file = os.path.join(dir_name, "../images/white_block.png")
+        grey_block_file = os.path.join(dir_name, "../images/grey_block.png")
         red_block_file = os.path.join(dir_name, "../images/red_block.png")
-        white_block = QPixmap(white_block_file).scaled(150, 15)
+        grey_block = QPixmap(grey_block_file).scaled(150, 15)
         red_block = QPixmap(red_block_file).scaled(125, 15)
 
         # Updates UI with appropriate values depending on number of floors.
@@ -257,24 +257,24 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.MWindow.lbl_waiting_1.setText(str(self.floor_1_waiting))
             self.MWindow.lbl_delivered_0.setText(str(self.floor_0_delivered))
             self.MWindow.lbl_delivered_1.setText(str(self.floor_1_delivered))
-            self.MWindow.lbl_floor_0.setPixmap(white_block)
-            self.MWindow.lbl_floor_1.setPixmap(white_block)
+            self.MWindow.lbl_floor_0.setPixmap(grey_block)
+            self.MWindow.lbl_floor_1.setPixmap(grey_block)
 
             if int(self.num_floors) >= 3:
                 self.MWindow.lbl_waiting_2.setText(str(self.floor_2_waiting))
                 self.MWindow.lbl_delivered_2.setText(
                     str(self.floor_2_delivered))
-                self.MWindow.lbl_floor_2.setPixmap(white_block)
+                self.MWindow.lbl_floor_2.setPixmap(grey_block)
             if int(self.num_floors) >= 4:
                 self.MWindow.lbl_waiting_3.setText(str(self.floor_3_waiting))
                 self.MWindow.lbl_delivered_3.setText(
                     str(self.floor_3_delivered))
-                self.MWindow.lbl_floor_3.setPixmap(white_block)
+                self.MWindow.lbl_floor_3.setPixmap(grey_block)
             if int(self.num_floors) == 5:
                 self.MWindow.lbl_waiting_4.setText(str(self.floor_4_waiting))
                 self.MWindow.lbl_delivered_4.setText(
                     str(self.floor_4_delivered))
-                self.MWindow.lbl_floor_4.setPixmap(white_block)
+                self.MWindow.lbl_floor_4.setPixmap(grey_block)
 
             if self.lift_floor == 0:
                 self.MWindow.lbl_floor_0.setPixmap(red_block)
