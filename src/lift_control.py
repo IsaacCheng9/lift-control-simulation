@@ -21,6 +21,7 @@ of people after the simulation is complete.
 """
 import json
 import logging
+import os
 import random
 import sys
 from time import sleep
@@ -244,8 +245,11 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.floor_4_delivered += 1
 
         # Sets white and red blocks as images to represent floor lift is on.
-        white_block = QPixmap("white_block.png").scaled(150, 15)
-        red_block = QPixmap("red_block.png").scaled(125, 15)
+        dir_name = os.path.dirname(__file__)
+        white_block_file = os.path.join(dir_name, "../images/white_block.png")
+        red_block_file = os.path.join(dir_name, "../images/red_block.png")
+        white_block = QPixmap(white_block_file).scaled(150, 15)
+        red_block = QPixmap(red_block_file).scaled(125, 15)
 
         # Updates UI with appropriate values depending on number of floors.
         if int(self.num_floors) <= 5:
