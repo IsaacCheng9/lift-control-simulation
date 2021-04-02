@@ -244,7 +244,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             if person["target_floor"] == 4 and person["current_floor"] == 4:
                 self.floor_4_delivered += 1
 
-        # Sets white and red blocks as images to represent floor lift is on.
+        # Sets grey and red blocks as images to represent floor lift is on.
         dir_name = os.path.dirname(__file__)
         grey_block_file = os.path.join(dir_name, "../images/grey_block.png")
         red_block_file = os.path.join(dir_name, "../images/red_block.png")
