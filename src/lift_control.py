@@ -245,11 +245,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.floor_4_delivered += 1
 
         # Sets grey and red blocks as images to represent floor lift is on.
-        dir_name = os.path.dirname(__file__)
-        grey_block_file = os.path.join(dir_name, "../images/grey_block.png")
-        red_block_file = os.path.join(dir_name, "../images/red_block.png")
-        grey_block = QPixmap(grey_block_file).scaled(150, 15)
-        red_block = QPixmap(red_block_file).scaled(125, 15)
+        grey_block = QPixmap("images/grey_block.png").scaled(150, 15)
+        red_block = QPixmap("images/red_block.png").scaled(125, 15)
 
         # Updates UI with appropriate values depending on number of floors.
         if int(self.num_floors) <= 5:
