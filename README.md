@@ -1,10 +1,15 @@
 # lift-control-simulation
 
 A system developed in Python to manage and simulate lift control in various
-scenarios. It uses a priority queue and a custom-made algorithm, optimised for
-efficiency in distance travelled by the lift.
+scenarios.
+
+It uses a priority queue and a custom-made algorithm, optimised for efficiency
+in distance travelled by the lift. This algorithm achieves up to 82.5%
+reduction in distance travelled by the lift compared to the naive algorithm,
+dwarfing the 25% reduction claimed by the destination dispatch technique.
 
 ## Visuals
+
 ![Running the simulation](https://i.imgur.com/K6YzssY.gif)
 
 ## Installation
