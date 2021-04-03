@@ -21,7 +21,6 @@ of people after the simulation is complete.
 """
 import json
 import logging
-import os
 import random
 import sys
 from time import sleep
@@ -451,8 +450,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     "Number of People in Lift: " +
                                     str(num_in_lift))
                                 QApplication.processEvents()
-                                print("\nThere are now", num_in_lift, "people "
-                                      "in the lift, as person", extra["id"],
+                                print("\nThere are now", num_in_lift,
+                                      "people in the lift, as person",
+                                      extra["id"],
                                       "has been added to the lift.")
 
                         # Displays an updated version of the list of people in
@@ -647,8 +647,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         self.MWindow.lbl_num_in_lift.setText(
                             "Number of People in Lift: " + str(num_in_lift))
                         QApplication.processEvents()
-                        print("\nThere are now", num_in_lift, "people in the "
-                              "lift, as person ID", waiting["id"],
+                        print("\nThere are now", num_in_lift,
+                              "people in the lift, as person ID",
+                              waiting["id"],
                               "has been added to the lift.")
 
                 if people_pending:
