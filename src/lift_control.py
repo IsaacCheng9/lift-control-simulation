@@ -29,13 +29,13 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
 
-from config_sim_setup import Ui_dialog_config_sim
-from main_menu_setup import Ui_mwindow_main_menu
-from sim_2_floors_setup import Ui_mwindow_sim_2_floors
-from sim_3_floors_setup import Ui_mwindow_sim_3_floors
-from sim_4_floors_setup import Ui_mwindow_sim_4_floors
-from sim_5_floors_setup import Ui_mwindow_sim_5_floors
-from sim_6_floors_setup import Ui_mwindow_sim_6_floors
+from src.setup.config_sim_setup import Ui_dialog_config_sim
+from src.setup.main_menu_setup import Ui_mwindow_main_menu
+from src.setup.sim_2_floors_setup import Ui_mwindow_sim_2_floors
+from src.setup.sim_3_floors_setup import Ui_mwindow_sim_3_floors
+from src.setup.sim_4_floors_setup import Ui_mwindow_sim_4_floors
+from src.setup.sim_5_floors_setup import Ui_mwindow_sim_5_floors
+from src.setup.sim_6_floors_setup import Ui_mwindow_sim_6_floors
 
 
 def main() -> None:
@@ -49,8 +49,8 @@ def main() -> None:
 
 
 def file_names() -> tuple:
-    people_overview_file = "people_overview.json"
-    logs_file = "logs.txt"
+    people_overview_file = "data/people_overview.json"
+    logs_file = "data/logs.txt"
     return people_overview_file, logs_file
 
 
