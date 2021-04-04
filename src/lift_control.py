@@ -49,8 +49,8 @@ def main() -> None:
 
 
 def file_names() -> tuple:
-    people_overview_file = "data/people_overview.json"
-    logs_file = "data/logs.txt"
+    people_overview_file = "resources/people_overview.json"
+    logs_file = "resources/logs.txt"
     return people_overview_file, logs_file
 
 
