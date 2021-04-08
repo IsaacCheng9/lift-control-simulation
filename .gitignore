@@ -131,3 +131,4 @@ dmypy.json
 # Documentation files
 *.docx
 *.mp4
+.idea/
