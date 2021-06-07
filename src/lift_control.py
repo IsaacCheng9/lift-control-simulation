@@ -23,6 +23,7 @@ import json
 import logging
 import random
 import sys
+from pathlib import Path  # if you haven't already done so
 from time import sleep
 
 from PyQt5 import QtWidgets
@@ -49,8 +50,8 @@ def main() -> None:
 
 
 def file_names() -> tuple:
-    people_overview_file = "resources/people_overview.json"
-    logs_file = "resources/logs.txt"
+    people_overview_file = "src/resources/people_overview.json"
+    logs_file = "src/resources/logs.txt"
     return people_overview_file, logs_file
 
 
@@ -74,7 +75,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
-
         self.num_floors = 5
         self.num_people = len(people_overview)
         self.lift_capacity = 5
@@ -85,7 +85,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lbl_num_people.setText("Number of People: " + str(self.num_people))
         self.lbl_lift_capacity.setText("Lift Capacity: " + str(self.lift_capacity))
         self.lbl_ui_delay.setText("UI Delay (Milliseconds): " + str(self.ui_delay))
-
         # Connects 'Configure Simulation' button to the configure simulation
         # dialog.
         self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
@@ -97,25 +96,21 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
     def open_dialog_config_sim(self, people_overview_file) -> None:
         """Opens the dialog for the user to configure their simulation."""
         self.Dialog = ConfigSimDialog()
-
         # Restricts inputs to only numbers.
         self.only_int = QIntValidator()
         self.Dialog.line_edit_num_floors.setValidator(self.only_int)
         self.Dialog.line_edit_num_people.setValidator(self.only_int)
         self.Dialog.line_edit_lift_capacity.setValidator(self.only_int)
         self.Dialog.line_edit_ui_delay.setValidator(self.only_int)
-
         # Connects the 'Save Simulation' button to save the configuration.
         self.Dialog.btn_save_sim.clicked.connect(
             lambda: self.save_sim(people_overview_file)
         )
-
         self.Dialog.open()
 
     def open_mwindow_lift_sim(self, people_overview_file) -> None:
         """Opens the main window for the lift simulation."""
         self.lift_floor = 0
-
         # Opens a different UI depending on the number of floors configured.
         if int(self.num_floors) == 2:
             self.MWindow = LiftSim2FloorsWindow()
@@ -131,10 +126,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
-
         # Sets initial values for people waiting on each floor.
         self.update_floors(people_overview)
-
         # Connects 'Generate New Simulation' button to generate a new
         # simulation with the current configuration settings.
         self.MWindow.btn_generate_new_sim.clicked.connect(
@@ -150,7 +143,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.btn_run_sim_improved.clicked.connect(
             lambda: self.run_simulation_improved(people_overview_file)
         )
-
         self.generate_new_sim(people_overview_file)
         self.MWindow.show()
 
@@ -191,19 +183,16 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             # Notifies the user that their configuration was saved
             # successfully.
             self.Dialog.lbl_save_successful.setText("Configuration saved successfully!")
-
             # Sets the inputs for the new lift simulation.
             self.num_floors = self.Dialog.line_edit_num_floors.text()
             self.num_people = self.Dialog.line_edit_num_people.text()
             self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
             self.ui_delay = self.Dialog.line_edit_ui_delay.text()
-
             # Updates labels to show current configuration.
             self.lbl_num_floors.setText("Number of Floors: " + str(self.num_floors))
             self.lbl_num_people.setText("Number of People: " + str(self.num_people))
             self.lbl_lift_capacity.setText("Lift Capacity: " + str(self.lift_capacity))
             self.lbl_ui_delay.setText("UI Delay: " + str(self.ui_delay))
-
             # Updates 'Open Simulation' button to open the relevant
             # simulation window.
             self.btn_open_sim.clicked.connect(
@@ -253,8 +242,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.floor_4_delivered += 1
 
         # Sets grey and red blocks as images to represent floor lift is on.
-        grey_block = QPixmap("images/grey_block.png").scaled(150, 15)
-        red_block = QPixmap("images/red_block.png").scaled(125, 15)
+        grey_block = QPixmap("src/images/grey_block.png").scaled(150, 15)
+        red_block = QPixmap("src/images/red_block.png").scaled(125, 15)
 
         # Updates UI with appropriate values depending on number of floors.
         if int(self.num_floors) <= 5:
@@ -288,7 +277,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.MWindow.lbl_floor_3.setPixmap(red_block)
             elif self.lift_floor == 4:
                 self.MWindow.lbl_floor_4.setPixmap(red_block)
-
         QApplication.processEvents()
 
     def generate_new_sim(self, people_overview_file) -> None:
@@ -301,19 +289,16 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         for i in range(int(self.num_people)):
             # Creates a random starting floor.
             start_floor = random.randrange(0, int(self.num_floors))
-
             # Creates a target floor which is different to starting floor.
             while True:
                 target_floor = random.randrange(0, int(self.num_floors))
                 if start_floor != target_floor:
                     break
-
             # Calculates the direction the person will be going.
             if target_floor - start_floor > 0:
                 direction = "Up"
             else:
                 direction = "Down"
-
             # Adds the person dictionary to the list.
             person = {
                 "id": i,
@@ -328,10 +313,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Saves the list of people to a JSON file.
         with open(people_overview_file, "w") as outfile:
             json.dump(people_overview, outfile, ensure_ascii=False, indent=4)
-
         # Sets initial values for people waiting on each floor.
         self.update_floors(people_overview)
-
         # Resets tracking stats to 0.
         self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
         self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
@@ -367,7 +350,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
-
         # Resets tracking stats to 0.
         self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
         self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
@@ -485,8 +467,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             ]
                         )
                         print("\nFloor Differential (Delivering):", deliver_moves)
-
                         sleep(int(self.ui_delay) / 1000)
+
                         # Moves the lift up or down based on the person's
                         # target floor relative to the lift's current floor,
                         # and whether the lift needs to change direction, then
@@ -495,7 +477,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             self.lift_floor += 1
                         else:
                             self.lift_floor -= 1
-
                         # Updates the current floor of people in lift.
                         for passenger in people_lift:
                             for person1 in people_overview:
@@ -503,7 +484,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     passenger["current_floor"] = self.lift_floor
                                     person1["current_floor"] = self.lift_floor
                         self.update_floors(people_overview)
-
                         distance_travelled += 1
                         self.MWindow.lbl_distance_travelled.setText(
                             "Total Distance Travelled: " + str(distance_travelled)
@@ -558,7 +538,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 for person1 in people_overview:
                                     if person1["id"] == passenger["id"]:
                                         person1["delivered"] = True
-
                                 # Removes the person from the lift.
                                 people_lift.remove(passenger)
 
@@ -567,7 +546,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print("\nPeople Overview (Simulation Complete):")
         for person in people_overview:
             print(person)
-
         sleep(int(self.ui_delay) / 1000)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
@@ -697,8 +675,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         int(people_pending[0]["start_floor"]) - self.lift_floor
                     )
                     print("\nFloor Differential (Collecting):", collect_moves)
-
                     sleep(int(self.ui_delay) / 1000)
+
                     # Moves the lift up or down depending on the direction,
                     # and specifies the floor moved to.
                     if lift_direction == "Up":
@@ -713,7 +691,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 passenger["current_floor"] = self.lift_floor
                                 person["current_floor"] = self.lift_floor
                     self.update_floors(people_overview)
-
                     distance_travelled += 1
                     self.MWindow.lbl_distance_travelled.setText(
                         "Total Distance Travelled: " + str(distance_travelled)
@@ -760,7 +737,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             for person in people_overview:
                                 if person["id"] == passenger["id"]:
                                     person["delivered"] = True
-
                             # Ensures person is removed from lift and pending.
                             people_lift.remove(passenger)
                             if passenger in people_pending:
@@ -794,7 +770,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         print("\nPeople in Lift:")
                         for passenger in people_lift:
                             print(passenger)
-
                         # Displays the next closest floor to deliver a person.
                         deliver_moves = min(
                             [
@@ -803,8 +778,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             ]
                         )
                         print("\nFloor Differential (Delivering):", deliver_moves)
-
                         sleep(int(self.ui_delay) / 1000)
+
                         # Moves the lift up or down depending on the
                         # direction, and specifies the floor moved to.
                         if people_lift[0]["direction"] == "Up":
@@ -819,7 +794,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     passenger["current_floor"] = self.lift_floor
                                     person["current_floor"] = self.lift_floor
                         self.update_floors(people_overview)
-
                         distance_travelled += 1
                         self.MWindow.lbl_distance_travelled.setText(
                             "Total Distance Travelled: " + str(distance_travelled)
@@ -827,12 +801,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         QApplication.processEvents()
                         print("    Lift Floor (Delivering):", self.lift_floor)
 
-        # Displays the updated version of the list of
-        # people.
+        # Displays the updated version of the list of people.
         print("\nPeople Overview (Simulation Complete):")
         for person in people_overview:
             print(person)
-
         sleep(int(self.ui_delay) / 1000)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
@@ -886,6 +858,15 @@ class LiftSim6FloorsWindow(QMainWindow, Ui_mwindow_sim_6_floors):
         self.setupUi(self)
 
 
-# Prevents the code from executing when the script is imported as a module.
 if __name__ == "__main__":
+    # Adds the parent directory of the package before attempting to import
+    # anything from the package using absolute imports.
+    file = Path(__file__).resolve()
+    parent, root = file.parent, file.parents[1]
+    sys.path.append(str(root))
+    # Removes the current file's directory from sys.path.
+    try:
+        sys.path.remove(str(parent))
+    except ValueError:
+        pass
     main()
