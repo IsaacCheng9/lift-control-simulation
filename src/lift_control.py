@@ -23,7 +23,6 @@ import json
 import logging
 import random
 import sys
-from pathlib import Path  # if you haven't already done so
 from time import sleep
 
 from PyQt5 import QtWidgets
@@ -50,8 +49,8 @@ def main() -> None:
 
 
 def file_names() -> tuple:
-    people_overview_file = "src/resources/people_overview.json"
-    logs_file = "src/resources/logs.txt"
+    people_overview_file = "resources/people_overview.json"
+    logs_file = "resources/logs.txt"
     return people_overview_file, logs_file
 
 
@@ -242,8 +241,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.floor_4_delivered += 1
 
         # Sets grey and red blocks as images to represent floor lift is on.
-        grey_block = QPixmap("src/images/grey_block.png").scaled(150, 15)
-        red_block = QPixmap("src/images/red_block.png").scaled(125, 15)
+        grey_block = QPixmap("images/grey_block.png").scaled(150, 15)
+        red_block = QPixmap("images/red_block.png").scaled(125, 15)
 
         # Updates UI with appropriate values depending on number of floors.
         if int(self.num_floors) <= 5:
@@ -859,14 +858,4 @@ class LiftSim6FloorsWindow(QMainWindow, Ui_mwindow_sim_6_floors):
 
 
 if __name__ == "__main__":
-    # Adds the parent directory of the package before attempting to import
-    # anything from the package using absolute imports.
-    file = Path(__file__).resolve()
-    parent, root = file.parent, file.parents[1]
-    sys.path.append(str(root))
-    # Removes the current file's directory from sys.path.
-    try:
-        sys.path.remove(str(parent))
-    except ValueError:
-        pass
     main()
