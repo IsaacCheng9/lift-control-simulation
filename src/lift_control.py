@@ -25,9 +25,9 @@ import random
 import sys
 from time import sleep
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIntValidator, QPixmap
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QStyleFactory
 
 from setup.config_sim_setup import Ui_dialog_config_sim
 from setup.main_menu_setup import Ui_mwindow_main_menu
@@ -41,6 +41,7 @@ from setup.sim_6_floors_setup import Ui_mwindow_sim_6_floors
 def main() -> None:
     """Opens the main menu on program startup."""
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle("fusion")
     people_overview_file, logs_file = file_names()
     setup_logging(logs_file)
     mwindow_main_menu = MainMenuWindow(people_overview_file)
