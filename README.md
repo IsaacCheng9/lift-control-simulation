@@ -16,6 +16,14 @@ distance travelled compared to the naive algorithm benchmark, outperforming the
 
 ## Installation
 
+### Operating System
+
+Compatible with:
+
+- Windows
+- MacOS
+- Linux
+
 ### Python Version
 
 Python 3.7.0 or later is required for this software to run. It can be downloaded
