@@ -21,11 +21,12 @@ of people after the simulation is complete.
 """
 import json
 import logging
+import os
 import random
 import sys
 from time import sleep
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIntValidator, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
 
@@ -40,6 +41,10 @@ from setup.sim_6_floors_setup import Ui_mwindow_sim_6_floors
 
 def main() -> None:
     """Opens the main menu on program startup."""
+    # Performs scaling to prevent tiny UI on high resolution screens.
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+    os.environ["QT_SCALE_FACTOR"] = "1.5"
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("fusion")
     people_overview_file, logs_file = file_names()
