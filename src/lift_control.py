@@ -29,13 +29,13 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
 
-from src.setup.config_sim_setup import Ui_dialog_config_sim
-from src.setup.main_menu_setup import Ui_mwindow_main_menu
-from src.setup.sim_2_floors_setup import Ui_mwindow_sim_2_floors
-from src.setup.sim_3_floors_setup import Ui_mwindow_sim_3_floors
-from src.setup.sim_4_floors_setup import Ui_mwindow_sim_4_floors
-from src.setup.sim_5_floors_setup import Ui_mwindow_sim_5_floors
-from src.setup.sim_6_floors_setup import Ui_mwindow_sim_6_floors
+from setup.config_sim_setup import Ui_dialog_config_sim
+from setup.main_menu_setup import Ui_mwindow_main_menu
+from setup.sim_2_floors_setup import Ui_mwindow_sim_2_floors
+from setup.sim_3_floors_setup import Ui_mwindow_sim_3_floors
+from setup.sim_4_floors_setup import Ui_mwindow_sim_4_floors
+from setup.sim_5_floors_setup import Ui_mwindow_sim_5_floors
+from setup.sim_6_floors_setup import Ui_mwindow_sim_6_floors
 
 
 def main() -> None:
