@@ -132,4 +132,4 @@ dmypy.json
 *.docx
 *.mp4
 .idea/
-.txt
+*.txt
