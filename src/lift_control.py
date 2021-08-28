@@ -25,9 +25,9 @@ import random
 import sys
 from time import sleep
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator, QPixmap
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QStyleFactory
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
 
 from setup.config_sim_setup import Ui_dialog_config_sim
 from setup.main_menu_setup import Ui_mwindow_main_menu
