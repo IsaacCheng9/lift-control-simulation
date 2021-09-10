@@ -39,11 +39,8 @@ must `pip install pyqt5` if you do not already have it installed.
 To run the application, you should follow the following steps:
 
 1. Clone this GitHub repository.
-2. Navigate to the source directory in your terminal with the command:
-   `cd src`
-3. Ensure that you have the prerequisites to run the application (as explained
-   in the previous section).
-4. Run the application with the command: `python lift_control.py`
+2. Ensure that you're in the root directory: lift-control-simulation
+3. Run the application with the command: `python -m src.lift_control`
 
 ## Usage
 
