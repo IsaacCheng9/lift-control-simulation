@@ -44,7 +44,7 @@ def main() -> None:
     # Performs scaling to prevent tiny UI on high resolution screens.
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
-    os.environ["QT_SCALE_FACTOR"] = "1.5"
+    os.environ["QT_SCALE_FACTOR"] = "2"
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("fusion")
     people_overview_file, logs_file = file_names()
