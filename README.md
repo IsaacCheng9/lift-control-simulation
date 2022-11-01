@@ -1,14 +1,18 @@
-# lift-control-simulation
+# Lift Control Simulation
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 A desktop application developed in Python with PyQt5 to manage and simulate lift
 control under various configurations.
 
-It optimises a priority queue with a custom-made algorithm for efficiency in
-distance travelled by the lift. This algorithm achieves up to 82.5% reduction in
-distance travelled compared to the naive algorithm benchmark, outperforming the
-25% reduction claimed by the destination dispatch technique.
+I optimised a custom algorithm for efficiency in distance travelled by the lift.
+This algorithm achieves up to 82.5% reduction in distance travelled compared to
+the naive algorithm benchmark, outperforming the 25% reduction claimed by the
+destination dispatch technique.
+
+For more information about this, see the design
+document at [docs/Lift Control - Design Document.pdf](<docs/Lift Control - Design Document.pdf>).
+It contains an explanation of the algorithm and performance analysis.
 
 ## Visuals
 
