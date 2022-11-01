@@ -22,6 +22,7 @@ of people after the simulation is complete.
 import json
 import logging
 import os
+import pathlib
 import random
 import sys
 from time import sleep
@@ -56,12 +57,49 @@ def main() -> None:
 
 def file_names() -> tuple:
     people_overview_file = "resources/people_overview.json"
+    # If people_overview.json doesn't exist, create it /resources.
+    if not pathlib.Path(people_overview_file).exists():
+        generate_random_people_config(people_overview_file)
     logs_file = "resources/logs.txt"
     return people_overview_file, logs_file
 
 
-def setup_logging(logs_file: str):
-    """Sets up the logging system for debugging purposes."""
+def generate_random_people_config(file_path: str) -> None:
+    """
+    Randomly create a configuration of ten people with random start and target
+    floors in a building of five floors.
+
+    Args:
+        file_path: The directory of the file to save the configuration to.
+    """
+    people = []
+    for person in range(10):
+        start_floor = random.randint(0, 4)
+        while True:
+            target_floor = random.randint(0, 4)
+            if target_floor != start_floor:
+                break
+        person_config = {
+            "id": person,
+            "start_floor": start_floor,
+            "target_floor": target_floor,
+            "current_floor": start_floor,
+            "delivered": False,
+            "direction": "up" if target_floor > start_floor else "down",
+        }
+        people.append(person_config)
+        # Save the people configuration to people_overview.json.
+        with open(file_path, "w") as file:
+            json.dump(people, file, indent=2)
+
+
+def setup_logging(logs_file: str) -> None:
+    """
+    Set up the logging system for debugging purposes.
+
+    Args:
+        logs_file: The directory of the file to save the logs to.
+    """
     logging.basicConfig(
         filename=logs_file,
         level=logging.DEBUG,
@@ -79,7 +117,11 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
-            people_overview = json.load(infile)
+            try:
+                people_overview = json.load(infile)
+            except json.decoder.JSONDecodeError:
+                generate_random_people_config(people_overview_file)
+                people_overview = json.load(infile)
         self.num_floors = 5
         self.num_people = len(people_overview)
         self.lift_capacity = 5
