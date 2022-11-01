@@ -133,3 +133,6 @@ dmypy.json
 *.mp4
 .idea/
 *.txt
+
+# Configuration file for the people in the lift
+resources/people_overview.json
