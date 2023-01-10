@@ -397,29 +397,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
-        # Resets tracking stats to 0.
-        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
-        self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
-        self.MWindow.lbl_update.setText("")
-        # Sets initial values for people waiting on each floor.
-        self.update_floors(people_overview)
-
-        # Displays configuration, generated people, and starting lift floor.
-        print(
-            "\n-------------------------------------------------------------"
-            "\nNumber of Floors:",
-            self.num_floors,
-            "\nNumber of People:",
-            self.num_people,
-            "\nLift Capacity:",
-            self.lift_capacity,
-            "\nUI Delay (ms):",
-            self.ui_delay,
-        )
-        print("\nPeople Generated:")
-        for person in people_overview:
-            print(person)
-        print("\nLift Floor (Starting):", self.lift_floor)
+        self.display_config_info(people_overview)
 
         # Continues simulation until all target floors are reached.
         while (
@@ -597,6 +575,30 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
+    def display_config_info(self, people_overview: list) -> None:
+        # Resets tracking stats to 0.
+        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
+        self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
+        self.MWindow.lbl_update.setText("")
+        # Sets initial values for people waiting on each floor.
+        self.update_floors(people_overview)
+        # Displays configuration, generated people, and starting lift floor.
+        print(
+            "\n-------------------------------------------------------------"
+            "\nNumber of Floors:",
+            self.num_floors,
+            "\nNumber of People:",
+            self.num_people,
+            "\nLift Capacity:",
+            self.lift_capacity,
+            "\nUI Delay (ms):",
+            self.ui_delay,
+        )
+        print("\nPeople Generated:")
+        for person in people_overview:
+            print(person)
+        print("\nLift Floor (Starting):", self.lift_floor)
+
     def run_simulation_improved(self, people_overview_file: str) -> None:
         """
         Runs the simulation using the improved algorithm.
@@ -626,30 +628,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
-
-        # Resets tracking stats to 0.
-        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
-        self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
-        self.MWindow.lbl_update.setText("")
-        # Sets initial values for people waiting on each floor.
-        self.update_floors(people_overview)
-
-        # Displays configuration, generated people, and starting lift floor.
-        print(
-            "\n-------------------------------------------------------------"
-            "\nNumber of Floors:",
-            self.num_floors,
-            "\nNumber of People:",
-            self.num_people,
-            "\nLift Capacity:",
-            self.lift_capacity,
-            "\nUI Delay (ms):",
-            self.ui_delay,
-        )
-        print("\nPeople Generated:")
-        for person in people_overview:
-            print(person)
-        print("\nLift Floor (Starting):", self.lift_floor)
+        self.display_config_info(people_overview)
 
         # Continues simulation until all target floors are reached.
         while (
