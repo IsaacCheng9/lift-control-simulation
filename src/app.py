@@ -111,7 +111,7 @@ def setup_logging(logs_file: str) -> None:
 class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
     """Contains the main window for the lift control simulation."""
 
-    def __init__(self, people_overview_file):
+    def __init__(self, people_overview_file: str):
         super().__init__()
         self.setupUi(self)
 
@@ -140,7 +140,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             lambda: self.open_mwindow_lift_sim(people_overview_file)
         )
 
-    def open_dialog_config_sim(self, people_overview_file) -> None:
+    def open_dialog_config_sim(self, people_overview_file: str) -> None:
         """Opens the dialog for the user to configure their simulation."""
         self.Dialog = ConfigSimDialog()
         # Restricts inputs to only numbers.
@@ -155,7 +155,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         )
         self.Dialog.open()
 
-    def open_mwindow_lift_sim(self, people_overview_file) -> None:
+    def open_mwindow_lift_sim(self, people_overview_file: str) -> None:
         """Opens the main window for the lift simulation."""
         self.lift_floor = 0
         # Opens a different UI depending on the number of floors configured.
@@ -193,7 +193,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.generate_new_sim(people_overview_file)
         self.MWindow.show()
 
-    def save_sim(self, people_overview_file):
+    def save_sim(self, people_overview_file: str):
         """Saves the lift simulation settings."""
         self.num_floors_input = self.Dialog.line_edit_num_floors.text()
         self.num_people_input = self.Dialog.line_edit_num_people.text()
@@ -326,7 +326,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.MWindow.lbl_floor_4.setPixmap(red_block)
         QApplication.processEvents()
 
-    def generate_new_sim(self, people_overview_file) -> None:
+    def generate_new_sim(self, people_overview_file: str) -> None:
         """Generates a new simulation with current configuration settings."""
         # Empties the list of people generated to overwrite previous sim.
         people_overview = []
@@ -368,7 +368,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Provides confirmation that generation was successful.
         self.MWindow.lbl_update.setText("New simulation generated successfully.")
 
-    def run_simulation_naive(self, people_overview_file) -> None:
+    def run_simulation_naive(self, people_overview_file: str) -> None:
         """
         Runs the simulation using the naive (mechanical) algorithm.
 
@@ -597,7 +597,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
-    def run_simulation_improved(self, people_overview_file) -> None:
+    def run_simulation_improved(self, people_overview_file: str) -> None:
         """
         Runs the simulation using the improved algorithm.
 
