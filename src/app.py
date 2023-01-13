@@ -139,6 +139,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.btn_open_sim.clicked.connect(
             lambda: self.open_mwindow_lift_sim(people_overview_file)
         )
+        QApplication.processEvents()
 
     def open_dialog_config_sim(self, people_overview_file: str) -> None:
         """Opens the dialog for the user to configure their simulation."""
@@ -245,6 +246,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.btn_open_sim.clicked.connect(
                 lambda: self.open_mwindow_lift_sim(people_overview_file)
             )
+        QApplication.processEvents()
 
     def update_floors(self, people_overview: list):
         """
@@ -367,6 +369,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
         # Provides confirmation that generation was successful.
         self.MWindow.lbl_update.setText("New simulation generated successfully.")
+        QApplication.processEvents()
 
     def run_simulation_naive(self, people_overview_file: str) -> None:
         """
@@ -502,18 +505,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             self.lift_floor += 1
                         else:
                             self.lift_floor -= 1
-                        # Updates the current floor of people in lift.
-                        for passenger in people_lift:
-                            for person1 in people_overview:
-                                if person1["id"] == passenger["id"]:
-                                    passenger["current_floor"] = self.lift_floor
-                                    person1["current_floor"] = self.lift_floor
-                        self.update_floors(people_overview)
-                        distance_travelled += 1
-                        self.MWindow.lbl_distance_travelled.setText(
-                            "Total Distance Travelled: " + str(distance_travelled)
+
+                        distance_travelled = self.update_current_floor_of_passengers(
+                            distance_travelled, people_lift, people_overview
                         )
-                        QApplication.processEvents()
                         print("    Lift Floor (Delivering):", self.lift_floor)
 
                         # Changes the lift's direction if they have reached
@@ -710,18 +705,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     else:
                         self.lift_floor -= 1
 
-                    # Updates the current floor of people in lift.
-                    for passenger in people_lift:
-                        for person in people_overview:
-                            if person["id"] == passenger["id"]:
-                                passenger["current_floor"] = self.lift_floor
-                                person["current_floor"] = self.lift_floor
-                    self.update_floors(people_overview)
-                    distance_travelled += 1
-                    self.MWindow.lbl_distance_travelled.setText(
-                        "Total Distance Travelled: " + str(distance_travelled)
+                    distance_travelled = self.update_current_floor_of_passengers(
+                        distance_travelled, people_lift, people_overview
                     )
-                    QApplication.processEvents()
                     print("    Lift Floor (Collecting):", self.lift_floor)
 
                 # Iterates whilst there are people in the lift.
@@ -813,18 +799,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         else:
                             self.lift_floor -= 1
 
-                        # Updates the current floor of people in lift.
-                        for passenger in people_lift:
-                            for person in people_overview:
-                                if person["id"] == passenger["id"]:
-                                    passenger["current_floor"] = self.lift_floor
-                                    person["current_floor"] = self.lift_floor
-                        self.update_floors(people_overview)
-                        distance_travelled += 1
-                        self.MWindow.lbl_distance_travelled.setText(
-                            "Total Distance Travelled: " + str(distance_travelled)
+                        distance_travelled = self.update_current_floor_of_passengers(
+                            distance_travelled, people_lift, people_overview
                         )
-                        QApplication.processEvents()
                         print("    Lift Floor (Delivering):", self.lift_floor)
 
         # Displays the updated version of the list of people.
@@ -834,6 +811,23 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         sleep(int(self.ui_delay) / 1000)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
+
+    def update_current_floor_of_passengers(
+        self, distance_travelled, people_lift, people_overview
+    ):
+        # Updates the current floor of people in lift.
+        for passenger in people_lift:
+            for person in people_overview:
+                if person["id"] == passenger["id"]:
+                    passenger["current_floor"] = self.lift_floor
+                    person["current_floor"] = self.lift_floor
+        self.update_floors(people_overview)
+        distance_travelled += 1
+        self.MWindow.lbl_distance_travelled.setText(
+            "Total Distance Travelled: " + str(distance_travelled)
+        )
+        QApplication.processEvents()
+        return distance_travelled
 
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
