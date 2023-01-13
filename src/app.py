@@ -525,41 +525,13 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         # anyone in the lift, and drops them off if it has.
                         for passenger in people_lift[:]:
                             if passenger["target_floor"] == self.lift_floor:
-                                sleep(int(self.ui_delay) / 1000)
-                                # Marks the person as delivered, and increments
-                                # count.
-                                num_in_lift -= 1
-                                num_delivered += 1
-                                self.MWindow.lbl_num_in_lift.setText(
-                                    "Number of People in Lift: " + str(num_in_lift)
+                                num_in_lift = self.mark_passenger_as_delivered(
+                                    num_delivered,
+                                    num_in_lift,
+                                    passenger,
+                                    people_lift,
+                                    people_overview,
                                 )
-                                self.MWindow.lbl_num_delivered.setText(
-                                    "Number of People Delivered: " + str(num_delivered)
-                                )
-                                print(
-                                    "\nDelivered person ID",
-                                    passenger["id"],
-                                    "from floor",
-                                    passenger["start_floor"],
-                                    "to",
-                                    passenger["target_floor"],
-                                )
-                                self.MWindow.lbl_update.setText(
-                                    "Delivered person ID "
-                                    + str(passenger["id"])
-                                    + " from floor "
-                                    + str(passenger["start_floor"])
-                                    + " to "
-                                    + str(passenger["target_floor"])
-                                )
-                                QApplication.processEvents()
-
-                                # Marks the person as delivered.
-                                for person1 in people_overview:
-                                    if person1["id"] == passenger["id"]:
-                                        person1["delivered"] = True
-                                # Removes the person from the lift.
-                                people_lift.remove(passenger)
 
         # Displays the updated version of the list of
         # people.
@@ -569,6 +541,61 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         sleep(int(self.ui_delay) / 1000)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
+
+    def mark_passenger_as_delivered(
+        self,
+        num_delivered: int,
+        num_in_lift: int,
+        passenger: dict,
+        people_lift: list,
+        people_overview: list,
+    ) -> int:
+        """
+        Marks a passenger as delivered, and removes them from the lift.
+
+        Args:
+            num_delivered: The number of people delivered so far.
+            num_in_lift: The number of people currently in the lift.
+            passenger: The passenger to be marked as delivered.
+            people_lift: The list of people currently in the lift.
+            people_overview: The list of people in the simulation.
+
+        Returns:
+            The updated number of people in the lift.
+        """
+        sleep(int(self.ui_delay) / 1000)
+        num_in_lift -= 1
+        num_delivered += 1
+        self.MWindow.lbl_num_in_lift.setText(
+            "Number of People in Lift: " + str(num_in_lift)
+        )
+        self.MWindow.lbl_num_delivered.setText(
+            "Number of People Delivered: " + str(num_delivered)
+        )
+        print(
+            "\nDelivered person ID",
+            passenger["id"],
+            "from floor",
+            passenger["start_floor"],
+            "to",
+            passenger["target_floor"],
+        )
+        self.MWindow.lbl_update.setText(
+            "Delivered person ID "
+            + str(passenger["id"])
+            + " from floor "
+            + str(passenger["start_floor"])
+            + " to "
+            + str(passenger["target_floor"])
+        )
+        QApplication.processEvents()
+        # Marks the person as delivered.
+        for person1 in people_overview:
+            if person1["id"] == passenger["id"]:
+                person1["delivered"] = True
+        # Removes the person from the lift.
+        people_lift.remove(passenger)
+        return num_in_lift
 
     def display_config_info(self, people_overview: list) -> None:
         # Resets tracking stats to 0.
@@ -716,41 +743,13 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     # anyone in the lift, and drops them off if it has.
                     for passenger in people_lift[:]:
                         if passenger["target_floor"] == self.lift_floor:
-                            sleep(int(self.ui_delay) / 1000)
-                            # Marks the person as delivered, and increments
-                            # count.
-                            num_in_lift -= 1
-                            num_delivered += 1
-                            self.MWindow.lbl_num_in_lift.setText(
-                                "Number of People in Lift: " + str(num_in_lift)
+                            num_in_lift = self.mark_passenger_as_delivered(
+                                num_delivered,
+                                num_in_lift,
+                                passenger,
+                                people_lift,
+                                people_overview,
                             )
-                            self.MWindow.lbl_num_delivered.setText(
-                                "Number of People Delivered: " + str(num_delivered)
-                            )
-                            print(
-                                "\nDelivered person ID",
-                                passenger["id"],
-                                "from floor",
-                                passenger["start_floor"],
-                                "to",
-                                passenger["target_floor"],
-                            )
-                            self.MWindow.lbl_update.setText(
-                                "Delivered person ID "
-                                + str(passenger["id"])
-                                + " from floor "
-                                + str(passenger["start_floor"])
-                                + " to "
-                                + str(passenger["target_floor"])
-                            )
-                            QApplication.processEvents()
-
-                            # Marks the person as delivered.
-                            for person in people_overview:
-                                if person["id"] == passenger["id"]:
-                                    person["delivered"] = True
-                            # Ensures person is removed from lift and pending.
-                            people_lift.remove(passenger)
                             if passenger in people_pending:
                                 people_pending.remove(passenger)
 
