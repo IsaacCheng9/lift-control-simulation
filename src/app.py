@@ -149,7 +149,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lbl_ui_delay.setText("UI Delay (Milliseconds): " + str(self.ui_delay))
         # Connects 'Configure Simulation' button to the configure simulation
         # dialog.
-        self.btn_config_sim.clicked.connect(self.open_dialog_config_sim)
+        self.btn_config_sim.clicked.connect(
+            lambda: self.open_dialog_config_sim(people_overview_file)
+        )
         # Connects 'Open Simulation' button to the relevant simulation window.
         self.btn_open_sim.clicked.connect(
             lambda: self.open_mwindow_lift_sim(people_overview_file)
