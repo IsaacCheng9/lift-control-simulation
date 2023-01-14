@@ -703,6 +703,158 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
         self.display_simulation_summary(people_overview, distance_travelled)
 
+    def collect_person_with_improved_algorithm(
+        self,
+        distance_travelled: int,
+        num_in_lift: int,
+        people_lift: list,
+        people_overview: list,
+        people_pending: list,
+    ) -> Tuple[int, int]:
+        """
+        Collect a person from their start floor using the improved algorithm,
+        delivering people who can be delivered en-route of collecting the
+        person.
+
+        Args:
+            distance_travelled: The total distance travelled by the lift.
+            num_in_lift: The number of people in the lift.
+            people_lift: A list of people in the lift.
+            people_overview: A list of people in the simulation.
+            people_pending: A list of people who can be delivered en-route of
+                            collecting the person.
+
+        Returns:
+            The total distance travelled by the lift and the number of people
+            in the lift.
+        """
+        # Calculate if the lift needs to go up or down to collect the next
+        # person.
+        if people_pending[0]["start_floor"] - self.lift_floor > 0:
+            lift_direction = "Up"
+        elif people_pending[0]["start_floor"] - self.lift_floor < 0:
+            lift_direction = "Down"
+        else:
+            lift_direction = "None"
+
+        num_floors_away_from_collection = abs(
+            int(people_pending[0]["start_floor"]) - self.lift_floor
+        )
+        # Add people as pending if they can be delivered en route of collecting
+        # the person.
+        if lift_direction in ("Up", "Down"):
+            for en_route in people_overview:
+                num_floors_away_en_route = abs(
+                    int(en_route["target_floor"]) - self.lift_floor
+                )
+                if (
+                    en_route not in people_pending
+                    and len(people_lift) < int(self.lift_capacity) - 1
+                    and en_route["delivered"] is False
+                    and en_route["direction"] == lift_direction
+                    and num_floors_away_en_route <= num_floors_away_from_collection
+                ):
+                    people_pending.append(en_route)
+
+        # Check if it needs to pick any pending person up.
+        for waiting in people_pending[:]:
+            if waiting["start_floor"] == self.lift_floor:
+                people_lift.append(waiting)
+                people_pending.remove(waiting)
+                num_in_lift += 1
+                collected_msg = (
+                    f"Collected person ID {waiting['id']} en route, as they "
+                    f"are also going {waiting['direction'].lower()} and can be "
+                    "dropped off en route."
+                )
+                print(f"    {collected_msg}")
+                self.MWindow.lbl_update.setText(collected_msg)
+                self.MWindow.lbl_num_in_lift.setText(
+                    "Number of People in Lift: " + str(num_in_lift)
+                )
+                QApplication.processEvents()
+                sleep(self.ui_delay)
+
+        if people_pending:
+            if lift_direction == "Up":
+                self.lift_floor += 1
+            else:
+                self.lift_floor -= 1
+            distance_travelled = self.update_current_floor_of_passengers(
+                distance_travelled, people_lift, people_overview
+            )
+            print(f"Lift Floor: {self.lift_floor} (Collecting)")
+
+        return distance_travelled, num_in_lift
+
+    def deliver_person_with_improved_algorithm(
+        self,
+        distance_travelled: int,
+        num_delivered: int,
+        num_in_lift: int,
+        people_lift: list,
+        people_overview: list,
+        people_pending: list,
+    ):
+        """
+        Deliver a person from their start floor using the improved algorithm,
+        delivering people who can be delivered en-route of delivering the
+        person.
+
+        Args:
+            distance_travelled: The total distance travelled by the lift.
+            num_delivered: The number of people delivered in the simulation.
+            num_in_lift: The number of people in the lift.
+            people_lift: A list of people in the lift.
+            people_overview: A list of people in the simulation.
+            people_pending: A list of people who can be delivered en-route of
+                            collecting the person.
+
+        Returns:
+            The total distance travelled by the lift and the number of people
+            in the lift.
+        """
+        while people_lift:
+            # Check if the lift has arrived at the target floor of anyone in
+            # the lift, and drop them off if it has.
+            for passenger in people_lift[:]:
+                if passenger["target_floor"] == self.lift_floor:
+                    num_in_lift = self.mark_passenger_as_delivered(
+                        num_delivered,
+                        num_in_lift,
+                        passenger,
+                        people_lift,
+                        people_overview,
+                    )
+                    if passenger in people_pending:
+                        people_pending.remove(passenger)
+
+            if people_lift:
+                # Check if there's a person on the floor going the same
+                # direction and collects them if they are.
+                for en_route in people_overview:
+                    if (
+                        en_route not in people_lift
+                        and len(people_lift) < int(self.lift_capacity)
+                        and en_route["start_floor"] == self.lift_floor
+                        and en_route["delivered"] is False
+                        and en_route["direction"] == people_lift[0]["direction"]
+                    ):
+                        people_lift.append(en_route)
+                        num_in_lift += 1
+
+                # Move the lift up/down towards the target floor.
+                if people_lift[0]["direction"] == "Up":
+                    self.lift_floor += 1
+                else:
+                    self.lift_floor -= 1
+                distance_travelled = self.update_current_floor_of_passengers(
+                    distance_travelled, people_lift, people_overview
+                )
+                print(f"Lift Floor: {self.lift_floor} (Delivering)")
+
+        return distance_travelled, num_in_lift
+
     def run_simulation_with_improved_algorithm(self, people_overview_file: str) -> None:
         """
         Run the simulation using the improved algorithm.
@@ -750,107 +902,31 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         people_pending.append(person)
                         break
             else:
-                # Calculates if the lift needs to go up or down to collect the
-                # next person.
-                if people_pending[0]["start_floor"] - self.lift_floor > 0:
-                    lift_direction = "Up"
-                elif people_pending[0]["start_floor"] - self.lift_floor < 0:
-                    lift_direction = "Down"
-                else:
-                    lift_direction = "None"
-
-                # Number of floors the lift is away from collecting someone.
-                num_floors_away = abs(
-                    int(people_pending[0]["start_floor"]) - self.lift_floor
+                # Collect the next person and deliver any people who can be
+                # delivered en-route of collecting the person.
+                (
+                    distance_travelled,
+                    num_in_lift,
+                ) = self.collect_person_with_improved_algorithm(
+                    distance_travelled,
+                    num_in_lift,
+                    people_lift,
+                    people_overview,
+                    people_pending,
                 )
-
-                # Adds people as pending if they can be delivered en route.
-                if lift_direction in ("Up", "Down"):
-                    for en_route in people_overview:
-                        num_floors_away_en_route = abs(
-                            int(en_route["target_floor"]) - self.lift_floor
-                        )
-                        if (
-                            en_route not in people_pending
-                            and len(people_lift) < int(self.lift_capacity) - 1
-                            and en_route["delivered"] is False
-                            and en_route["direction"] == lift_direction
-                            and num_floors_away_en_route <= num_floors_away
-                        ):
-                            people_pending.append(en_route)
-
-                # Checks if it needs to pick any pending person up.
-                for waiting in people_pending[:]:
-                    if waiting["start_floor"] == self.lift_floor:
-                        people_lift.append(waiting)
-                        people_pending.remove(waiting)
-                        num_in_lift += 1
-                        collected_msg = (
-                            f"Collected person ID {waiting['id']} en route, as they "
-                            f"are also going {waiting['direction'].lower()} and can be "
-                            "dropped off en route."
-                        )
-                        print(f"    {collected_msg}")
-                        self.MWindow.lbl_update.setText(collected_msg)
-                        self.MWindow.lbl_num_in_lift.setText(
-                            "Number of People in Lift: " + str(num_in_lift)
-                        )
-                        QApplication.processEvents()
-                        sleep(self.ui_delay)
-
-                if people_pending:
-                    # Moves the lift up or down depending on the direction,
-                    # and specifies the floor moved to.
-                    if lift_direction == "Up":
-                        self.lift_floor += 1
-                    else:
-                        self.lift_floor -= 1
-                    distance_travelled = self.update_current_floor_of_passengers(
-                        distance_travelled, people_lift, people_overview
-                    )
-                    print(f"Lift Floor: {self.lift_floor} (Collecting)")
-
-                # Iterates whilst there are people in the lift.
-                while people_lift:
-                    # Checks if the lift has arrived at the target floor of
-                    # anyone in the lift, and drops them off if it has.
-                    for passenger in people_lift[:]:
-                        if passenger["target_floor"] == self.lift_floor:
-                            num_in_lift = self.mark_passenger_as_delivered(
-                                num_delivered,
-                                num_in_lift,
-                                passenger,
-                                people_lift,
-                                people_overview,
-                            )
-                            if passenger in people_pending:
-                                people_pending.remove(passenger)
-
-                    if people_lift:
-                        # Checks if there's a person on the floor going the
-                        # same direction and collects them if they are.
-                        for en_route in people_overview:
-                            if (
-                                en_route not in people_lift
-                                and len(people_lift) < int(self.lift_capacity)
-                                and en_route["start_floor"] == self.lift_floor
-                                and en_route["delivered"] is False
-                                and en_route["direction"] == people_lift[0]["direction"]
-                            ):
-                                people_lift.append(en_route)
-                                num_in_lift += 1
-
-                        # Moves the lift up or down depending on the
-                        # direction, and specifies the floor moved to.
-                        if people_lift[0]["direction"] == "Up":
-                            self.lift_floor += 1
-                        else:
-                            self.lift_floor -= 1
-
-                        distance_travelled = self.update_current_floor_of_passengers(
-                            distance_travelled, people_lift, people_overview
-                        )
-                        print(f"Lift Floor: {self.lift_floor} (Delivering)")
+                # Deliver the person and any additional people who can be
+                # delivered en-route of delivering the person.
+                (
+                    distance_travelled,
+                    num_in_lift,
+                ) = self.deliver_person_with_improved_algorithm(
+                    distance_travelled,
+                    num_delivered,
+                    num_in_lift,
+                    people_lift,
+                    people_overview,
+                    people_pending,
+                )
 
         self.display_simulation_summary(people_overview, distance_travelled)
 
