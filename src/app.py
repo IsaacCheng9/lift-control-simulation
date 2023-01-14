@@ -26,6 +26,7 @@ import pathlib
 import random
 import sys
 from time import sleep
+from typing import Tuple
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIntValidator, QPixmap
@@ -500,6 +501,136 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             lift_direction = "Down"
         return lift_direction
 
+    def collect_person_with_naive_algorithm(
+        self,
+        distance_travelled: int,
+        lift_direction: str,
+        num_in_lift: int,
+        people_lift: list,
+        people_overview: list,
+        person: dict,
+    ) -> Tuple[int, str, int]:
+        """
+        Collect a person from their start floor using the naive algorithm.
+
+        Args:
+            distance_travelled: The total distance travelled by the lift.
+            lift_direction: Whether the lift is going up or down.
+            num_in_lift: The number of people in the lift.
+            people_lift: The list of people in the lift.
+            people_overview: The list of people in the simulation.
+            person: The person to collect.
+
+        Returns:
+            The updated distance travelled, lift direction and number of people
+            in the lift.
+        """
+        while self.lift_floor != person["start_floor"]:
+            # Moves the lift up or down based on the person's
+            # start floor relative to the lift's current floor,
+            # and whether the lift needs to change direction,
+            # then displays the floor moved to.
+            if lift_direction == "Up":
+                self.lift_floor += 1
+            else:
+                self.lift_floor -= 1
+            self.update_floors_in_gui(people_overview)
+            distance_travelled += 1
+            self.MWindow.lbl_distance_travelled.setText(
+                "Total Distance Travelled: " + str(distance_travelled)
+            )
+            QApplication.processEvents()
+            print(f"Lift Floor: {self.lift_floor} (Collecting)")
+            lift_direction = self.switch_lift_direction_if_at_top_or_bottom_floor(
+                lift_direction
+            )
+        # Collect the person and update the GUI.
+        people_lift.append(person)
+        num_in_lift += 1
+        self.MWindow.lbl_num_in_lift.setText(
+            "Number of People in Lift: " + str(num_in_lift)
+        )
+        QApplication.processEvents()
+        return distance_travelled, lift_direction, num_in_lift
+
+    def deliver_person_with_naive_algorithm(
+        self,
+        distance_travelled: int,
+        lift_direction: str,
+        num_delivered: int,
+        num_in_lift: int,
+        people_lift: list,
+        people_overview: list,
+        person: dict,
+    ) -> Tuple[int, str, int]:
+        """
+        Deliver the person to their target floor and any additional people
+        en-route.
+
+        Args:
+            distance_travelled: The total distance travelled by the lift.
+            lift_direction: Whether the lift is going up or down.
+            num_delivered: The number of people delivered in the simulation.
+            num_in_lift: The number of people in the lift.
+            people_lift: The list of people in the lift.
+            people_overview: The list of people in the simulation.
+            person: The person to collect.
+
+        Returns:
+            The updated distance travelled, lift direction, and number of
+            people in the lift.
+        """
+        while people_lift:
+            # Checks if there's a person on the floor going the
+            # same direction and collects them if they are.
+            for en_route in people_overview:
+                if (
+                    en_route not in people_lift
+                    and en_route["start_floor"] == self.lift_floor
+                    and en_route["delivered"] is False
+                    and en_route["direction"] == person["direction"]
+                ):
+                    people_lift.append(en_route)
+                    num_in_lift += 1
+                    collected_msg = (
+                        f"Collected person ID {en_route['id']} en route, "
+                        "as they are also going "
+                        f"{en_route['direction'].lower()}."
+                    )
+                    print(f"    {collected_msg}")
+                    self.MWindow.lbl_update.setText(collected_msg)
+                    self.MWindow.lbl_num_in_lift.setText(
+                        "Number of People in Lift: " + str(num_in_lift)
+                    )
+                    QApplication.processEvents()
+                    sleep(self.ui_delay)
+
+            # Continue moving the lift up or down until we reach
+            # the top or bottom of the building.
+            if lift_direction == "Up":
+                self.lift_floor += 1
+            else:
+                self.lift_floor -= 1
+            distance_travelled = self.update_current_floor_of_passengers(
+                distance_travelled, people_lift, people_overview
+            )
+            print(f"Lift Floor: {self.lift_floor} (Delivering)")
+            lift_direction = self.switch_lift_direction_if_at_top_or_bottom_floor(
+                lift_direction
+            )
+
+            # Drop off passengers if we've reached their target.
+            for passenger in people_lift[:]:
+                if passenger["target_floor"] == self.lift_floor:
+                    num_in_lift = self.mark_passenger_as_delivered(
+                        num_delivered,
+                        num_in_lift,
+                        passenger,
+                        people_lift,
+                        people_overview,
+                    )
+        return distance_travelled, lift_direction, num_in_lift
+
     def run_simulation_with_naive_algorithm(self, people_overview_file: str) -> None:
         """
         Run the simulation using the naive (mechanical) algorithm.
@@ -543,88 +674,32 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             for person in people_overview:
                 if person["delivered"] is False:
                     # Continue moving floors until we can collect the person.
-                    while self.lift_floor != person["start_floor"]:
-                        # Moves the lift up or down based on the person's
-                        # start floor relative to the lift's current floor,
-                        # and whether the lift needs to change direction,
-                        # then displays the floor moved to.
-                        if lift_direction == "Up":
-                            self.lift_floor += 1
-                        else:
-                            self.lift_floor -= 1
-                        self.update_floors_in_gui(people_overview)
-                        distance_travelled += 1
-                        self.MWindow.lbl_distance_travelled.setText(
-                            "Total Distance Travelled: " + str(distance_travelled)
-                        )
-                        QApplication.processEvents()
-                        print(f"Lift Floor: {self.lift_floor} (Collecting)")
-                        lift_direction = (
-                            self.switch_lift_direction_if_at_top_or_bottom_floor(
-                                lift_direction
-                            )
-                        )
-
-                    # Collect the person and update the GUI.
-                    people_lift.append(person)
-                    num_in_lift += 1
-                    self.MWindow.lbl_num_in_lift.setText(
-                        "Number of People in Lift: " + str(num_in_lift)
+                    (
+                        distance_travelled,
+                        lift_direction,
+                        num_in_lift,
+                    ) = self.collect_person_with_naive_algorithm(
+                        distance_travelled,
+                        lift_direction,
+                        num_in_lift,
+                        people_lift,
+                        people_overview,
+                        person,
                     )
-                    QApplication.processEvents()
-
                     # Deliver the person and any additional people in the lift.
-                    while people_lift:
-                        # Checks if there's a person on the floor going the
-                        # same direction and collects them if they are.
-                        for en_route in people_overview:
-                            if (
-                                en_route not in people_lift
-                                and en_route["start_floor"] == self.lift_floor
-                                and en_route["delivered"] is False
-                                and en_route["direction"] == person["direction"]
-                            ):
-                                people_lift.append(en_route)
-                                num_in_lift += 1
-                                collected_msg = (
-                                    f"Collected person ID {en_route['id']} en route, "
-                                    "as they are also going "
-                                    f"{en_route['direction'].lower()}."
-                                )
-                                print(f"    {collected_msg}")
-                                self.MWindow.lbl_update.setText(collected_msg)
-                                self.MWindow.lbl_num_in_lift.setText(
-                                    "Number of People in Lift: " + str(num_in_lift)
-                                )
-                                QApplication.processEvents()
-                                sleep(self.ui_delay)
-
-                        # Continue moving the lift up or down until we reach
-                        # the top or bottom of the building.
-                        if lift_direction == "Up":
-                            self.lift_floor += 1
-                        else:
-                            self.lift_floor -= 1
-                        distance_travelled = self.update_current_floor_of_passengers(
-                            distance_travelled, people_lift, people_overview
-                        )
-                        print(f"Lift Floor: {self.lift_floor} (Delivering)")
-                        lift_direction = (
-                            self.switch_lift_direction_if_at_top_or_bottom_floor(
-                                lift_direction
-                            )
-                        )
-
-                        # Drop off passengers if we've reached their target.
-                        for passenger in people_lift[:]:
-                            if passenger["target_floor"] == self.lift_floor:
-                                num_in_lift = self.mark_passenger_as_delivered(
-                                    num_delivered,
-                                    num_in_lift,
-                                    passenger,
-                                    people_lift,
-                                    people_overview,
-                                )
+                    (
+                        distance_travelled,
+                        lift_direction,
+                        num_in_lift,
+                    ) = self.deliver_person_with_naive_algorithm(
+                        distance_travelled,
+                        lift_direction,
+                        num_delivered,
+                        num_in_lift,
+                        people_lift,
+                        people_overview,
+                        person,
+                    )
 
         self.display_simulation_summary(people_overview, distance_travelled)
 
