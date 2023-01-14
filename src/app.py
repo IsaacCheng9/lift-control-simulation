@@ -66,9 +66,9 @@ def get_file_names() -> tuple:
         The file names of the people overview and log files.
     """
     people_overview_file = "resources/people_overview.json"
-    # If people_overview.json doesn't exist, create it /resources.
+    # If people_overview.json doesn't exist, create it in /resources.
     if not pathlib.Path(people_overview_file).exists():
-        generate_random_people_config(people_overview_file)
+        generate_default_sim_config(people_overview_file)
     logs_file = "resources/logs.txt"
     return people_overview_file, logs_file
 
@@ -88,10 +88,10 @@ def setup_logging(logs_file: str) -> None:
     logging.debug("Lift Control program started.")
 
 
-def generate_random_people_config(file_path: str) -> None:
+def generate_default_sim_config(file_path: str) -> None:
     """
-    Randomly create a configuration of ten people with random start and target
-    floors in a building of five floors.
+    Generate a default simulation configuration of ten people with random start
+    and target floors in a building of five floors.
 
     Args:
         file_path: The directory of the file to save the configuration to.
@@ -136,7 +136,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             try:
                 people_overview = json.load(infile)
             except json.decoder.JSONDecodeError:
-                generate_random_people_config(people_overview_file)
+                generate_default_sim_config(people_overview_file)
                 people_overview = json.load(infile)
         self.num_floors = 5
         self.num_people = len(people_overview)
