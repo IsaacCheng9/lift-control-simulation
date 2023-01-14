@@ -140,13 +140,16 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.num_floors = 5
         self.num_people = len(people_overview)
         self.lift_capacity = 5
-        self.ui_delay = 500
+        # Set the default UI delay to 500 ms.
+        self.ui_delay = 0.5
 
         # Updates labels to show current configuration.
         self.lbl_num_floors.setText("Number of Floors: " + str(self.num_floors))
         self.lbl_num_people.setText("Number of People: " + str(self.num_people))
         self.lbl_lift_capacity.setText("Lift Capacity: " + str(self.lift_capacity))
-        self.lbl_ui_delay.setText("UI Delay (Milliseconds): " + str(self.ui_delay))
+        self.lbl_ui_delay.setText(
+            "UI Delay (ms): " + str(self.ui_delay * 1000)
+        )
         # Connects 'Configure Simulation' button to the configure simulation
         # dialog.
         self.btn_config_sim.clicked.connect(
@@ -270,12 +273,12 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             self.num_floors = self.Dialog.line_edit_num_floors.text()
             self.num_people = self.Dialog.line_edit_num_people.text()
             self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
-            self.ui_delay = self.Dialog.line_edit_ui_delay.text()
+            self.ui_delay = float(self.Dialog.line_edit_ui_delay.text()) / 1000
             # Updates labels to show current configuration.
             self.lbl_num_floors.setText("Number of Floors: " + str(self.num_floors))
             self.lbl_num_people.setText("Number of People: " + str(self.num_people))
             self.lbl_lift_capacity.setText("Lift Capacity: " + str(self.lift_capacity))
-            self.lbl_ui_delay.setText("UI Delay: " + str(self.ui_delay))
+            self.lbl_ui_delay.setText("UI Delay (ms): " + str(self.ui_delay * 1000))
             # Updates 'Open Simulation' button to open the relevant
             # simulation window.
             self.btn_open_sim.clicked.connect(
@@ -433,7 +436,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         Returns:
             The updated number of people in the lift.
         """
-        sleep(int(self.ui_delay) / 1000)
+        sleep(self.ui_delay)
         num_in_lift -= 1
         num_delivered += 1
         self.MWindow.lbl_num_in_lift.setText(
@@ -557,7 +560,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             QApplication.processEvents()
                             break
                         else:
-                            sleep(int(self.ui_delay) / 1000)
+                            sleep(self.ui_delay)
                             # Moves the lift up or down based on the person's
                             # start floor relative to the lift's current floor,
                             # and whether the lift needs to change direction,
@@ -652,7 +655,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print("\nPeople Overview (Simulation Complete):")
         for person in people_overview:
             print(person)
-        sleep(int(self.ui_delay) / 1000)
+        sleep(self.ui_delay)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
@@ -762,7 +765,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         int(people_pending[0]["start_floor"]) - self.lift_floor
                     )
                     print("\nFloor Differential (Collecting):", collect_moves)
-                    sleep(int(self.ui_delay) / 1000)
+                    sleep(self.ui_delay)
 
                     # Moves the lift up or down depending on the direction,
                     # and specifies the floor moved to.
@@ -832,7 +835,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print("\nPeople Overview (Simulation Complete):")
         for person in people_overview:
             print(person)
-        sleep(int(self.ui_delay) / 1000)
+        sleep(self.ui_delay)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
@@ -853,7 +856,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             ]
         )
         print("\nFloor Differential (Delivering):", deliver_moves)
-        sleep(int(self.ui_delay) / 1000)
+        sleep(self.ui_delay)
 
     def update_current_floor_of_passengers(
         self, distance_travelled: int, people_lift: list, people_overview: list
