@@ -484,6 +484,21 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             print(person)
         print(f"\nLift Floor: {self.lift_floor} (Starting)")
 
+    def switch_lift_direction_if_at_top_or_bottom_floor(
+        self, lift_direction: str
+    ) -> str:
+        """
+        Switch the lift's direction if it has reached the top or bottom floor.
+
+        Args:
+            lift_direction: The current direction of the lift.
+        """
+        if self.lift_floor == 0 and lift_direction == "Down":
+            lift_direction = "Up"
+        if self.lift_floor == int(self.num_floors) - 1 and lift_direction == "Up":
+            lift_direction = "Down"
+        return lift_direction
+
     def run_simulation_with_naive_algorithm(self, people_overview_file: str) -> None:
         """
         Run the simulation using the naive (mechanical) algorithm.
@@ -526,46 +541,37 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             # Iterates in order of the people generated (represents a queue).
             for person in people_overview:
                 if person["delivered"] is False:
-                    # Moves the lift floor by floor to collect the person, and
-                    # adds them to the list of people in the lift.
-                    while True:
-                        # Doesn't move the lift if on correct floor.
-                        if self.lift_floor == person["start_floor"]:
-                            # Updates the number of people in the lift.
-                            num_in_lift += 1
-                            self.MWindow.lbl_num_in_lift.setText(
-                                "Number of People in Lift: " + str(num_in_lift)
-                            )
-                            QApplication.processEvents()
-                            break
+                    # Continue moving floors until we can collect the person.
+                    while self.lift_floor != person["start_floor"]:
+                        sleep(self.ui_delay)
+                        # Moves the lift up or down based on the person's
+                        # start floor relative to the lift's current floor,
+                        # and whether the lift needs to change direction,
+                        # then displays the floor moved to.
+                        if lift_direction == "Up":
+                            self.lift_floor += 1
                         else:
-                            sleep(self.ui_delay)
-                            # Moves the lift up or down based on the person's
-                            # start floor relative to the lift's current floor,
-                            # and whether the lift needs to change direction,
-                            # then displays the floor moved to.
-                            if lift_direction == "Up":
-                                self.lift_floor += 1
-                            else:
-                                self.lift_floor -= 1
-                            self.update_floors_in_gui(people_overview)
-                            distance_travelled += 1
-                            self.MWindow.lbl_distance_travelled.setText(
-                                "Total Distance Travelled: " + str(distance_travelled)
+                            self.lift_floor -= 1
+                        self.update_floors_in_gui(people_overview)
+                        distance_travelled += 1
+                        self.MWindow.lbl_distance_travelled.setText(
+                            "Total Distance Travelled: " + str(distance_travelled)
+                        )
+                        QApplication.processEvents()
+                        print(f"Lift Floor: {self.lift_floor} (Collecting)")
+                        lift_direction = (
+                            self.switch_lift_direction_if_at_top_or_bottom_floor(
+                                lift_direction
                             )
-                            QApplication.processEvents()
-                            print(f"Lift Floor: {self.lift_floor} (Collecting)")
+                        )
 
-                        # Changes the lift's direction if they have reached
-                        # the end.
-                        if self.lift_floor == 0 and lift_direction == "Down":
-                            lift_direction = "Up"
-                        if (
-                            self.lift_floor == int(self.num_floors) - 1
-                            and lift_direction == "Up"
-                        ):
-                            lift_direction = "Down"
+                    # Collect the person and update the GUI.
                     people_lift.append(person)
+                    num_in_lift += 1
+                    self.MWindow.lbl_num_in_lift.setText(
+                        "Number of People in Lift: " + str(num_in_lift)
+                    )
+                    QApplication.processEvents()
 
                     # Iterates whilst there are people in the lift.
                     while people_lift:
@@ -585,32 +591,23 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 )
                                 QApplication.processEvents()
 
-                        # Moves the lift up or down based on the person's
-                        # target floor relative to the lift's current floor,
-                        # and whether the lift needs to change direction, then
-                        # displays the floor moved to.
+                        # Continue moving the lift up or down until we reach
+                        # the top or bottom of the building.
                         if lift_direction == "Up":
                             self.lift_floor += 1
                         else:
                             self.lift_floor -= 1
-
                         distance_travelled = self.update_current_floor_of_passengers(
                             distance_travelled, people_lift, people_overview
                         )
                         print(f"Lift Floor: {self.lift_floor} (Delivering)")
+                        lift_direction = (
+                            self.switch_lift_direction_if_at_top_or_bottom_floor(
+                                lift_direction
+                            )
+                        )
 
-                        # Changes the lift's direction if they have reached
-                        # the end.
-                        if self.lift_floor == 0 and lift_direction == "Down":
-                            lift_direction = "Up"
-                        if (
-                            self.lift_floor == int(self.num_floors) - 1
-                            and lift_direction == "Up"
-                        ):
-                            lift_direction = "Down"
-
-                        # Checks if the lift has arrived at the target floor of
-                        # anyone in the lift, and drops them off if it has.
+                        # Drop off passengers if we've reached their target.
                         for passenger in people_lift[:]:
                             if passenger["target_floor"] == self.lift_floor:
                                 num_in_lift = self.mark_passenger_as_delivered(
