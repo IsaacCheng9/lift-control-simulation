@@ -147,9 +147,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lbl_num_floors.setText("Number of Floors: " + str(self.num_floors))
         self.lbl_num_people.setText("Number of People: " + str(self.num_people))
         self.lbl_lift_capacity.setText("Lift Capacity: " + str(self.lift_capacity))
-        self.lbl_ui_delay.setText(
-            "UI Delay (ms): " + str(self.ui_delay * 1000)
-        )
+        self.lbl_ui_delay.setText("UI Delay (ms): " + str(self.ui_delay * 1000))
         # Connects 'Configure Simulation' button to the configure simulation
         # dialog.
         self.btn_config_sim.clicked.connect(
@@ -446,7 +444,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             "Number of People Delivered: " + str(num_delivered)
         )
         print(
-            "\nDelivered person ID",
+            "    Delivered person ID",
             passenger["id"],
             "from floor",
             passenger["start_floor"],
@@ -498,7 +496,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print("\nPeople Generated:")
         for person in people_overview:
             print(person)
-        print("\nLift Floor (Starting):", self.lift_floor)
+        print(f"Lift Floor: {self.lift_floor} (Starting)")
 
     def run_simulation_with_naive_algorithm(self, people_overview_file: str) -> None:
         """
@@ -542,11 +540,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             # Iterates in order of the people generated (represents a queue).
             for person in people_overview:
                 if person["delivered"] is False:
-                    # Calculates the number of moves needed to reach the next
-                    # person's starting floor.
-                    collect_moves = int(person["start_floor"]) - self.lift_floor
-                    print("\nFloor Differential (Collecting):", abs(collect_moves))
-
                     # Moves the lift floor by floor to collect the person, and
                     # adds them to the list of people in the lift.
                     while True:
@@ -575,7 +568,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 "Total Distance Travelled: " + str(distance_travelled)
                             )
                             QApplication.processEvents()
-                            print("    Lift Floor (Collecting):", self.lift_floor)
+                            print(f"Lift Floor: {self.lift_floor} (Collecting)")
 
                         # Changes the lift's direction if they have reached
                         # the end.
@@ -605,15 +598,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     "Number of People in Lift: " + str(num_in_lift)
                                 )
                                 QApplication.processEvents()
-                                print(
-                                    "\nThere are now",
-                                    num_in_lift,
-                                    "people in the lift, as person",
-                                    extra["id"],
-                                    "has been added to the lift.",
-                                )
 
-                        self.display_nearest_target_floor(people_lift)
                         # Moves the lift up or down based on the person's
                         # target floor relative to the lift's current floor,
                         # and whether the lift needs to change direction, then
@@ -626,7 +611,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         distance_travelled = self.update_current_floor_of_passengers(
                             distance_travelled, people_lift, people_overview
                         )
-                        print("    Lift Floor (Delivering):", self.lift_floor)
+                        print(f"Lift Floor: {self.lift_floor} (Delivering)")
 
                         # Changes the lift's direction if they have reached
                         # the end.
@@ -735,11 +720,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         ):
                             people_pending.append(extra)
 
-                # Displays an updated version of the list of people pending.
-                print("\nPeople Pending:")
-                for waiting in people_pending:
-                    print(waiting)
-
                 # Checks if it needs to pick a pending person up.
                 for waiting in people_pending[:]:
                     if waiting["start_floor"] == self.lift_floor:
@@ -750,21 +730,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             "Number of People in Lift: " + str(num_in_lift)
                         )
                         QApplication.processEvents()
-                        print(
-                            "\nThere are now",
-                            num_in_lift,
-                            "people in the lift, as person ID",
-                            waiting["id"],
-                            "has been added to the lift.",
-                        )
 
                 if people_pending:
-                    # Displays the number of moves needed to collect the next
-                    # person.
-                    collect_moves = abs(
-                        int(people_pending[0]["start_floor"]) - self.lift_floor
-                    )
-                    print("\nFloor Differential (Collecting):", collect_moves)
                     sleep(self.ui_delay)
 
                     # Moves the lift up or down depending on the direction,
@@ -777,7 +744,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     distance_travelled = self.update_current_floor_of_passengers(
                         distance_travelled, people_lift, people_overview
                     )
-                    print("    Lift Floor (Collecting):", self.lift_floor)
+                    print(f"Lift Floor: {self.lift_floor} (Collecting)")
 
                 # Iterates whilst there are people in the lift.
                 while people_lift:
@@ -810,15 +777,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             ):
                                 people_lift.append(extra)
                                 num_in_lift += 1
-                                print(
-                                    "\nThere are now",
-                                    num_in_lift,
-                                    "people in the lift, as person ID",
-                                    extra["id"],
-                                    "has been added to the lift.",
-                                )
 
-                        self.display_nearest_target_floor(people_lift)
                         # Moves the lift up or down depending on the
                         # direction, and specifies the floor moved to.
                         if people_lift[0]["direction"] == "Up":
@@ -829,7 +788,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         distance_travelled = self.update_current_floor_of_passengers(
                             distance_travelled, people_lift, people_overview
                         )
-                        print("    Lift Floor (Delivering):", self.lift_floor)
+                        print(f"Lift Floor: {self.lift_floor} (Delivering)")
 
         # Displays the updated version of the list of people.
         print("\nPeople Overview (Simulation Complete):")
@@ -838,25 +797,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         sleep(self.ui_delay)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
-
-    def display_nearest_target_floor(self, people_lift: list) -> None:
-        """
-        Display the nearest target floor to the lift's current floor.
-
-        Args:
-            people_lift: The list of people in the list.
-        """
-        print("\nPeople in Lift:")
-        for passenger in people_lift:
-            print(passenger)
-        deliver_moves = min(
-            [
-                abs(int(passenger["target_floor"]) - self.lift_floor)
-                for passenger in people_lift
-            ]
-        )
-        print("\nFloor Differential (Delivering):", deliver_moves)
-        sleep(self.ui_delay)
 
     def update_current_floor_of_passengers(
         self, distance_travelled: int, people_lift: list, people_overview: list
@@ -872,7 +812,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         Returns:
             The updated total distance travelled by the lift.
         """
-        # Updates the current floor of people in lift.
         for passenger in people_lift:
             for person in people_overview:
                 if person["id"] == passenger["id"]:
