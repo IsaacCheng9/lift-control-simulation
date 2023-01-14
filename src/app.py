@@ -480,23 +480,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     "has been added to the lift.",
                                 )
 
-                        # Displays an updated version of the list of people in
-                        # the lift.
-                        print("\nPeople in Lift:")
-                        for passenger in people_lift:
-                            print(passenger)
-
-                        # Displays the number of moves needed to deliver the
-                        # next closest person in the lift.
-                        deliver_moves = min(
-                            [
-                                abs(int(passenger["target_floor"]) - self.lift_floor)
-                                for passenger in people_lift
-                            ]
-                        )
-                        print("\nFloor Differential (Delivering):", deliver_moves)
-                        sleep(int(self.ui_delay) / 1000)
-
+                        self.display_nearest_target_floor(people_lift)
                         # Moves the lift up or down based on the person's
                         # target floor relative to the lift's current floor,
                         # and whether the lift needs to change direction, then
@@ -776,21 +760,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     "has been added to the lift.",
                                 )
 
-                        # Displays an updated version of the list of people
-                        # in the lift.
-                        print("\nPeople in Lift:")
-                        for passenger in people_lift:
-                            print(passenger)
-                        # Displays the next closest floor to deliver a person.
-                        deliver_moves = min(
-                            [
-                                abs(int(passenger["target_floor"]) - self.lift_floor)
-                                for passenger in people_lift
-                            ]
-                        )
-                        print("\nFloor Differential (Delivering):", deliver_moves)
-                        sleep(int(self.ui_delay) / 1000)
-
+                        self.display_nearest_target_floor(people_lift)
                         # Moves the lift up or down depending on the
                         # direction, and specifies the floor moved to.
                         if people_lift[0]["direction"] == "Up":
@@ -810,6 +780,25 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         sleep(int(self.ui_delay) / 1000)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
+
+    def display_nearest_target_floor(self, people_lift: list) -> None:
+        """
+        Display the nearest target floor to the lift's current floor.
+
+        Args:
+            people_lift: The list of people in the list.
+        """
+        print("\nPeople in Lift:")
+        for passenger in people_lift:
+            print(passenger)
+        deliver_moves = min(
+            [
+                abs(int(passenger["target_floor"]) - self.lift_floor)
+                for passenger in people_lift
+            ]
+        )
+        print("\nFloor Differential (Delivering):", deliver_moves)
+        sleep(int(self.ui_delay) / 1000)
 
     def update_current_floor_of_passengers(
         self, distance_travelled, people_lift, people_overview
