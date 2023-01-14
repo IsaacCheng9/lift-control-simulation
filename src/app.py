@@ -710,10 +710,18 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         people_lift.append(waiting)
                         people_pending.remove(waiting)
                         num_in_lift += 1
+                        collected_msg = (
+                            f"Collected person ID {waiting['id']} en route, as they "
+                            f"are also going {waiting['direction'].lower()} and can be "
+                            "dropped off en route."
+                        )
+                        print(f"    {collected_msg}")
+                        self.MWindow.lbl_update.setText(collected_msg)
                         self.MWindow.lbl_num_in_lift.setText(
                             "Number of People in Lift: " + str(num_in_lift)
                         )
                         QApplication.processEvents()
+                        sleep(self.ui_delay)
 
                 if people_pending:
                     # Moves the lift up or down depending on the direction,
@@ -743,8 +751,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                             if passenger in people_pending:
                                 people_pending.remove(passenger)
 
-                    # Calculates the number of moves needed to reach the
-                    # floor of the next closest person in the lift.
                     if people_lift:
                         # Checks if there's a person on the floor going the
                         # same direction and collects them if they are.
