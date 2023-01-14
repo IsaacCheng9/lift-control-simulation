@@ -621,14 +621,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     people_overview,
                                 )
 
-        # Displays the updated version of the list of
-        # people.
-        print("\nPeople Overview (Simulation Complete):")
-        for person in people_overview:
-            print(person)
-        sleep(self.ui_delay)
-        self.MWindow.lbl_update.setText("Simulation complete.")
-        QApplication.processEvents()
+        self.display_simulation_summary(people_overview)
 
     def run_simulation_with_improved_algorithm(self, people_overview_file: str) -> None:
         """
@@ -776,7 +769,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         )
                         print(f"Lift Floor: {self.lift_floor} (Delivering)")
 
-        # Displays the updated version of the list of people.
+        self.display_simulation_summary(people_overview)
+
+    def display_simulation_summary(self, people_overview: list) -> None:
+        """
+        Display a summary of the simulation after it has finished.
+
+        Args:
+            people_overview: A list of people in the simulation.
+        """
         print("\nPeople Overview (Simulation Complete):")
         for person in people_overview:
             print(person)
