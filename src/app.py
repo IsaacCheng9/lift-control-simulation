@@ -363,6 +363,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             elif self.lift_floor == 4:
                 self.MWindow.lbl_floor_4.setPixmap(red_block)
         QApplication.processEvents()
+        sleep(self.ui_delay)
 
     def generate_new_sim(self, people_overview_file: str) -> None:
         """
@@ -434,7 +435,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         Returns:
             The updated number of people in the lift.
         """
-        sleep(self.ui_delay)
         num_in_lift -= 1
         num_delivered += 1
         self.MWindow.lbl_num_in_lift.setText(
@@ -450,6 +450,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         print(f"    {delivered_msg}")
         self.MWindow.lbl_update.setText(delivered_msg)
         QApplication.processEvents()
+        sleep(self.ui_delay)
         # Find the person and mark them as delivered.
         for person1 in people_overview:
             if person1["id"] == passenger["id"]:
@@ -543,7 +544,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 if person["delivered"] is False:
                     # Continue moving floors until we can collect the person.
                     while self.lift_floor != person["start_floor"]:
-                        sleep(self.ui_delay)
                         # Moves the lift up or down based on the person's
                         # start floor relative to the lift's current floor,
                         # and whether the lift needs to change direction,
@@ -584,7 +584,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 and en_route["delivered"] is False
                                 and en_route["direction"] == person["direction"]
                             ):
-                                sleep(self.ui_delay)
                                 people_lift.append(en_route)
                                 num_in_lift += 1
                                 collected_msg = (
@@ -598,6 +597,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                     "Number of People in Lift: " + str(num_in_lift)
                                 )
                                 QApplication.processEvents()
+                                sleep(self.ui_delay)
 
                         # Continue moving the lift up or down until we reach
                         # the top or bottom of the building.
@@ -716,7 +716,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         QApplication.processEvents()
 
                 if people_pending:
-                    sleep(self.ui_delay)
                     # Moves the lift up or down depending on the direction,
                     # and specifies the floor moved to.
                     if lift_direction == "Up":
@@ -788,7 +787,6 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         for person in people_overview:
             print(person)
         print(f"Total Distance Travelled: {distance_travelled}")
-        sleep(self.ui_delay)
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
