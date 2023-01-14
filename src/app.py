@@ -41,27 +41,50 @@ from src.setup.sim_6_floors_setup import Ui_mwindow_sim_6_floors
 
 
 def main() -> None:
-    """Opens the main menu on program startup."""
+    """
+    Open the main menu on program startup.
+    """
     # Performs scaling to prevent tiny UI on high resolution screens.
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
     os.environ["QT_SCALE_FACTOR"] = "2"
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("fusion")
-    people_overview_file, logs_file = file_names()
+    people_overview_file, logs_file = get_file_names()
     setup_logging(logs_file)
     mwindow_main_menu = MainMenuWindow(people_overview_file)
     mwindow_main_menu.show()
     sys.exit(app.exec())
 
 
-def file_names() -> tuple:
+def get_file_names() -> tuple:
+    """
+    Get the file names of the people overview and log files.
+
+    Returns:
+        The file names of the people overview and log files.
+    """
     people_overview_file = "resources/people_overview.json"
     # If people_overview.json doesn't exist, create it /resources.
     if not pathlib.Path(people_overview_file).exists():
         generate_random_people_config(people_overview_file)
     logs_file = "resources/logs.txt"
     return people_overview_file, logs_file
+
+
+def setup_logging(logs_file: str) -> None:
+    """
+    Set up the logging system for debugging purposes.
+
+    Args:
+        logs_file: The directory of the file to save the logs to.
+    """
+    logging.basicConfig(
+        filename=logs_file,
+        level=logging.DEBUG,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+    )
+    logging.debug("Lift Control program started.")
 
 
 def generate_random_people_config(file_path: str) -> None:
@@ -93,29 +116,21 @@ def generate_random_people_config(file_path: str) -> None:
             json.dump(people, file, indent=2)
 
 
-def setup_logging(logs_file: str) -> None:
-    """
-    Set up the logging system for debugging purposes.
-
-    Args:
-        logs_file: The directory of the file to save the logs to.
-    """
-    logging.basicConfig(
-        filename=logs_file,
-        level=logging.DEBUG,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-    )
-    logging.debug("Lift Control program started.")
-
-
 class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
-    """Contains the main window for the lift control simulation."""
+    """
+    The main window for the lift control simulation.
+    """
 
     def __init__(self, people_overview_file: str):
+        """
+        Args:
+            people_overview_file: The path of the file to get the people in the
+                                  simulation from.
+        """
         super().__init__()
         self.setupUi(self)
 
-        # Reads existing JSON files for list of people.
+        # Read the JSON file for the list of people.
         with open(people_overview_file, "r") as infile:
             try:
                 people_overview = json.load(infile)
@@ -142,7 +157,13 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         QApplication.processEvents()
 
     def open_dialog_config_sim(self, people_overview_file: str) -> None:
-        """Opens the dialog for the user to configure their simulation."""
+        """
+        Open the dialog for the user to configure their simulation.
+
+        Args:
+            people_overview_file: The path of the file to get the people in the
+                                  simulation from.
+        """
         self.Dialog = ConfigSimDialog()
         # Restricts inputs to only numbers.
         self.only_int = QIntValidator()
@@ -157,7 +178,13 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.Dialog.open()
 
     def open_mwindow_lift_sim(self, people_overview_file: str) -> None:
-        """Opens the main window for the lift simulation."""
+        """
+        Open the main window for the lift simulation.
+
+        Args:
+            people_overview_file: The path of the file to get the people in the
+                                  simulation from.
+        """
         self.lift_floor = 0
         # Opens a different UI depending on the number of floors configured.
         if int(self.num_floors) == 2:
@@ -175,7 +202,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
         # Sets initial values for people waiting on each floor.
-        self.update_floors(people_overview)
+        self.update_floors_in_gui(people_overview)
         # Connects 'Generate New Simulation' button to generate a new
         # simulation with the current configuration settings.
         self.MWindow.btn_generate_new_sim.clicked.connect(
@@ -184,18 +211,24 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Connects 'Run Simulation (Naive)' button to run the simulation with
         # the naive (mechanical) algorithm.
         self.MWindow.btn_run_sim_naive.clicked.connect(
-            lambda: self.run_simulation_naive(people_overview_file)
+            lambda: self.run_simulation_with_naive_algorithm(people_overview_file)
         )
         # Connects 'Run Simulation (Improved)' button to run the simulation
         # with the improved algorithm.
         self.MWindow.btn_run_sim_improved.clicked.connect(
-            lambda: self.run_simulation_improved(people_overview_file)
+            lambda: self.run_simulation_with_improved_algorithm(people_overview_file)
         )
         self.generate_new_sim(people_overview_file)
         self.MWindow.show()
 
     def save_sim(self, people_overview_file: str):
-        """Saves the lift simulation settings."""
+        """
+        Save the lift simulation settings.
+
+        Args:
+            people_overview_file: The path of the file to get the people in the
+                                  simulation from.
+        """
         self.num_floors_input = self.Dialog.line_edit_num_floors.text()
         self.num_people_input = self.Dialog.line_edit_num_people.text()
         self.lift_capacity_input = self.Dialog.line_edit_lift_capacity.text()
@@ -248,9 +281,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             )
         QApplication.processEvents()
 
-    def update_floors(self, people_overview: list):
+    def update_floors_in_gui(self, people_overview: list):
         """
-        Updates values in UI for each floor.
+        Update values in GUI for each floor.
 
         Arguments:
             people_overview (list): A list of generated people.
@@ -329,7 +362,13 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         QApplication.processEvents()
 
     def generate_new_sim(self, people_overview_file: str) -> None:
-        """Generates a new simulation with current configuration settings."""
+        """
+        Generate a new simulation with the current configuration settings.
+
+        Args:
+            people_overview_file: The path of the file to get the people in the
+                                  simulation from.
+        """
         # Empties the list of people generated to overwrite previous sim.
         people_overview = []
 
@@ -363,7 +402,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         with open(people_overview_file, "w") as outfile:
             json.dump(people_overview, outfile, ensure_ascii=False, indent=4)
         # Sets initial values for people waiting on each floor.
-        self.update_floors(people_overview)
+        self.update_floors_in_gui(people_overview)
         # Resets tracking stats to 0.
         self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
         self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
@@ -380,7 +419,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         people_overview: list,
     ) -> int:
         """
-        Marks a passenger as delivered, and removes them from the lift.
+        Mark a passenger as delivered and remove them from the lift.
 
         Args:
             num_delivered: The number of people delivered so far.
@@ -438,7 +477,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
         self.MWindow.lbl_update.setText("")
         # Sets initial values for people waiting on each floor.
-        self.update_floors(people_overview)
+        self.update_floors_in_gui(people_overview)
         # Displays configuration, generated people, and starting lift floor.
         print(
             "\n-------------------------------------------------------------"
@@ -456,9 +495,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             print(person)
         print("\nLift Floor (Starting):", self.lift_floor)
 
-    def run_simulation_naive(self, people_overview_file: str) -> None:
+    def run_simulation_with_naive_algorithm(self, people_overview_file: str) -> None:
         """
-        Runs the simulation using the naive (mechanical) algorithm.
+        Run the simulation using the naive (mechanical) algorithm.
 
         This algorithm implements a traditional lift control system where the
         person requesting the lift will press a button to either go up or
@@ -476,8 +515,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         the top or the bottom floor respectively.
 
         Args:
-            people_overview_file: The path to the JSON file containing the
-                                  list of people in the simulation.
+            people_overview_file: The path of the file to get the people in the
+                                  simulation from.
         """
         num_delivered = 0
         distance_travelled = 0
@@ -525,7 +564,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                 self.lift_floor += 1
                             else:
                                 self.lift_floor -= 1
-                            self.update_floors(people_overview)
+                            self.update_floors_in_gui(people_overview)
                             distance_travelled += 1
                             self.MWindow.lbl_distance_travelled.setText(
                                 "Total Distance Travelled: " + str(distance_travelled)
@@ -615,9 +654,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
-    def run_simulation_improved(self, people_overview_file: str) -> None:
+    def run_simulation_with_improved_algorithm(self, people_overview_file: str) -> None:
         """
-        Runs the simulation using the improved algorithm.
+        Run the simulation using the improved algorithm.
 
         This algorithm implements an improved lift control system where the
         person requesting the lift will enter the floor they want to travel to,
@@ -635,8 +674,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         route of the collection of people.
 
         Args:
-            people_overview_file: The path to the JSON file containing the
-                                  list of people in the simulation.
+            people_overview_file: The path of the file to get the people in the
+                                  simulation from.
         """
         num_delivered = 0
         distance_travelled = 0
@@ -834,7 +873,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 if person["id"] == passenger["id"]:
                     passenger["current_floor"] = self.lift_floor
                     person["current_floor"] = self.lift_floor
-        self.update_floors(people_overview)
+        self.update_floors_in_gui(people_overview)
         distance_travelled += 1
         self.MWindow.lbl_distance_travelled.setText(
             "Total Distance Travelled: " + str(distance_travelled)
@@ -844,7 +883,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
 
 class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
-    """Contains the dialog window for creating a new lift simulation."""
+    """
+    The dialog window for creating a new lift simulation.
+    """
 
     def __init__(self):
         super().__init__()
@@ -852,7 +893,9 @@ class ConfigSimDialog(QDialog, QIntValidator, Ui_dialog_config_sim):
 
 
 class LiftSim2FloorsWindow(QMainWindow, Ui_mwindow_sim_2_floors):
-    """Contains the main window for simulating two floors."""
+    """
+    The main window when simulating two floors.
+    """
 
     def __init__(self):
         super().__init__()
@@ -860,7 +903,9 @@ class LiftSim2FloorsWindow(QMainWindow, Ui_mwindow_sim_2_floors):
 
 
 class LiftSim3FloorsWindow(QMainWindow, Ui_mwindow_sim_3_floors):
-    """Contains the main window for simulating three floors."""
+    """
+    The main window when simulating three floors.
+    """
 
     def __init__(self):
         super().__init__()
@@ -868,7 +913,9 @@ class LiftSim3FloorsWindow(QMainWindow, Ui_mwindow_sim_3_floors):
 
 
 class LiftSim4FloorsWindow(QMainWindow, Ui_mwindow_sim_4_floors):
-    """Contains the main window for simulating four floors."""
+    """
+    The main window when simulating four floors.
+    """
 
     def __init__(self):
         super().__init__()
@@ -876,7 +923,9 @@ class LiftSim4FloorsWindow(QMainWindow, Ui_mwindow_sim_4_floors):
 
 
 class LiftSim5FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
-    """Contains the main window for simulating five floors."""
+    """
+    The main window when simulating five floors.
+    """
 
     def __init__(self):
         super().__init__()
@@ -884,7 +933,9 @@ class LiftSim5FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
 
 
 class LiftSim6FloorsWindow(QMainWindow, Ui_mwindow_sim_6_floors):
-    """Contains the main window for simulating six or more floors."""
+    """
+    The main window when simulating six or more floors.
+    """
 
     def __init__(self):
         super().__init__()
