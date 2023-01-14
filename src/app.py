@@ -443,34 +443,24 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.MWindow.lbl_num_delivered.setText(
             "Number of People Delivered: " + str(num_delivered)
         )
-        print(
-            "    Delivered person ID",
-            passenger["id"],
-            "from floor",
-            passenger["start_floor"],
-            "to",
-            passenger["target_floor"],
+        delivery_info = (
+            f"    Delivered person ID {passenger['id']} "
+            f"from floor {passenger['start_floor']} to {passenger['target_floor']}"
         )
-        self.MWindow.lbl_update.setText(
-            "Delivered person ID "
-            + str(passenger["id"])
-            + " from floor "
-            + str(passenger["start_floor"])
-            + " to "
-            + str(passenger["target_floor"])
-        )
+        print(delivery_info)
+        self.MWindow.lbl_update.setText(delivery_info)
         QApplication.processEvents()
-        # Marks the person as delivered.
+        # Find the person and mark them as delivered.
         for person1 in people_overview:
             if person1["id"] == passenger["id"]:
                 person1["delivered"] = True
-        # Removes the person from the lift.
+        # Remove the person from the lift.
         people_lift.remove(passenger)
         return num_in_lift
 
-    def display_config_info(self, people_overview: list) -> None:
+    def display_simulation_info(self, people_overview: list) -> None:
         """
-        Display the configuration of the simulation and the people generated.
+        Display the information about the simulation that has started.
 
         Args:
             people_overview: A list of the people in the simulation.
@@ -484,19 +474,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Displays configuration, generated people, and starting lift floor.
         print(
             "\n-------------------------------------------------------------"
-            "\nNumber of Floors:",
-            self.num_floors,
-            "\nNumber of People:",
-            self.num_people,
-            "\nLift Capacity:",
-            self.lift_capacity,
-            "\nUI Delay (ms):",
-            self.ui_delay,
+            f"\nNumber of Floors: {self.num_floors}"
+            f"\nNumber of People: {self.num_people}"
+            f"\nLift Capacity: {self.lift_capacity}"
+            f"\nUI Delay (ms): {self.ui_delay * 1000}"
         )
-        print("\nPeople Generated:")
+        print("\nPeople Overview (Simulation Starting):")
         for person in people_overview:
             print(person)
-        print(f"Lift Floor: {self.lift_floor} (Starting)")
+        print(f"\nLift Floor: {self.lift_floor} (Starting)")
 
     def run_simulation_with_naive_algorithm(self, people_overview_file: str) -> None:
         """
@@ -531,7 +517,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
-        self.display_config_info(people_overview)
+        self.display_simulation_info(people_overview)
 
         # Continues simulation until all target floors are reached.
         while (
@@ -677,7 +663,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Reads existing JSON files for list of people.
         with open(people_overview_file, "r") as infile:
             people_overview = json.load(infile)
-        self.display_config_info(people_overview)
+        self.display_simulation_info(people_overview)
 
         # Continues simulation until all target floors are reached.
         while (
