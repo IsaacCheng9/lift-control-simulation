@@ -582,6 +582,12 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         return num_in_lift
 
     def display_config_info(self, people_overview: list) -> None:
+        """
+        Display the configuration of the simulation and the people generated.
+
+        Args:
+            people_overview: A list of the people in the simulation.
+        """
         # Resets tracking stats to 0.
         self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
         self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
