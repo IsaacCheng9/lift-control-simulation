@@ -222,7 +222,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         with open(people_overview_file, "r", encoding="utf-8") as infile:
             people_overview = json.load(infile)
         # Sets initial values for people waiting on each floor.
-        self.update_floors_in_gui(people_overview)
+        self.update_floor_stats_in_gui(people_overview)
         # Connects 'Generate New Simulation' button to generate a new
         # simulation with the current configuration settings.
         self.main_window.btn_generate_new_sim.clicked.connect(
@@ -303,26 +303,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             )
         QApplication.processEvents()
 
-    def update_floors_in_gui(self, people_overview: list) -> None:
+    def increment_waiting_and_delivered_floor_stats(
+        self, people_overview: list
+    ) -> None:
         """
-        Update values in GUI for each floor.
+        Increment waiting and delivered stats for each floor.
 
-        Arguments:
-            people_overview (list): A list of generated people.
+        Args:
+            people_overview: The list of people in the simulation.
         """
-        # Resets floor statistics to recalculate them.
-        self.floor_0_waiting = 0
-        self.floor_1_waiting = 0
-        self.floor_2_waiting = 0
-        self.floor_3_waiting = 0
-        self.floor_4_waiting = 0
-        self.floor_0_delivered = 0
-        self.floor_1_delivered = 0
-        self.floor_2_delivered = 0
-        self.floor_3_delivered = 0
-        self.floor_4_delivered = 0
-
-        # Increments waiting and delivered stats for each floor accordingly.
         for person in people_overview:
             if person["start_floor"] == 0 and person["current_floor"] == 0:
                 self.floor_0_waiting += 1
@@ -345,11 +334,17 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             if person["target_floor"] == 4 and person["current_floor"] == 4:
                 self.floor_4_delivered += 1
 
-        # Sets grey and red blocks as images to represent floor lift is on.
-        grey_block = QPixmap("resources/images/grey_block.png").scaled(150, 15)
-        red_block = QPixmap("resources/images/red_block.png").scaled(125, 15)
+    def generate_floor_blocks(self, grey_block: QPixmap, red_block: QPixmap) -> None:
+        """
+        Generate coloured blocks to visualise the lift's position in the
+        building in a GUI.
 
-        # Updates UI with appropriate values depending on number of floors.
+        Args:
+            grey_block: The image of a grey block to represent floors that the
+                        lift is not on.
+            red_block: The image of a red block to represent the floor that the
+                       lift is on.
+        """
         if int(self.num_floors) <= 5:
             self.main_window.lbl_waiting_0.setText(str(self.floor_0_waiting))
             self.main_window.lbl_waiting_1.setText(str(self.floor_1_waiting))
@@ -381,6 +376,31 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.main_window.lbl_floor_3.setPixmap(red_block)
             elif self.lift_floor == 4:
                 self.main_window.lbl_floor_4.setPixmap(red_block)
+
+    def update_floor_stats_in_gui(self, people_overview: list) -> None:
+        """
+        Update the statistics for each floor in the GUI.
+
+        Arguments:
+            people_overview (list): A list of generated people.
+        """
+        # Reset floor statistics so we can recalculate them.
+        self.floor_0_waiting = 0
+        self.floor_1_waiting = 0
+        self.floor_2_waiting = 0
+        self.floor_3_waiting = 0
+        self.floor_4_waiting = 0
+        self.floor_0_delivered = 0
+        self.floor_1_delivered = 0
+        self.floor_2_delivered = 0
+        self.floor_3_delivered = 0
+        self.floor_4_delivered = 0
+        # Increment the number of people waiting and delivered on each floor.
+        self.increment_waiting_and_delivered_floor_stats(people_overview)
+        # Set grey and red blocks as images to represent floor lift is on.
+        grey_block = QPixmap("resources/images/grey_block.png").scaled(150, 15)
+        red_block = QPixmap("resources/images/red_block.png").scaled(125, 15)
+        self.generate_floor_blocks(grey_block, red_block)
         QApplication.processEvents()
         sleep(self.ui_delay)
 
@@ -425,7 +445,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         with open(people_overview_file, "w", encoding="utf-8") as outfile:
             json.dump(people_overview, outfile, ensure_ascii=False, indent=4)
         # Sets initial values for people waiting on each floor.
-        self.update_floors_in_gui(people_overview)
+        self.update_floor_stats_in_gui(people_overview)
         # Resets tracking stats to 0.
         self.main_window.lbl_num_delivered.setText("Number of People Delivered: 0")
         self.main_window.lbl_distance_travelled.setText("Total Distance Travelled: 0")
@@ -445,7 +465,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.main_window.lbl_distance_travelled.setText("Total Distance Travelled: 0")
         self.main_window.lbl_update.setText("")
         # Sets initial values for people waiting on each floor.
-        self.update_floors_in_gui(people_overview)
+        self.update_floor_stats_in_gui(people_overview)
         # Displays configuration, generated people, and starting lift floor.
         print(
             "\n-------------------------------------------------------------"
@@ -524,7 +544,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 if person["id"] == passenger["id"]:
                     passenger["current_floor"] = self.lift_floor
                     person["current_floor"] = self.lift_floor
-        self.update_floors_in_gui(people_overview)
+        self.update_floor_stats_in_gui(people_overview)
         distance_travelled += 1
         self.main_window.lbl_distance_travelled.setText(
             "Total Distance Travelled: " + str(distance_travelled)
@@ -580,7 +600,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.lift_floor += 1
             else:
                 self.lift_floor -= 1
-            self.update_floors_in_gui(people_overview)
+            self.update_floor_stats_in_gui(people_overview)
             distance_travelled += 1
             self.main_window.lbl_distance_travelled.setText(
                 "Total Distance Travelled: " + str(distance_travelled)
