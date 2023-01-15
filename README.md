@@ -2,7 +2,7 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-A desktop application developed in Python with PyQt5 to manage and simulate lift
+A desktop application developed in Python with PyQt6 to manage and simulate lift
 control under various configurations.
 
 I optimised a custom algorithm for efficiency in distance travelled by the lift.
