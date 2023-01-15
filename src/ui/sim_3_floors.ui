@@ -12,12 +12,11 @@
   </property>
   <property name="font">
    <font>
-    <family>Arial</family>
     <pointsize>10</pointsize>
    </font>
   </property>
   <property name="windowTitle">
-   <string>Simulation - Lift Control</string>
+   <string>Lift Control Simulation – 3 Floors</string>
   </property>
   <widget class="QWidget" name="central_widget">
    <widget class="QWidget" name="layoutWidget">
@@ -35,12 +34,11 @@
        <property name="font">
         <font>
          <pointsize>16</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
        <property name="text">
-        <string>Lift Control - Simulation (3 Floors)</string>
+        <string>Lift Control Simulation – 3 Floors</string>
        </property>
       </widget>
      </item>
@@ -125,26 +123,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_num_in_lift">
-       <property name="text">
-        <string>Number of People in Lift: 0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="hori_line_status">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
       <layout class="QGridLayout" name="grid_layout_sim">
        <item row="0" column="0">
         <widget class="QLabel" name="lbl_waiting_floors">
          <property name="font">
           <font>
-           <weight>50</weight>
+           <pointsize>10</pointsize>
            <bold>false</bold>
           </font>
          </property>
@@ -185,7 +169,7 @@
         <widget class="QLabel" name="lbl_lift_floors">
          <property name="font">
           <font>
-           <weight>50</weight>
+           <pointsize>10</pointsize>
            <bold>false</bold>
           </font>
          </property>
@@ -212,7 +196,7 @@
         <widget class="QLabel" name="lbl_delivered_floors">
          <property name="font">
           <font>
-           <weight>50</weight>
+           <pointsize>10</pointsize>
            <bold>false</bold>
           </font>
          </property>
@@ -248,7 +232,8 @@
       <widget class="QLabel" name="lbl_key">
        <property name="font">
         <font>
-         <italic>true</italic>
+         <pointsize>10</pointsize>
+         <italic>false</italic>
         </font>
        </property>
        <property name="text">
@@ -260,6 +245,13 @@
       <widget class="Line" name="hori_line_sim">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_num_in_lift">
+       <property name="text">
+        <string>Number of People in Lift: 0</string>
        </property>
       </widget>
      </item>

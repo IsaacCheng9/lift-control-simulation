@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>mwindow_sim_2_floors</class>
- <widget class="QMainWindow" name="mwindow_sim_2_floors">
+ <class>mwindow_sim_6_or_more_floors</class>
+ <widget class="QMainWindow" name="mwindow_sim_6_or_more_floors">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>650</width>
-    <height>375</height>
+    <height>275</height>
    </rect>
   </property>
   <property name="font">
    <font>
-    <family>Arial</family>
     <pointsize>10</pointsize>
    </font>
   </property>
   <property name="windowTitle">
-   <string>Simulation - Lift Control</string>
+   <string>Lift Control Simulation – Non-Visual (&gt;= 6 Floors)</string>
   </property>
   <widget class="QWidget" name="central_widget">
    <widget class="QWidget" name="layoutWidget">
@@ -25,8 +24,8 @@
      <rect>
       <x>11</x>
       <y>11</y>
-      <width>606</width>
-      <height>340</height>
+      <width>604</width>
+      <height>260</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="vert_layout_lift_control">
@@ -35,12 +34,11 @@
        <property name="font">
         <font>
          <pointsize>16</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
        <property name="text">
-        <string>Lift Control - Simulation (2 Floors)</string>
+        <string>Lift Control Simulation – Non-Visual (&gt;= 6 Floors)</string>
        </property>
       </widget>
      </item>
@@ -125,113 +123,15 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_num_in_lift">
-       <property name="text">
-        <string>Number of People in Lift: 0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="hori_line_status">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QGridLayout" name="grid_layout_sim">
-       <item row="0" column="1">
-        <widget class="QLabel" name="lbl_delivered_floors">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Number of People Delivered:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="lbl_floor_1">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lbl_waiting_1">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="lbl_floor_0">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbl_waiting_0">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="lbl_delivered_0">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="lbl_lift_floors">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Lift Floors:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="lbl_delivered_1">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_waiting_floors">
-         <property name="font">
-          <font>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Number of People Waiting:</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <widget class="QLabel" name="lbl_key">
        <property name="font">
         <font>
-         <italic>true</italic>
+         <pointsize>10</pointsize>
+         <italic>false</italic>
         </font>
        </property>
        <property name="text">
-        <string>(White blocks represent floors, and red blocks represent floors with the lift on it.)</string>
+        <string>(No visual simulation shown; simulation exceeds five floors.)</string>
        </property>
       </widget>
      </item>
@@ -239,6 +139,13 @@
       <widget class="Line" name="hori_line_sim">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_num_in_lift">
+       <property name="text">
+        <string>Number of People in Lift: 0</string>
        </property>
       </widget>
      </item>

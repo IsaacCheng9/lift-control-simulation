@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>mwindow_sim_6_floors</class>
- <widget class="QMainWindow" name="mwindow_sim_6_floors">
+ <class>mwindow_main_menu</class>
+ <widget class="QMainWindow" name="mwindow_main_menu">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>275</height>
+    <width>600</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="font">
    <font>
-    <family>Arial</family>
     <pointsize>10</pointsize>
    </font>
   </property>
   <property name="windowTitle">
-   <string>Simulation (Non-Visual) - Lift Control</string>
+   <string>Lift Control Simulation – Main Menu</string>
   </property>
   <widget class="QWidget" name="central_widget">
    <widget class="QWidget" name="layoutWidget">
@@ -25,8 +24,8 @@
      <rect>
       <x>11</x>
       <y>11</y>
-      <width>604</width>
-      <height>260</height>
+      <width>564</width>
+      <height>265</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="vert_layout_lift_control">
@@ -35,12 +34,11 @@
        <property name="font">
         <font>
          <pointsize>16</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
        <property name="text">
-        <string>Lift Control - Simulation (Non-Visual)</string>
+        <string>Lift Control Simulation – Main Menu</string>
        </property>
       </widget>
      </item>
@@ -53,10 +51,10 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="hori_layout_nav">
-       <item>
-        <widget class="QPushButton" name="btn_generate_new_sim">
+       <item alignment="Qt::AlignLeft">
+        <widget class="QPushButton" name="btn_config_sim">
          <property name="text">
-          <string>Generate New Simulation</string>
+          <string>Configure Simulation</string>
          </property>
         </widget>
        </item>
@@ -68,16 +66,9 @@
         </widget>
        </item>
        <item alignment="Qt::AlignLeft">
-        <widget class="QPushButton" name="btn_run_sim_naive">
+        <widget class="QPushButton" name="btn_open_sim">
          <property name="text">
-          <string>Run Simulation (Naive)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_run_sim_improved">
-         <property name="text">
-          <string>Run Simulation (Improved)</string>
+          <string>Open Simulation</string>
          </property>
         </widget>
        </item>
@@ -104,63 +95,63 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_num_delivered">
-       <property name="text">
-        <string>Number of People Delivered: 0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="lbl_distance_travelled">
-       <property name="text">
-        <string>Total Distance Travelled: 0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="hori_line_summary">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="lbl_num_in_lift">
-       <property name="text">
-        <string>Number of People in Lift: 0</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="hori_line_status">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="lbl_key">
+      <widget class="QLabel" name="lbl_current_config">
        <property name="font">
         <font>
-         <italic>true</italic>
+         <pointsize>10</pointsize>
+         <underline>true</underline>
         </font>
        </property>
        <property name="text">
-        <string>(No visual simulation shown; simulation exceeds five floors.)</string>
+        <string>Current Configuration</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="Line" name="hori_line_sim">
+      <widget class="QLabel" name="lbl_num_floors">
+       <property name="text">
+        <string>Number of Floors: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_num_people">
+       <property name="text">
+        <string>Number of People: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_lift_capacity">
+       <property name="text">
+        <string>Lift Capacity: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_ui_delay">
+       <property name="text">
+        <string>UI Delay (Milliseconds): </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="hori_line_config">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_update">
+      <widget class="QLabel" name="lbl_instruction">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <italic>false</italic>
+        </font>
+       </property>
        <property name="text">
-        <string/>
+        <string>(Note that only configurations with up to five floors will be simulated visually.)</string>
        </property>
       </widget>
      </item>

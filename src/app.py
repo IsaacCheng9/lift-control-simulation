@@ -28,26 +28,24 @@ import sys
 from time import sleep
 from typing import Tuple
 
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtGui import QIntValidator, QPixmap
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow
+from PyQt6 import QtWidgets
+from PyQt6.QtGui import QIntValidator, QPixmap
+from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow
 
-from src.setup.config_sim_setup import Ui_dialog_config_sim
-from src.setup.main_menu_setup import Ui_mwindow_main_menu
-from src.setup.sim_2_floors_setup import Ui_mwindow_sim_2_floors
-from src.setup.sim_3_floors_setup import Ui_mwindow_sim_3_floors
-from src.setup.sim_4_floors_setup import Ui_mwindow_sim_4_floors
-from src.setup.sim_5_floors_setup import Ui_mwindow_sim_5_floors
-from src.setup.sim_6_floors_setup import Ui_mwindow_sim_6_floors
+from src.ui.ui_config_sim import Ui_dialog_config_sim
+from src.ui.ui_main_menu import Ui_mwindow_main_menu
+from src.ui.ui_sim_2_floors import Ui_mwindow_sim_2_floors
+from src.ui.ui_sim_3_floors import Ui_mwindow_sim_3_floors
+from src.ui.ui_sim_4_floors import Ui_mwindow_sim_4_floors
+from src.ui.ui_sim_5_floors import Ui_mwindow_sim_5_floors
+from src.ui.ui_sim_6_or_more_floors import Ui_mwindow_sim_6_or_more_floors
 
 
 def main() -> None:
     """
     Open the main menu on program startup.
     """
-    # Performs scaling to prevent tiny UI on high resolution screens.
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+    # Perform scaling to prevent tiny UI on high resolution screens.
     os.environ["QT_SCALE_FACTOR"] = "2"
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("fusion")
@@ -1035,7 +1033,7 @@ class LiftSim5FloorsWindow(QMainWindow, Ui_mwindow_sim_5_floors):
         self.setupUi(self)
 
 
-class LiftSim6FloorsWindow(QMainWindow, Ui_mwindow_sim_6_floors):
+class LiftSim6FloorsWindow(QMainWindow, Ui_mwindow_sim_6_or_more_floors):
     """
     The main window when simulating six or more floors.
     """
