@@ -111,7 +111,7 @@ def generate_default_sim_config(file_path: str) -> None:
         }
         people.append(person_config)
         # Save the people configuration to people_overview.json.
-        with open(file_path, "w") as file:
+        with open(file_path, "w", encoding="utf-8") as file:
             json.dump(people, file, indent=2)
 
 
@@ -127,10 +127,28 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                                   simulation from.
         """
         super().__init__()
+        self.main_window = None
+        self.dialog_window = None
+        self.only_int = None
+        self.num_floors_input = None
+        self.num_people_input = None
+        self.lift_capacity_input = None
+        self.ui_delay_input = None
+        self.lift_floor = None
+        self.floor_0_waiting = None
+        self.floor_1_waiting = None
+        self.floor_2_waiting = None
+        self.floor_3_waiting = None
+        self.floor_4_waiting = None
+        self.floor_0_delivered = None
+        self.floor_1_delivered = None
+        self.floor_2_delivered = None
+        self.floor_3_delivered = None
+        self.floor_4_delivered = None
         self.setupUi(self)
 
         # Read the JSON file for the list of people.
-        with open(people_overview_file, "r") as infile:
+        with open(people_overview_file, "r", encoding="utf-8") as infile:
             try:
                 people_overview = json.load(infile)
             except json.decoder.JSONDecodeError:
@@ -166,18 +184,18 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             people_overview_file: The path of the file to get the people in the
                                   simulation from.
         """
-        self.Dialog = ConfigSimDialog()
+        self.dialog_window = ConfigSimDialog()
         # Restricts inputs to only numbers.
         self.only_int = QIntValidator()
-        self.Dialog.line_edit_num_floors.setValidator(self.only_int)
-        self.Dialog.line_edit_num_people.setValidator(self.only_int)
-        self.Dialog.line_edit_lift_capacity.setValidator(self.only_int)
-        self.Dialog.line_edit_ui_delay.setValidator(self.only_int)
+        self.dialog_window.line_edit_num_floors.setValidator(self.only_int)
+        self.dialog_window.line_edit_num_people.setValidator(self.only_int)
+        self.dialog_window.line_edit_lift_capacity.setValidator(self.only_int)
+        self.dialog_window.line_edit_ui_delay.setValidator(self.only_int)
         # Connects the 'Save Simulation' button to save the configuration.
-        self.Dialog.btn_save_sim.clicked.connect(
+        self.dialog_window.btn_save_sim.clicked.connect(
             lambda: self.save_sim(people_overview_file)
         )
-        self.Dialog.open()
+        self.dialog_window.open()
 
     def open_mwindow_lift_sim(self, people_overview_file: str) -> None:
         """
@@ -190,38 +208,38 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lift_floor = 0
         # Opens a different UI depending on the number of floors configured.
         if int(self.num_floors) == 2:
-            self.MWindow = LiftSim2FloorsWindow()
+            self.main_window = LiftSim2FloorsWindow()
         elif int(self.num_floors) == 3:
-            self.MWindow = LiftSim3FloorsWindow()
+            self.main_window = LiftSim3FloorsWindow()
         elif int(self.num_floors) == 4:
-            self.MWindow = LiftSim4FloorsWindow()
+            self.main_window = LiftSim4FloorsWindow()
         elif int(self.num_floors) == 5:
-            self.MWindow = LiftSim5FloorsWindow()
+            self.main_window = LiftSim5FloorsWindow()
         else:
-            self.MWindow = LiftSim6FloorsWindow()
+            self.main_window = LiftSim6FloorsWindow()
 
         # Reads existing JSON files for list of people.
-        with open(people_overview_file, "r") as infile:
+        with open(people_overview_file, "r", encoding="utf-8") as infile:
             people_overview = json.load(infile)
         # Sets initial values for people waiting on each floor.
         self.update_floors_in_gui(people_overview)
         # Connects 'Generate New Simulation' button to generate a new
         # simulation with the current configuration settings.
-        self.MWindow.btn_generate_new_sim.clicked.connect(
+        self.main_window.btn_generate_new_sim.clicked.connect(
             lambda: self.generate_new_sim(people_overview_file)
         )
         # Connects 'Run Simulation (Naive)' button to run the simulation with
         # the naive (mechanical) algorithm.
-        self.MWindow.btn_run_sim_naive.clicked.connect(
+        self.main_window.btn_run_sim_naive.clicked.connect(
             lambda: self.run_simulation_with_naive_algorithm(people_overview_file)
         )
         # Connects 'Run Simulation (Improved)' button to run the simulation
         # with the improved algorithm.
-        self.MWindow.btn_run_sim_improved.clicked.connect(
+        self.main_window.btn_run_sim_improved.clicked.connect(
             lambda: self.run_simulation_with_improved_algorithm(people_overview_file)
         )
         self.generate_new_sim(people_overview_file)
-        self.MWindow.show()
+        self.main_window.show()
 
     def save_sim(self, people_overview_file: str) -> None:
         """
@@ -231,10 +249,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             people_overview_file: The path of the file to get the people in the
                                   simulation from.
         """
-        self.num_floors_input = self.Dialog.line_edit_num_floors.text()
-        self.num_people_input = self.Dialog.line_edit_num_people.text()
-        self.lift_capacity_input = self.Dialog.line_edit_lift_capacity.text()
-        self.ui_delay_input = self.Dialog.line_edit_ui_delay.text()
+        self.num_floors_input = self.dialog_window.line_edit_num_floors.text()
+        self.num_people_input = self.dialog_window.line_edit_num_people.text()
+        self.lift_capacity_input = self.dialog_window.line_edit_lift_capacity.text()
+        self.ui_delay_input = self.dialog_window.line_edit_ui_delay.text()
 
         # Validates against inputs which are either too small or null.
         if (
@@ -243,34 +261,36 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             or self.lift_capacity_input == ""
             or self.ui_delay_input == ""
         ):
-            self.Dialog.lbl_save_successful.setText(
+            self.dialog_window.lbl_save_successful.setText(
                 "Please fill in all the configuration options!"
             )
         elif int(self.num_floors_input) <= 1:
-            self.Dialog.lbl_save_successful.setText(
+            self.dialog_window.lbl_save_successful.setText(
                 "Please configure at least two floors!"
             )
         elif int(self.num_people_input) <= 0:
-            self.Dialog.lbl_save_successful.setText(
+            self.dialog_window.lbl_save_successful.setText(
                 "Please configure at least one person!"
             )
         elif int(self.lift_capacity_input) <= 0:
-            self.Dialog.lbl_save_successful.setText(
+            self.dialog_window.lbl_save_successful.setText(
                 "Please configure a lift capacity of at least one person!"
             )
         elif int(self.ui_delay_input) <= 0:
-            self.Dialog.lbl_save_successful.setText(
+            self.dialog_window.lbl_save_successful.setText(
                 "Please configure a UI delay of at least one millisecond!"
             )
         else:
             # Notifies the user that their configuration was saved
             # successfully.
-            self.Dialog.lbl_save_successful.setText("Configuration saved successfully!")
+            self.dialog_window.lbl_save_successful.setText(
+                "Configuration saved successfully!"
+            )
             # Sets the inputs for the new lift simulation.
-            self.num_floors = self.Dialog.line_edit_num_floors.text()
-            self.num_people = self.Dialog.line_edit_num_people.text()
-            self.lift_capacity = self.Dialog.line_edit_lift_capacity.text()
-            self.ui_delay = float(self.Dialog.line_edit_ui_delay.text()) / 1000
+            self.num_floors = self.dialog_window.line_edit_num_floors.text()
+            self.num_people = self.dialog_window.line_edit_num_people.text()
+            self.lift_capacity = self.dialog_window.line_edit_lift_capacity.text()
+            self.ui_delay = float(self.dialog_window.line_edit_ui_delay.text()) / 1000
             # Updates labels to show current configuration.
             self.lbl_num_floors.setText("Number of Floors: " + str(self.num_floors))
             self.lbl_num_people.setText("Number of People: " + str(self.num_people))
@@ -331,36 +351,36 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
 
         # Updates UI with appropriate values depending on number of floors.
         if int(self.num_floors) <= 5:
-            self.MWindow.lbl_waiting_0.setText(str(self.floor_0_waiting))
-            self.MWindow.lbl_waiting_1.setText(str(self.floor_1_waiting))
-            self.MWindow.lbl_delivered_0.setText(str(self.floor_0_delivered))
-            self.MWindow.lbl_delivered_1.setText(str(self.floor_1_delivered))
-            self.MWindow.lbl_floor_0.setPixmap(grey_block)
-            self.MWindow.lbl_floor_1.setPixmap(grey_block)
+            self.main_window.lbl_waiting_0.setText(str(self.floor_0_waiting))
+            self.main_window.lbl_waiting_1.setText(str(self.floor_1_waiting))
+            self.main_window.lbl_delivered_0.setText(str(self.floor_0_delivered))
+            self.main_window.lbl_delivered_1.setText(str(self.floor_1_delivered))
+            self.main_window.lbl_floor_0.setPixmap(grey_block)
+            self.main_window.lbl_floor_1.setPixmap(grey_block)
 
             if int(self.num_floors) >= 3:
-                self.MWindow.lbl_waiting_2.setText(str(self.floor_2_waiting))
-                self.MWindow.lbl_delivered_2.setText(str(self.floor_2_delivered))
-                self.MWindow.lbl_floor_2.setPixmap(grey_block)
+                self.main_window.lbl_waiting_2.setText(str(self.floor_2_waiting))
+                self.main_window.lbl_delivered_2.setText(str(self.floor_2_delivered))
+                self.main_window.lbl_floor_2.setPixmap(grey_block)
             if int(self.num_floors) >= 4:
-                self.MWindow.lbl_waiting_3.setText(str(self.floor_3_waiting))
-                self.MWindow.lbl_delivered_3.setText(str(self.floor_3_delivered))
-                self.MWindow.lbl_floor_3.setPixmap(grey_block)
+                self.main_window.lbl_waiting_3.setText(str(self.floor_3_waiting))
+                self.main_window.lbl_delivered_3.setText(str(self.floor_3_delivered))
+                self.main_window.lbl_floor_3.setPixmap(grey_block)
             if int(self.num_floors) == 5:
-                self.MWindow.lbl_waiting_4.setText(str(self.floor_4_waiting))
-                self.MWindow.lbl_delivered_4.setText(str(self.floor_4_delivered))
-                self.MWindow.lbl_floor_4.setPixmap(grey_block)
+                self.main_window.lbl_waiting_4.setText(str(self.floor_4_waiting))
+                self.main_window.lbl_delivered_4.setText(str(self.floor_4_delivered))
+                self.main_window.lbl_floor_4.setPixmap(grey_block)
 
             if self.lift_floor == 0:
-                self.MWindow.lbl_floor_0.setPixmap(red_block)
+                self.main_window.lbl_floor_0.setPixmap(red_block)
             elif self.lift_floor == 1:
-                self.MWindow.lbl_floor_1.setPixmap(red_block)
+                self.main_window.lbl_floor_1.setPixmap(red_block)
             elif self.lift_floor == 2:
-                self.MWindow.lbl_floor_2.setPixmap(red_block)
+                self.main_window.lbl_floor_2.setPixmap(red_block)
             elif self.lift_floor == 3:
-                self.MWindow.lbl_floor_3.setPixmap(red_block)
+                self.main_window.lbl_floor_3.setPixmap(red_block)
             elif self.lift_floor == 4:
-                self.MWindow.lbl_floor_4.setPixmap(red_block)
+                self.main_window.lbl_floor_4.setPixmap(red_block)
         QApplication.processEvents()
         sleep(self.ui_delay)
 
@@ -402,15 +422,15 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             people_overview.append(person)
 
         # Saves the list of people to a JSON file.
-        with open(people_overview_file, "w") as outfile:
+        with open(people_overview_file, "w", encoding="utf-8") as outfile:
             json.dump(people_overview, outfile, ensure_ascii=False, indent=4)
         # Sets initial values for people waiting on each floor.
         self.update_floors_in_gui(people_overview)
         # Resets tracking stats to 0.
-        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
-        self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
+        self.main_window.lbl_num_delivered.setText("Number of People Delivered: 0")
+        self.main_window.lbl_distance_travelled.setText("Total Distance Travelled: 0")
         # Provides confirmation that generation was successful.
-        self.MWindow.lbl_update.setText("New simulation generated successfully.")
+        self.main_window.lbl_update.setText("New simulation generated successfully.")
         QApplication.processEvents()
 
     def display_simulation_info(self, people_overview: list) -> None:
@@ -421,9 +441,9 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             people_overview: A list of the people in the simulation.
         """
         # Resets tracking stats to 0.
-        self.MWindow.lbl_num_delivered.setText("Number of People Delivered: 0")
-        self.MWindow.lbl_distance_travelled.setText("Total Distance Travelled: 0")
-        self.MWindow.lbl_update.setText("")
+        self.main_window.lbl_num_delivered.setText("Number of People Delivered: 0")
+        self.main_window.lbl_distance_travelled.setText("Total Distance Travelled: 0")
+        self.main_window.lbl_update.setText("")
         # Sets initial values for people waiting on each floor.
         self.update_floors_in_gui(people_overview)
         # Displays configuration, generated people, and starting lift floor.
@@ -463,10 +483,10 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         """
         num_in_lift -= 1
         num_people_delivered += 1
-        self.MWindow.lbl_num_in_lift.setText(
+        self.main_window.lbl_num_in_lift.setText(
             "Number of People in Lift: " + str(num_in_lift)
         )
-        self.MWindow.lbl_num_delivered.setText(
+        self.main_window.lbl_num_delivered.setText(
             "Number of People Delivered: " + str(num_people_delivered)
         )
         delivered_msg = (
@@ -474,7 +494,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
             f"from floor {passenger['start_floor']} to {passenger['target_floor']}"
         )
         print(f"    {delivered_msg}")
-        self.MWindow.lbl_update.setText(delivered_msg)
+        self.main_window.lbl_update.setText(delivered_msg)
         QApplication.processEvents()
         sleep(self.ui_delay)
         # Find the person and mark them as delivered.
@@ -506,7 +526,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     person["current_floor"] = self.lift_floor
         self.update_floors_in_gui(people_overview)
         distance_travelled += 1
-        self.MWindow.lbl_distance_travelled.setText(
+        self.main_window.lbl_distance_travelled.setText(
             "Total Distance Travelled: " + str(distance_travelled)
         )
         QApplication.processEvents()
@@ -562,7 +582,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                 self.lift_floor -= 1
             self.update_floors_in_gui(people_overview)
             distance_travelled += 1
-            self.MWindow.lbl_distance_travelled.setText(
+            self.main_window.lbl_distance_travelled.setText(
                 "Total Distance Travelled: " + str(distance_travelled)
             )
             QApplication.processEvents()
@@ -573,7 +593,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         # Collect the person and update the GUI.
         people_lift.append(person)
         num_in_lift += 1
-        self.MWindow.lbl_num_in_lift.setText(
+        self.main_window.lbl_num_in_lift.setText(
             "Number of People in Lift: " + str(num_in_lift)
         )
         QApplication.processEvents()
@@ -625,8 +645,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                         f"{en_route['direction'].lower()}."
                     )
                     print(f"    {collected_msg}")
-                    self.MWindow.lbl_update.setText(collected_msg)
-                    self.MWindow.lbl_num_in_lift.setText(
+                    self.main_window.lbl_update.setText(collected_msg)
+                    self.main_window.lbl_num_in_lift.setText(
                         "Number of People in Lift: " + str(num_in_lift)
                     )
                     QApplication.processEvents()
@@ -692,7 +712,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         lift_direction = "Up"
 
         # Reads existing JSON files for list of people.
-        with open(people_overview_file, "r") as infile:
+        with open(people_overview_file, "r", encoding="utf-8") as infile:
             people_overview = json.load(infile)
         self.display_simulation_info(people_overview)
 
@@ -799,8 +819,8 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
                     "dropped off en route."
                 )
                 print(f"    {collected_msg}")
-                self.MWindow.lbl_update.setText(collected_msg)
-                self.MWindow.lbl_num_in_lift.setText(
+                self.main_window.lbl_update.setText(collected_msg)
+                self.main_window.lbl_num_in_lift.setText(
                     "Number of People in Lift: " + str(num_in_lift)
                 )
                 QApplication.processEvents()
@@ -920,7 +940,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         self.lift_floor = 0
 
         # Reads existing JSON files for list of people.
-        with open(people_overview_file, "r") as infile:
+        with open(people_overview_file, "r", encoding="utf-8") as infile:
             people_overview = json.load(infile)
         self.display_simulation_info(people_overview)
 
@@ -979,7 +999,7 @@ class MainMenuWindow(QMainWindow, Ui_mwindow_main_menu):
         for person in people_overview:
             print(person)
         print(f"Total Distance Travelled: {distance_travelled}")
-        self.MWindow.lbl_update.setText("Simulation complete.")
+        self.main_window.lbl_update.setText("Simulation complete.")
         QApplication.processEvents()
 
 
@@ -1000,6 +1020,15 @@ class LiftSim2FloorsWindow(QMainWindow, Ui_mwindow_sim_2_floors):
 
     def __init__(self):
         super().__init__()
+        self.lbl_floor_2 = None
+        self.lbl_floor_3 = None
+        self.lbl_floor_4 = None
+        self.lbl_waiting_2 = None
+        self.lbl_waiting_3 = None
+        self.lbl_waiting_4 = None
+        self.lbl_delivered_2 = None
+        self.lbl_delivered_3 = None
+        self.lbl_delivered_4 = None
         self.setupUi(self)
 
 
